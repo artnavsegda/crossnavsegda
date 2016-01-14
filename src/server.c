@@ -33,6 +33,26 @@ int main()
 		exit(0);
 	}
 
+	while(1)
+	{
+		int connect = accept(sock,NULL,NULL);
+		if (connect < 0)
+		{
+			printf("accept error\n");
+			close(sock);
+			exit(0);
+		}
+		if (shutdown(connect, SHUT_RDWR))
+		{
+			printf("shutdown error\n");
+			close(connect);
+			close(sock);
+			exit(0);
+		}
+		close(connect);
+	}
+	close(sock);
+
 	return 0;
 }
 
