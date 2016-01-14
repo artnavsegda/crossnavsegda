@@ -42,7 +42,7 @@ int main()
 			close(sock);
 			exit(0);
 		}
-		if (shutdown(connect, SHUT_RDWR))
+		if (shutdown(connect, SHUT_RDWR) == -1)
 		{
 			printf("shutdown error\n");
 			close(connect);
