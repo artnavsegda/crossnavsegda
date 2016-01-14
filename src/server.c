@@ -9,7 +9,7 @@
 
 int main()
 {
-	int sock = socket(PF_INET,SOCK_STREAM,0);
+	int sock = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock < 0)
 	{
 		printf("socket error\n");
