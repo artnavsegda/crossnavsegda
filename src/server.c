@@ -9,15 +9,17 @@
 
 int main()
 {
-	struct sockaddr_in server;
-	server.sin_family = AF_INET;
-	memset(&server,0,sizeof(server));
 	int sock = socket(PF_INET,SOCK_STREAM,0);
 	if (sock < 0)
 	{
 		printf("socket error\n");
 		exit(0);
 	}
+	struct sockaddr_in server;
+	memset(&server,0,sizeof(server));
+	server.sin_family = AF_INET;
+	server.sin_port = htons(1100);
+	server.sin_addr.s_addr = htonl(INADDR_ANY);
 	return 0;
 }
 
