@@ -20,6 +20,12 @@ int main()
 	server.sin_family = AF_INET;
 	server.sin_port = htons(1100);
 	server.sin_addr.s_addr = htonl(INADDR_ANY);
+	if (bind(sock,&server,sizeof server))
+	{
+		printf("bind error\n");
+		exit(0);
+	}
+
 	return 0;
 }
 
