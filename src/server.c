@@ -23,6 +23,13 @@ int main()
 	if (bind(sock,&server,sizeof server))
 	{
 		printf("bind error\n");
+		close(sock);
+		exit(0);
+	}
+	if (listen(sock,10))
+	{
+		printf("listen error\n");
+		close(sock);
 		exit(0);
 	}
 
