@@ -1,13 +1,18 @@
-#include <stdio.h>
+#include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 int main()
 {
-	int sock;
-	struct sockaddr server;
-	server.sa_family = AF_INET;
+	struct sockaddr_in server;
+	server.sin_family = AF_INET;
 	memset(&server,0,sizeof(server));
-	sock = socket(PF_INET,SOCK_STREAM,0);
+	int sock = socket(PF_INET,SOCK_STREAM,0);
 	if (sock < 0)
 	{
 		printf("socket error\n");
