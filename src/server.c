@@ -9,6 +9,7 @@
 
 int main()
 {
+	int buf[100];
 	int sock = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock < 0)
 	{
@@ -35,21 +36,22 @@ int main()
 
 	while(1)
 	{
-		int connect = accept(sock,NULL,NULL);
-		if (connect < 0)
+		int msgsock = accept(sock,NULL,NULL);
+		if (msgsock < 0)
 		{
 			printf("accept error\n");
 			close(sock);
 			exit(0);
 		}
-		if (shutdown(connect, SHUT_RDWR) == -1)
+		read(msgsock,buf,100);
+		if (shutdown(msgsock, SHUT_RDWR) == -1)
 		{
-			printf("shutdown error\n");
-			close(connect);
+			perror("shutdown error");
+			close(msgsock);
 			close(sock);
 			exit(0);
 		}
-		close(connect);
+		close(msgsock);
 	}
 	close(sock);
 

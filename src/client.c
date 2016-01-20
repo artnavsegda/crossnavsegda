@@ -19,6 +19,7 @@ int main()
 	memset(&client,0,sizeof(client));
 	client.sin_family = AF_INET;
 	client.sin_port = htons(1100);
+	//inet_pton(AF_INET, "192.168.1.105", &client.sin_addr);
 	inet_pton(AF_INET, "127.0.0.1", &client.sin_addr);
 	if (connect(sock,&client,sizeof client) == -1)
 	{
@@ -26,6 +27,8 @@ int main()
 		close(sock);
 		exit(0);
 	}
+
+	write(sock,"hello",6);
 
 	shutdown(sock, SHUT_RDWR);
 	close(sock);
