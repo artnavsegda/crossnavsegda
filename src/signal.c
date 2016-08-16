@@ -128,7 +128,6 @@ int main(void)
 {
 	signal(SIGALRM, alarm_handler);
 	entermode(STARTLEVEL);
-	alarm(10);
 	while (1)
 		sleep(1);
 	return 0;
