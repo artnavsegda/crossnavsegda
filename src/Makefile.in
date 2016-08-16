@@ -89,7 +89,8 @@ POST_UNINSTALL = :
 bin_PROGRAMS = hello$(EXEEXT) interactive$(EXEEXT) image$(EXEEXT) \
 	chota$(EXEEXT) count$(EXEEXT) debug$(EXEEXT) read$(EXEEXT) \
 	conjunk$(EXEEXT) conjunk2$(EXEEXT) conjunk3$(EXEEXT) \
-	server$(EXEEXT) client$(EXEEXT) ipc-pipes$(EXEEXT)
+	server$(EXEEXT) client$(EXEEXT) ipc-pipes$(EXEEXT) \
+	signal$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -141,6 +142,9 @@ read_LDADD = $(LDADD)
 server_SOURCES = server.c
 server_OBJECTS = server.$(OBJEXT)
 server_LDADD = $(LDADD)
+signal_SOURCES = signal.c
+signal_OBJECTS = signal.$(OBJEXT)
+signal_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -171,10 +175,10 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = chota.c client.c conjunk.c conjunk2.c conjunk3.c count.c \
 	debug.c $(hello_SOURCES) image.c interactive.c ipc-pipes.c \
-	read.c server.c
+	read.c server.c signal.c
 DIST_SOURCES = chota.c client.c conjunk.c conjunk2.c conjunk3.c \
 	count.c debug.c $(hello_SOURCES) image.c interactive.c \
-	ipc-pipes.c read.c server.c
+	ipc-pipes.c read.c server.c signal.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -415,6 +419,10 @@ server$(EXEEXT): $(server_OBJECTS) $(server_DEPENDENCIES) $(EXTRA_server_DEPENDE
 	@rm -f server$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(server_OBJECTS) $(server_LDADD) $(LIBS)
 
+signal$(EXEEXT): $(signal_OBJECTS) $(signal_DEPENDENCIES) $(EXTRA_signal_DEPENDENCIES) 
+	@rm -f signal$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(signal_OBJECTS) $(signal_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -434,6 +442,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ipc-pipes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signal.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
