@@ -90,7 +90,7 @@ bin_PROGRAMS = hello$(EXEEXT) interactive$(EXEEXT) image$(EXEEXT) \
 	chota$(EXEEXT) count$(EXEEXT) debug$(EXEEXT) read$(EXEEXT) \
 	conjunk$(EXEEXT) conjunk2$(EXEEXT) conjunk3$(EXEEXT) \
 	server$(EXEEXT) client$(EXEEXT) ipc-pipes$(EXEEXT) \
-	signal$(EXEEXT)
+	signal$(EXEEXT) rng$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -139,6 +139,9 @@ ipc_pipes_LDADD = $(LDADD)
 read_SOURCES = read.c
 read_OBJECTS = read.$(OBJEXT)
 read_LDADD = $(LDADD)
+rng_SOURCES = rng.c
+rng_OBJECTS = rng.$(OBJEXT)
+rng_LDADD = $(LDADD)
 server_SOURCES = server.c
 server_OBJECTS = server.$(OBJEXT)
 server_LDADD = $(LDADD)
@@ -175,10 +178,10 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = chota.c client.c conjunk.c conjunk2.c conjunk3.c count.c \
 	debug.c $(hello_SOURCES) image.c interactive.c ipc-pipes.c \
-	read.c server.c signal.c
+	read.c rng.c server.c signal.c
 DIST_SOURCES = chota.c client.c conjunk.c conjunk2.c conjunk3.c \
 	count.c debug.c $(hello_SOURCES) image.c interactive.c \
-	ipc-pipes.c read.c server.c signal.c
+	ipc-pipes.c read.c rng.c server.c signal.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -415,6 +418,10 @@ read$(EXEEXT): $(read_OBJECTS) $(read_DEPENDENCIES) $(EXTRA_read_DEPENDENCIES)
 	@rm -f read$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(read_OBJECTS) $(read_LDADD) $(LIBS)
 
+rng$(EXEEXT): $(rng_OBJECTS) $(rng_DEPENDENCIES) $(EXTRA_rng_DEPENDENCIES) 
+	@rm -f rng$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(rng_OBJECTS) $(rng_LDADD) $(LIBS)
+
 server$(EXEEXT): $(server_OBJECTS) $(server_DEPENDENCIES) $(EXTRA_server_DEPENDENCIES) 
 	@rm -f server$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(server_OBJECTS) $(server_LDADD) $(LIBS)
@@ -441,6 +448,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/interactive.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ipc-pipes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/read.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rng.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signal.Po@am__quote@
 

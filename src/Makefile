@@ -90,7 +90,7 @@ bin_PROGRAMS = hello$(EXEEXT) interactive$(EXEEXT) image$(EXEEXT) \
 	chota$(EXEEXT) count$(EXEEXT) debug$(EXEEXT) read$(EXEEXT) \
 	conjunk$(EXEEXT) conjunk2$(EXEEXT) conjunk3$(EXEEXT) \
 	server$(EXEEXT) client$(EXEEXT) ipc-pipes$(EXEEXT) \
-	signal$(EXEEXT)
+	signal$(EXEEXT) rng$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -139,6 +139,9 @@ ipc_pipes_LDADD = $(LDADD)
 read_SOURCES = read.c
 read_OBJECTS = read.$(OBJEXT)
 read_LDADD = $(LDADD)
+rng_SOURCES = rng.c
+rng_OBJECTS = rng.$(OBJEXT)
+rng_LDADD = $(LDADD)
 server_SOURCES = server.c
 server_OBJECTS = server.$(OBJEXT)
 server_LDADD = $(LDADD)
@@ -175,10 +178,10 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = chota.c client.c conjunk.c conjunk2.c conjunk3.c count.c \
 	debug.c $(hello_SOURCES) image.c interactive.c ipc-pipes.c \
-	read.c server.c signal.c
+	read.c rng.c server.c signal.c
 DIST_SOURCES = chota.c client.c conjunk.c conjunk2.c conjunk3.c \
 	count.c debug.c $(hello_SOURCES) image.c interactive.c \
-	ipc-pipes.c read.c server.c signal.c
+	ipc-pipes.c read.c rng.c server.c signal.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -205,13 +208,13 @@ ETAGS = etags
 CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /Users/artnavsegda/GitHub/crossnavsegda/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/art/coding/crossnavsegda/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /Users/artnavsegda/GitHub/crossnavsegda/missing autoconf
-AUTOHEADER = ${SHELL} /Users/artnavsegda/GitHub/crossnavsegda/missing autoheader
-AUTOMAKE = ${SHELL} /Users/artnavsegda/GitHub/crossnavsegda/missing automake-1.15
-AWK = awk
+AUTOCONF = ${SHELL} /home/art/coding/crossnavsegda/missing autoconf
+AUTOHEADER = ${SHELL} /home/art/coding/crossnavsegda/missing autoheader
+AUTOMAKE = ${SHELL} /home/art/coding/crossnavsegda/missing automake-1.15
+AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -219,8 +222,8 @@ CPPFLAGS =
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
-ECHO_C = \c
-ECHO_N = 
+ECHO_C = 
+ECHO_N = -n
 ECHO_T = 
 EXEEXT = 
 INSTALL = /usr/bin/install -c
@@ -232,8 +235,8 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lm 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /Users/artnavsegda/GitHub/crossnavsegda/missing makeinfo
-MKDIR_P = .././install-sh -c -d
+MAKEINFO = ${SHELL} /home/art/coding/crossnavsegda/missing makeinfo
+MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = artnavsegda
 PACKAGE_BUGREPORT = artnavsegda@gmail.com
@@ -244,13 +247,13 @@ PACKAGE_URL = https://github.com/artnavsegda
 PACKAGE_VERSION = 1.0
 PATH_SEPARATOR = :
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 STRIP = 
 VERSION = 1.0
-abs_builddir = /Users/artnavsegda/GitHub/crossnavsegda/src
-abs_srcdir = /Users/artnavsegda/GitHub/crossnavsegda/src
-abs_top_builddir = /Users/artnavsegda/GitHub/crossnavsegda
-abs_top_srcdir = /Users/artnavsegda/GitHub/crossnavsegda
+abs_builddir = /home/art/coding/crossnavsegda/src
+abs_srcdir = /home/art/coding/crossnavsegda/src
+abs_top_builddir = /home/art/coding/crossnavsegda
+abs_top_srcdir = /home/art/coding/crossnavsegda
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -269,7 +272,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /Users/artnavsegda/GitHub/crossnavsegda/install-sh
+install_sh = ${SHELL} /home/art/coding/crossnavsegda/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -415,6 +418,10 @@ read$(EXEEXT): $(read_OBJECTS) $(read_DEPENDENCIES) $(EXTRA_read_DEPENDENCIES)
 	@rm -f read$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(read_OBJECTS) $(read_LDADD) $(LIBS)
 
+rng$(EXEEXT): $(rng_OBJECTS) $(rng_DEPENDENCIES) $(EXTRA_rng_DEPENDENCIES) 
+	@rm -f rng$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(rng_OBJECTS) $(rng_LDADD) $(LIBS)
+
 server$(EXEEXT): $(server_OBJECTS) $(server_DEPENDENCIES) $(EXTRA_server_DEPENDENCIES) 
 	@rm -f server$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(server_OBJECTS) $(server_LDADD) $(LIBS)
@@ -441,6 +448,7 @@ include ./$(DEPDIR)/image.Po
 include ./$(DEPDIR)/interactive.Po
 include ./$(DEPDIR)/ipc-pipes.Po
 include ./$(DEPDIR)/read.Po
+include ./$(DEPDIR)/rng.Po
 include ./$(DEPDIR)/server.Po
 include ./$(DEPDIR)/signal.Po
 
