@@ -55,7 +55,7 @@ int main(void)
 		unsigned char ip[4];
 		unsigned char mac[6];
 		struct lengthtablestruct length_table;
-	  struct jumptablestruct jump_table;
+		struct jumptablestruct jump_table;
 	};
 	struct eeprom e;
 	scanf("ip = %hhu.%hhu.%hhu.%hhu\n",&e.ip[0],&e.ip[1],&e.ip[2],&e.ip[3]);
