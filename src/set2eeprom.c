@@ -17,19 +17,19 @@ enum modelist {
 };
 
 struct lengthtablestruct {
-  int startlevel;
-  int celldelay;
-  int celllevel;
-  int zerodelay;
-  int zerotest;
-  int purge;
-  int totalmercurydelay;
-  int totalmercury;
-  int elementalmercurydelay;
-  int elementalmercury;
-  int precalibrationdelay;
-  int calibration;
-  int postcalibrationdelay;
+  unsigned short startlevel;
+  unsigned short celldelay;
+  unsigned short celllevel;
+  unsigned short zerodelay;
+  unsigned short zerotest;
+  unsigned short purge;
+  unsigned short totalmercurydelay;
+  unsigned short totalmercury;
+  unsigned short elementalmercurydelay;
+  unsigned short elementalmercury;
+  unsigned short precalibrationdelay;
+  unsigned short calibration;
+  unsigned short postcalibrationdelay;
 };
 
 struct jumptablestruct {
@@ -61,7 +61,6 @@ int main(void)
 	scanf("ip = %hhu.%hhu.%hhu.%hhu\n",&e.ip[0],&e.ip[1],&e.ip[2],&e.ip[3]);
 	scanf("mac = %hhx:%hhx:%hhx:%hhx:%hhx:%hhx\n",&e.mac[0],&e.mac[1],&e.mac[2],&e.mac[3],&e.mac[4],&e.mac[5]);
 	scanf("startlevel = %hu\nprecalibrationdelay = %hu\ncalibration = %hu\npostcalibrationdelay = %hu\ncelldelay = %hu\ncelllevel = %hu\nzerodelay = %hu\nzerotest = %hu\ntotalmercurydelay = %hu\ntotalmercury = %hu\nelementalmercurydelay = %hu\nelementalmercury = %hu\npurge = %hu\n",&e.length_table.startlevel,&e.length_table.precalibrationdelay,&e.length_table.calibration,&e.length_table.postcalibrationdelay,&e.length_table.celldelay,&e.length_table.celllevel,&e.length_table.zerodelay,&e.length_table.zerotest,&e.length_table.totalmercurydelay,&e.length_table.totalmercury,&e.length_table.elementalmercurydelay,&e.length_table.elementalmercury,&e.length_table.purge);
-	fputs((char *)&e,stdout);
 	fwrite((char *)&e,sizeof(e),1,stdout);
 	return 0;
 }

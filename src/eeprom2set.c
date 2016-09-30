@@ -17,19 +17,19 @@ enum modelist {
 };
 
 struct lengthtablestruct {
-  int startlevel;
-  int celldelay;
-  int celllevel;
-  int zerodelay;
-  int zerotest;
-  int purge;
-  int totalmercurydelay;
-  int totalmercury;
-  int elementalmercurydelay;
-  int elementalmercury;
-  int precalibrationdelay;
-  int calibration;
-  int postcalibrationdelay;
+  unsigned short startlevel;
+  unsigned short celldelay;
+  unsigned short celllevel;
+  unsigned short zerodelay;
+  unsigned short zerotest;
+  unsigned short purge;
+  unsigned short totalmercurydelay;
+  unsigned short totalmercury;
+  unsigned short elementalmercurydelay;
+  unsigned short elementalmercury;
+  unsigned short precalibrationdelay;
+  unsigned short calibration;
+  unsigned short postcalibrationdelay;
 };
 
 struct jumptablestruct {
@@ -58,7 +58,6 @@ int main(void)
 	 	struct jumptablestruct jump_table;
 	};
 	struct eeprom e;
-	//fgets((char *)&e,sizeof(e),stdin);
 	fread((char *)&e,sizeof(e),1,stdin);
 	printf("ip = %hhu.%hhu.%hhu.%hhu\n",e.ip[0],e.ip[1],e.ip[2],e.ip[3]);
 	printf("mac = %hhx:%hhx:%hhx:%hhx:%hhx:%hhx\n",e.mac[0],e.mac[1],e.mac[2],e.mac[3],e.mac[4],e.mac[5]);
