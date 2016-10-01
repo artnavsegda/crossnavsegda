@@ -49,19 +49,19 @@ struct jumptablestruct {
 };
 
 struct jumptablestruct startstate = {
-	.startlevel = TOTALMERCURY,
-	.celldelay = TOTALMERCURY,
-	.celllevel = TOTALMERCURY,
-	.zerodelay = TOTALMERCURY,
-	.zerotest = TOTALMERCURY,
-	.purge = TOTALMERCURY,
+	.startlevel = CELLDELAY,
+	.celldelay = CELLLEVEL,
+	.celllevel = TOTALMERCURYDELAY,
+	.zerodelay = ZEROTEST,
+	.zerotest = TOTALMERCURYDELAY,
+	.purge = TOTALMERCURYDELAY,
 	.totalmercurydelay = TOTALMERCURY,
 	.totalmercury = TOTALMERCURY,
-	.elementalmercurydelay = TOTALMERCURY,
+	.elementalmercurydelay = ELEMENTALMERCURY,
 	.elementalmercury = TOTALMERCURY,
-	.precalibrationdelay = TOTALMERCURY,
-	.calibration = TOTALMERCURY,
-	.postcalibrationdelay = TOTALMERCURY
+	.precalibrationdelay = CALIBRATION,
+	.calibration = POSTCALIBRATIONDELAY,
+	.postcalibrationdelay = TOTALMERCURYDELAY
 };
 
 struct eeprom
