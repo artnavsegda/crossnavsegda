@@ -56,12 +56,15 @@ int main(void)
 		unsigned char mac[6];
 		struct lengthtablestruct length_table;
 	 	struct jumptablestruct jump_table;
+                unsigned char ad7705_setup_register;
+                unsigned char ad7705_clock_register;
 	};
 	struct eeprom e;
 	fread((char *)&e,sizeof(e),1,stdin);
 	printf("ip = %hhu.%hhu.%hhu.%hhu\n",e.ip[0],e.ip[1],e.ip[2],e.ip[3]);
 	printf("mac = %hhx:%hhx:%hhx:%hhx:%hhx:%hhx\n",e.mac[0],e.mac[1],e.mac[2],e.mac[3],e.mac[4],e.mac[5]);
 	printf("startlevel = %hu\nprecalibrationdelay = %hu\ncalibration = %hu\npostcalibrationdelay = %hu\ncelldelay = %hu\ncelllevel = %hu\nzerodelay = %hu\nzerotest = %hu\ntotalmercurydelay = %hu\ntotalmercury = %hu\nelementalmercurydelay = %hu\nelementalmercury = %hu\npurge = %hu\n",e.length_table.startlevel,e.length_table.precalibrationdelay,e.length_table.calibration,e.length_table.postcalibrationdelay,e.length_table.celldelay,e.length_table.celllevel,e.length_table.zerodelay,e.length_table.zerotest,e.length_table.totalmercurydelay,e.length_table.totalmercury,e.length_table.elementalmercurydelay,e.length_table.elementalmercury,e.length_table.purge);
-	printf("startlevel = %hhu\nprecalibrationdelay = %hhu\ncalibration = %hhu\npostcalibrationdelay = %hhu\ncelldelay = %hhu\ncelllevel = %hhu\nzerodelay = %hhu\nzerotest = %hhu\ntotalmercurydelay = %hhu\ntotalmercury = %hhu\nelementalmercurydelay = %hhu\nelementalmercury = %hhu\npurge = %hhu\n",e.jump_table.startlevel,e.jump_table.precalibrationdelay,e.jump_table.calibration,e.jump_table.postcalibrationdelay,e.jump_table.celldelay,e.jump_table.celllevel,e.jump_table.zerodelay,e.jump_table.zerotest,e.jump_table.totalmercurydelay,e.jump_table.totalmercury,e.jump_table.elementalmercurydelay,e.jump_table.elementalmercury,e.jump_table.purge);
+        printf("ad7705_setup_register = %X\n",e.ad7705_setup_register);
+        printf("ad7705_clock_register = %X\n",e.ad7705_clock_register);
 	return 0;
 }
