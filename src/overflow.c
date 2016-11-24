@@ -23,7 +23,7 @@ struct ra915struct {
 unsigned char genchecksum(unsigned char *massive)
 {
 	unsigned char checksum = 0;
-	for (int i;i<sizeof(massive);i++)
+	for (int i = 0;i<sizeof(massive);i++)
 		checksum = checksum + massive[i];
 	return checksum;
 }
