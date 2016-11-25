@@ -62,14 +62,44 @@ struct jumptablestruct startstate = {
 	.postcalibrationdelay = TOTALMERCURYDELAY
 };
 
+struct modbusaddressstruct {
+	struct coil
+};
+
+struct coiladdressstruct {
+	unsigned short statusofspectrometer;
+	unsigned short statusofthermocontrollers;
+	unsigned short avalibilityofexternalrequest;
+	unsigned short statusofzerotest;
+	unsigned short statusofcalibration;
+	unsigned short runcalibration;
+	unsigned short runzerotest;
+	unsigned short runelemental;
+	unsigned short startpurge;
+	unsigned short endpurge;
+};
+
+struct floataddressstruct {
+	unsigned short elementalmercury;
+	unsigned short totalmercury;
+	unsigned short oxidizedmercury;
+	unsigned short monitorflow;
+	unsigned short vacuum;
+	unsigned short dilutionpressure;
+	unsigned short bypasspressure;
+	unsigned short temperatureofspectrometer;
+	unsigned short codeofacurrentmode;
+	unsigned short totalmercurycoeffiecent;
+}
+
 struct eeprom
 {
 	unsigned char ip[4];
 	unsigned char mac[6];
 	struct lengthtablestruct length_table;
 	struct jumptablestruct jump_table;
-  unsigned char ad7705_setup_register;
-  unsigned char ad7705_clock_register;
-  unsigned char ad7705_zeroscale_calibration_register[3];
-  unsigned char ad7705_fullscale_calibration_register[3];
+	unsigned char ad7705_setup_register;
+	unsigned char ad7705_clock_register;
+	unsigned char ad7705_zeroscale_calibration_register[3];
+	unsigned char ad7705_fullscale_calibration_register[3];
 };
