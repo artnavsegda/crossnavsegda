@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 		.c_cflag = B9600,
 		.c_iflag = IGNPAR,
 		.c_oflag = 0,
-		.c_lflag = ICANON
+		.c_lflag = 0 
 	};
 	if (argc != 2)
 	{
