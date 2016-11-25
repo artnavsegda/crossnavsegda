@@ -4,9 +4,25 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <unistd.h>
+#include <strings.h>
+
+#define _BV(bit) (1 << (bit)) 
+
+unsigned char makecontrolbyte(void)
+{
+	unsigned char controlbyte = 0;
+	controlbyte |= _BV(1); //ign
+	controlbyte |= _BV(2); //zero
+	controlbyte |= _BV(3); //cell
+	controlbyte |= _BV(4); //cal
+	controlbyte |= _BV(5); //total
+	return controlbyte;
+}
 
 int main(int argc, char *argv[])
 {
+	unsigned char frame[5];
 	int fd;
 	struct termios tio = {
 		.c_cflag = B9600,
@@ -28,5 +44,13 @@ int main(int argc, char *argv[])
 	//tcgetattr(fd,&tio);
 	tcflush(fd, TCIFLUSH);
 	tcsetattr(fd,TCSANOW,&tio);
+
+	bzero(frame,5);
+	frame[0] = 0xB5;
+	frame[1] = makecontrolbyte();
+	//frame[4] = makechecksum(frame);
+
+	write(fd,frame,5);
+
 	return 0;
 }
