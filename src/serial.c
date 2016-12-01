@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	unsigned char frame[5];
 	int fd;
 	struct termios tio = {
-		.c_cflag = B9600,
+		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
 		.c_iflag = IGNPAR,
 		.c_oflag = 0,
 		.c_lflag = 0 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	bzero(frame,5);
 	frame[0] = 0xB5;
 	frame[1] = makecontrolbyte();
-	//frame[4] = makechecksum(frame);
+	frame[4] = makecontrolbyte();
 
 	write(fd,frame,5);
 
