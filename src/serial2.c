@@ -63,6 +63,31 @@ struct reqa5struct {
 	unsigned char reserve2;
 };
 
+ssize_t readcs(int fd, void *buf, size_t count)
+{
+	ssize_t result = read(fd,buf,count);
+	unsigned char checksum[1];
+	read(fd,checksum,1);
+	return result;
+}
+
+unsigned char genchecksum(unsigned char *buf, size_t count)
+{
+	unsigned char checksum = 0;
+	for (int i=0;i<count;i++)
+		checksum = checksum + buf[i];
+	return checksum;
+}
+
+ssize_t write(int fd, const void *buf, size_t count)
+{
+	ssize_t result = write(fd,buf,count);
+	unsigned char checksum[1];
+	checksum[0] = genchecksum((unsigned char *)&buf,count);
+	write(fd,checksum,1);
+	return result;
+}
+
 int main(int argc, char *argv[])
 {
 	unsigned char control[1];
@@ -237,13 +262,15 @@ int main(int argc, char *argv[])
 			break;
 			case 0xA5:
 				;
-				write(fd,0xA5,1);
+				write(fd,"\xA5",1);
 				struct reqa5struct reqa5;
-				write(fd,0xA5,22);
+				write(fd,&reqa5,22);
 			break;
 			default:
 			break;
 		}
+		//unsigned char sum[1];
+		//read(fd,sum,1);
 	}
 
 	//write(fd,frame,5);
