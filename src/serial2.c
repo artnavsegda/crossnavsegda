@@ -79,7 +79,7 @@ unsigned char genchecksum(unsigned char *buf, size_t count)
 	return checksum;
 }
 
-ssize_t write(int fd, const void *buf, size_t count)
+ssize_t writecs(int fd, const void *buf, size_t count)
 {
 	ssize_t result = write(fd,buf,count);
 	unsigned char checksum[1];
@@ -115,23 +115,25 @@ int main(int argc, char *argv[])
 
 	while (read(fd,control,1))
 	{
+		write(fd,control,1);
 		switch(control[0])
 		{
 			case 0x63:
 				;
 				unsigned int req63[2] = { 100, 100 };
-				write(fd,req63,8);
+				writecs(fd,req63,8);
 			break;
 			case 0x61:
 				;
 				unsigned int req61[1];
 				read(fd,req61,4);
 				printf("0x61 %u\n",req61[0]);
+				write(fd,control,1);
 			break;
 			case 0x62:
 				;
 				char req62[240];
-				write(fd,req62,240);
+				writecs(fd,req62,240);
 				/*for (int i=0;i<15)
 				{
 					struct req62struct req62;
@@ -143,48 +145,51 @@ int main(int argc, char *argv[])
 				char reqba[4];
 				read(fd,reqba,4);
 				printf("0xBA %s\n",reqba);
+				write(fd,control,1);
 			break;
 			case 0xA0:
 				;
 				char reqa0[4] = "abcd";
-				write(fd,reqa0,4);
+				writecs(fd,reqa0,4);
 			break;
 			case 0x46:
 				;
 				char req46[1];
 				read(fd,req46,1);
 				printf("0x46 0x%X\n",req46[0]);
+				write(fd,control,1);
 			break;
 			case 0xC6:
 				;
 				char reqc6[1];
 				read(fd,reqc6,1);
 				printf("0x46 0x%X\n",reqc6[0]);
+				write(fd,control,1);
 			break;
 			case 0x47:
 				;
 				char req47[1] = { 0x01 };
-				write(fd,req47,1);
+				writecs(fd,req47,1);
 			break;
 			case 0xC7:
 				;
 				char reqc7[1] = { 0x00 };
-				write(fd,reqc7,1);
+				writecs(fd,reqc7,1);
 			break;
 			case 0x14:
 				;
 				char req14[2] = { 0x01, 0x02 };
-				write(fd,req14,2);
+				writecs(fd,req14,2);
 			break;
 			case 0x15:
 				;
 				char req15[2] = { 0x01, 0x02 };
-				write(fd,req15,2);
+				writecs(fd,req15,2);
 			break;
 			case 0x08:
 				;
 				unsigned int req08[1] = { 100 };
-				write(fd,req08,4);
+				writecs(fd,req08,4);
 			break;
 			case 0x09:
 				;
@@ -195,13 +200,14 @@ int main(int argc, char *argv[])
 				read(fd,reqa7,64);
 				/* struct reqa7struct reqa7
 				read(fd,&reqa7,64); */
+				write(fd,control,1);
 			break;
 			case 0xA8:
 				;
 				char reqa8[64];
-				write(fd,reqa7,64);
+				writecs(fd,reqa7,64);
 				/* struct reqa7struct reqa8
-				write(fd,&reqa7,64); */
+				writecs(fd,&reqa7,64); */
 			break;
 			case 0xC5:
 				;
@@ -211,60 +217,69 @@ int main(int argc, char *argv[])
 				char reqc8[1];
 				read(fd,reqc8,1);
 				printf("0xC8 0x%X\n",reqc8[0]);
+				write(fd,control,1);
 			break;
 			case 0xC9:
 				;
 				char reqc9[1];
 				read(fd,reqc9,1);
 				printf("0xC9 0x%X\n",reqc9[0]);
+				write(fd,control,1);
 			break;
 			case 0xCB:
 				;
 				char reqcb[1];
 				read(fd,reqcb,1);
 				printf("0xCB 0x%X\n",reqcb[0]);
+				write(fd,control,1);
 			break;
 			case 0xA9:
 				;
 				char reqa9[1];
 				read(fd,reqa9,1);
 				printf("0xA9 0x%X\n",reqa9[0]);
+				write(fd,control,1);
 			break;
 			case 0xAA:
 				;
 				char reqaa[1];
 				read(fd,reqaa,1);
 				printf("0xAA 0x%X\n",reqaa[0]);
+				write(fd,control,1);
 			break;
 			case 0xAC:
 				;
 				char reqac[1];
 				read(fd,reqac,1);
 				printf("0xAC 0x%X\n",reqac[0]);
+				write(fd,control,1);
 			break;
 			case 0xC1:
 				;
 				char reqc1[1];
 				read(fd,reqc1,1);
 				printf("0xC1 0x%X\n",reqc1[0]);
+				write(fd,control,1);
 			break;
 			case 0xC2:
 				;
 				char reqc2[1];
 				read(fd,reqc2,1);
 				printf("0xC2 0x%X\n",reqc2[0]);
+				write(fd,control,1);
 			break;
 			case 0xCA:
 				;
 				char reqca[1];
 				read(fd,reqca,1);
 				printf("0xCA 0x%X\n",reqca[0]);
+				write(fd,control,1);
 			break;
 			case 0xA5:
 				;
 				write(fd,"\xA5",1);
 				struct reqa5struct reqa5;
-				write(fd,&reqa5,22);
+				writecs(fd,&reqa5,22);
 			break;
 			default:
 			break;
