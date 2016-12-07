@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		read(fd,frame,1);
-		printf("0x%X\n");
+		if (read(fd,frame,1) == 1)
+			printf("0x%X ",frame[0]);
 	}
 
 	return 0;
