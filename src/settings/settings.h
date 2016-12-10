@@ -62,10 +62,6 @@ struct jumptablestruct startstate = {
 	.postcalibrationdelay = TOTALMERCURYDELAY
 };
 
-struct modbusaddressstruct {
-	struct coil
-};
-
 struct coiladdressstruct {
 	unsigned short statusofspectrometer;
 	unsigned short statusofthermocontrollers;
