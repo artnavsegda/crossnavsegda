@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <fcntl.h>
-#include <sys\types.h>
-#include <sys\stat.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #define LENGTH 600000000
 
 int main(void)
