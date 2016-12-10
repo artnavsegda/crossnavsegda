@@ -1,1 +1,1 @@
-bin_PROGRAMS = serial2 output input
+bin_PROGRAMS = serial2 output blocked nonblocked

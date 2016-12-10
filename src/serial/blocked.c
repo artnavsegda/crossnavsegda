@@ -8,6 +8,7 @@
 
 int main(int argc, char *argv[])
 {
+	unsigned char frame[1];
 	int fd;
 	struct termios tio = {
 		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
@@ -36,7 +37,9 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		if (read(fd,frame,1) == 1)
-			printf("0x%X ",frame[0]);
+			printf("0x%X \n",frame[0]);
+		else
+			printf("empty\n");
 	}
 
 	return 0;
