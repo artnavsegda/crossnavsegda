@@ -1,1 +1,1 @@
-bin_PROGRAMS = read lowread
+bin_PROGRAMS = read lowread select

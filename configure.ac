@@ -4,5 +4,5 @@ AC_MSG_NOTICE([Art Navsegda])
 AC_PROG_CC
 AC_CHECK_LIB([m],[acos])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile src/Makefile src/serial/Makefile src/io/Makefile src/settings/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile src/serial/Makefile src/io/Makefile src/settings/Makefile src/signal/Makefile])
 AC_OUTPUT
