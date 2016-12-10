@@ -90,7 +90,7 @@ struct floataddressstruct {
 	unsigned short temperatureofspectrometer;
 	unsigned short codeofacurrentmode;
 	unsigned short totalmercurycoeffiecent;
-}
+};
 
 struct eeprom
 {
@@ -103,3 +103,4 @@ struct eeprom
 	unsigned char ad7705_zeroscale_calibration_register[3];
 	unsigned char ad7705_fullscale_calibration_register[3];
 };
+
