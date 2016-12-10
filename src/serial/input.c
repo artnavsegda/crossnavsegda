@@ -5,13 +5,9 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
-#include <strings.h>
-
-#define _BV(bit) (1 << (bit)) 
 
 int main(int argc, char *argv[])
 {
-	unsigned char frame[1];
 	int fd;
 	struct termios tio = {
 		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
@@ -19,18 +15,21 @@ int main(int argc, char *argv[])
 		.c_oflag = 0,
 		.c_lflag = 0 
 	};
+
 	if (argc != 2)
 	{
 		printf("name serial port\n");
 		exit(1);
 	}
+
 	fd = open(argv[1],O_RDWR | O_NOCTTY);
+
 	if (fd == -1)
 	{
 		printf("error open serial port\n");
 		exit(1);
 	}
-	//tcgetattr(fd,&tio);
+
 	tcflush(fd, TCIFLUSH);
 	tcsetattr(fd,TCSANOW,&tio);
 
