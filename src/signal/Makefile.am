@@ -1,1 +1,1 @@
-bin_PROGRAMS = alarm
+bin_PROGRAMS = alarm asyncio
