@@ -1,1 +1,1 @@
-bin_PROGRAMS = read lowread select
+bin_PROGRAMS = read lowread select noncanon
