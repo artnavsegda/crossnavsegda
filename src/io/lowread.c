@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <io.h>
 #include <fcntl.h>
 #include <sys\types.h>
 #include <sys\stat.h>
