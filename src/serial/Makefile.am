@@ -1,1 +1,1 @@
-bin_PROGRAMS = serial serial2 serial3
+bin_PROGRAMS = serial2 output input
