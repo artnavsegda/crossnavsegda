@@ -14,7 +14,9 @@ int main(int argc, char *argv[])
 		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
 		.c_iflag = IGNPAR,
 		.c_oflag = 0,
-		.c_lflag = 0 
+		.c_lflag = 0,
+	       	.c_cc[VTIME] = 0,
+		.c_cc[VMIN] = 5	
 	};
 
 	if (argc != 2)
