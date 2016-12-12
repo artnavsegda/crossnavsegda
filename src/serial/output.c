@@ -45,12 +45,19 @@ int main(int argc, char *argv[])
 	tcflush(fd, TCIFLUSH);
 	tcsetattr(fd,TCSANOW,&tio);
 
-	bzero(frame,5);
+	write(fd,"\xB5",1);
+	usleep(20*1000);
+
+	/*bzero(frame,5);
 	frame[0] = 0xB5;
 	frame[1] = makecontrolbyte();
 	frame[4] = makecontrolbyte();
+	write(fd,frame,5);*/
 
-	write(fd,frame,5);
+	bzero(frame,4);
+	frame[0] = makecontrolbyte();
+	frame[3] = makecontrolbyte();
+	write(fd,frame,4);
 
 	return 0;
 }
