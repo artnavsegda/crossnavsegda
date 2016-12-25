@@ -54,7 +54,7 @@ void transfermode(int fd)
 
 int main(int argc, char *argv[])
 {
-	unsigned char frame[22];
+	unsigned char frame[22],checksum[1];
 	unsigned char buf[100];
 	int fd;
 	struct termios tio = {
@@ -113,12 +113,32 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	printf ("read %d\n",read(fd,frame,22));
+	printf("read %d\n",read(fd,frame,22));
 
 	while(1)
 	{
-		printf("read %d\n",read(fd,frame,23));
-		printf("marker %X\n",frame[0]);
+		printf("read %d\n",read(fd,frame,1));
+		//printf("marker %X\n",frame[0]);
+		switch (frame[0])
+		{
+			case 0xA5:
+				printf("read a5 %d\n",read(fd,frame,21));
+				printf("read checksum %d\n",read(fd,checksum,1));
+				if (genchecksum(frame,21)==checksum[0])
+					printf("valid frame\n");
+			break;
+			default:
+				break;
+		}
+		/*if (frame[0] == 0xA5)
+		{
+			printf("read a5 %d\n",read(fd,frame,21));
+			printf("read checksum %d\n",read(fd,checksum,1));
+			if (genchecksum(frame,21)==checksum[0])
+				printf("valid frame\n");
+			//printf("calculate checksum %x\n",genchecksum(frame,21));
+			//printf("checksum %x\n",frame[0]);
+		}*/
 	}
 
 	//printf("marker %X\n",frame[0]);
