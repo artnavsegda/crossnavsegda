@@ -7,6 +7,22 @@
 #include <unistd.h>
 #include <strings.h>
 
+struct a5framestruct {
+	short currentpmt;
+	short valueamp1;
+	short valueamp2;
+	short valueamp3;
+	short battery;
+	short autosampler;
+	short temperature;
+	short currentbattery;
+	char reserved1;
+	char reserved1;
+	char reserved1;
+	char reserved1;
+	char voltagepmt;
+}
+
 struct kalibrstruct {
 	unsigned char marker;
 	unsigned char coefficentamp3;
@@ -52,9 +68,26 @@ void transfermode(int fd)
 	sendcommand(fd,0xCA,frame,1);
 }
 
-int main(int argc, char *argv[])
+int readframe(int fd, int framelength)
 {
 	unsigned char frame[22],checksum[1];
+	printf("read frame %d\n",read(fd,frame,framelength));
+	printf("read checksum %d\n",read(fd,checksum,1));
+	printf("checksum %x\n",checksum[0]);
+	if (genchecksum(frame,framelength)==checksum[0])
+	{
+		printf("valid frame\n");
+		for (int i=0;i<framelength;i++)
+			printf("%02X ",frame[i]);
+		printf("\n");
+		return 0;
+	}
+	return 1;
+}
+
+int main(int argc, char *argv[])
+{
+	unsigned char frame[22],checksum[1],confirm[1];
 	unsigned char buf[100];
 	int fd;
 	struct termios tio = {
@@ -114,31 +147,102 @@ int main(int argc, char *argv[])
 	}
 
 	printf("read %d\n",read(fd,frame,22));
+	int a5counter = 0;
+	int afcounter = 0;
 
 	while(1)
 	{
-		printf("read %d\n",read(fd,frame,1));
-		//printf("marker %X\n",frame[0]);
-		switch (frame[0])
+		if (read(fd,frame,1)==1)
 		{
-			case 0xA5:
+			printf("marker %X\n",frame[0]);
+			switch (frame[0])
+			{
+				case 0xA5:
+					/*printf("read a5 %d\n",read(fd,frame,21));
+					printf("read checksum %d\n",read(fd,checksum,1));
+					printf("a5 checksum %x\n",checksum[0]);
+					if (genchecksum(frame,21)==checksum[0])
+						printf("valid frame\n");*/
+					if (!readframe(fd,21))
+						printf("a5 counter %d\n",a5counter++);
+				break;
+				case 0xAF:
+					/*printf("read af %d\n",read(fd,frame,16));
+					printf("read checksum %d\n",read(fd,checksum,1));
+					printf("af checksum %x\n",checksum[0]);
+					if (genchecksum(frame,16)==checksum[0])
+						printf("valid frame\n");*/
+					if (!readframe(fd,16))
+						printf("af counter %d\n",afcounter++);
+				break;
+				case 0xAE:
+					readframe(fd,8);
+				break;
+				case 0xA0:
+					readframe(fd,4);
+				break;
+				case 0xA1:
+					readframe(fd,25);
+				break;
+				case 0xAD:
+					readframe(fd,4);
+				break;
+				case 0xAA:
+					readframe(fd,2);
+				break;
+				case 0xA2:
+					readframe(fd,2);
+				break;
+				case 0xA7:
+					readframe(fd,1);
+				break;
+				case 0xA4:
+					readframe(fd,4);
+				break;
+				case 0xA6:
+					readframe(fd,4);
+				break;
+				case 0x75:
+					readframe(fd,6);
+				break;
+				case 0x76:
+					readframe(fd,2);
+				break;
+				case 0x77:
+					readframe(fd,2);
+				break;
+				case 0xCA:
+				case 0xBE:
+				case 0xBD:
+				case 0xBB:
+				case 0xBA:
+				case 0xBF:
+				case 0xB0:
+				case 0xB2:
+				case 0xB6:
+				case 0xB7:
+				case 0xB4:
+				case 0xC0:
+				case 0xE3:
+				case 0xE5:
+				case 0xE6:
+					read(fd,confirm,1);
+					if (confirm[0] == frame[0])
+						printf("valid %x conmfirmation\n",confirm[0]);
+				break;
+				default:
+					break;
+			}
+			/*if (frame[0] == 0xA5)
+			{
 				printf("read a5 %d\n",read(fd,frame,21));
 				printf("read checksum %d\n",read(fd,checksum,1));
 				if (genchecksum(frame,21)==checksum[0])
 					printf("valid frame\n");
-			break;
-			default:
-				break;
+				//printf("calculate checksum %x\n",genchecksum(frame,21));
+				//printf("checksum %x\n",frame[0]);
+			}*/
 		}
-		/*if (frame[0] == 0xA5)
-		{
-			printf("read a5 %d\n",read(fd,frame,21));
-			printf("read checksum %d\n",read(fd,checksum,1));
-			if (genchecksum(frame,21)==checksum[0])
-				printf("valid frame\n");
-			//printf("calculate checksum %x\n",genchecksum(frame,21));
-			//printf("checksum %x\n",frame[0]);
-		}*/
 	}
 
 	//printf("marker %X\n",frame[0]);
@@ -148,7 +252,7 @@ int main(int argc, char *argv[])
 		read(fd,frame,1);*/
 
 	//printf("2 read %d\n", read(fd, buf, 100));
-	
+
 	//printf("3 read %d\n", read(fd, checksum, 1));
 
 	//printf("recieved checksum: %x\n", checksum[0]);
