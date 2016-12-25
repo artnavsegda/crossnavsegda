@@ -17,11 +17,11 @@ struct a5framestruct {
 	short temperature;
 	short currentbattery;
 	char reserved1;
-	char reserved1;
-	char reserved1;
-	char reserved1;
+	char reserved2;
+	char reserved3;
+	char reserved4;
 	char voltagepmt;
-}
+};
 
 struct kalibrstruct {
 	unsigned char marker;
@@ -68,7 +68,7 @@ void transfermode(int fd)
 	sendcommand(fd,0xCA,frame,1);
 }
 
-int readframe(int fd, int framelength)
+int readframe(int fd, int framelength, void *frame)
 {
 	unsigned char frame[22],checksum[1];
 	printf("read frame %d\n",read(fd,frame,framelength));
@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
 	printf("read %d\n",read(fd,frame,22));
 	int a5counter = 0;
 	int afcounter = 0;
+	struct a5framestruct a5frame;
 
 	while(1)
 	{
@@ -158,13 +159,13 @@ int main(int argc, char *argv[])
 			switch (frame[0])
 			{
 				case 0xA5:
-					/*printf("read a5 %d\n",read(fd,frame,21));
+					printf("read a5 %d\n",read(fd,&a5frame,21));
 					printf("read checksum %d\n",read(fd,checksum,1));
 					printf("a5 checksum %x\n",checksum[0]);
-					if (genchecksum(frame,21)==checksum[0])
-						printf("valid frame\n");*/
-					if (!readframe(fd,21))
-						printf("a5 counter %d\n",a5counter++);
+					if (genchecksum((unsigned char *)&a5frame,21)==checksum[0])
+						printf("valid frame\n");
+					/*if (!readframe(fd,21))
+						printf("a5 counter %d\n",a5counter++);*/
 				break;
 				case 0xAF:
 					/*printf("read af %d\n",read(fd,frame,16));
