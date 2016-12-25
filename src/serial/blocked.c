@@ -54,7 +54,7 @@ void transfermode(int fd)
 
 int main(int argc, char *argv[])
 {
-	unsigned char frame[1];
+	unsigned char frame[22];
 	unsigned char buf[100];
 	int fd;
 	struct termios tio = {
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 	}
 
 	tcflush(fd, TCIFLUSH);
-	cfmakeraw(&tio);
+//	cfmakeraw(&tio);
 	tcsetattr(fd,TCSANOW,&tio);
 
 	int counter=0;
@@ -113,10 +113,14 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	printf ("read %d\n",read(fd,frame,22));
+
 	while(1)
 	{
-		printf("read %ld bytes\n", read(fd,frame,22));
+		printf("read %d\n",read(fd,frame,23));
+		printf("marker %X\n",frame[0]);
 	}
+
 	//printf("marker %X\n",frame[0]);
 
 
