@@ -70,16 +70,16 @@ void transfermode(int fd)
 
 int readframe(int fd, int framelength, void *frame)
 {
-	unsigned char frame[22],checksum[1];
+	unsigned char checksum[1];
 	printf("read frame %d\n",read(fd,frame,framelength));
 	printf("read checksum %d\n",read(fd,checksum,1));
 	printf("checksum %x\n",checksum[0]);
 	if (genchecksum(frame,framelength)==checksum[0])
 	{
 		printf("valid frame\n");
-		for (int i=0;i<framelength;i++)
+		/*for (int i=0;i<framelength;i++)
 			printf("%02X ",frame[i]);
-		printf("\n");
+		printf("\n");*/
 		return 0;
 	}
 	return 1;
@@ -159,24 +159,35 @@ int main(int argc, char *argv[])
 			switch (frame[0])
 			{
 				case 0xA5:
-					printf("read a5 %d\n",read(fd,&a5frame,21));
+					/*printf("read a5 %d\n",read(fd,&a5frame,21));
 					printf("read checksum %d\n",read(fd,checksum,1));
 					printf("a5 checksum %x\n",checksum[0]);
 					if (genchecksum((unsigned char *)&a5frame,21)==checksum[0])
-						printf("valid frame\n");
-					/*if (!readframe(fd,21))
-						printf("a5 counter %d\n",a5counter++);*/
+						printf("valid frame\n");*/
+					if (!readframe(fd,21,&a5frame))
+					{
+						printf("a5 counter %d\n",a5counter++);
+						printf("%6d %6d %6d %6d %6d %6d %6d %6d\n",
+								a5frame.currentpmt,
+								a5frame.valueamp1,
+								a5frame.valueamp2,
+								a5frame.valueamp3,
+								a5frame.battery,
+								a5frame.autosampler,
+								a5frame.temperature,
+								a5frame.currentbattery);
+					}
 				break;
-				case 0xAF:
+			//	case 0xAF:
 					/*printf("read af %d\n",read(fd,frame,16));
 					printf("read checksum %d\n",read(fd,checksum,1));
 					printf("af checksum %x\n",checksum[0]);
 					if (genchecksum(frame,16)==checksum[0])
 						printf("valid frame\n");*/
-					if (!readframe(fd,16))
-						printf("af counter %d\n",afcounter++);
-				break;
-				case 0xAE:
+			//		if (!readframe(fd,16))
+			//			printf("af counter %d\n",afcounter++);
+			//	break;
+				/*case 0xAE:
 					readframe(fd,8);
 				break;
 				case 0xA0:
@@ -211,7 +222,7 @@ int main(int argc, char *argv[])
 				break;
 				case 0x77:
 					readframe(fd,2);
-				break;
+				break;*/
 				case 0xCA:
 				case 0xBE:
 				case 0xBD:
