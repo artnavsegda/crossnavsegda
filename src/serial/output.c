@@ -9,6 +9,14 @@
 
 #define _BV(bit) (1 << (bit)) 
 
+unsigned char genchecksum(unsigned char *massive, int sizeofmassive)
+{
+	unsigned char checksum = 0;
+	for (int i=0;i<sizeofmassive;i++)
+		checksum = checksum + massive[i];
+	return checksum;
+}
+
 unsigned char makecontrolbyte(void)
 {
 	unsigned char controlbyte = 0;
@@ -20,9 +28,21 @@ unsigned char makecontrolbyte(void)
 	return controlbyte;
 }
 
+void sendcommand(int fd, unsigned char marker, unsigned char *frame, int framelength)
+{
+	unsigned char markerframe[1];
+	markerframe[0] = marker;
+	write(fd,markerframe,1);
+	usleep(20*1000);
+	write(fd,frame,framelength);
+	markerframe[0] = genchecksum(frame,framelength);
+	write(fd,markerframe,1);
+	//write(fd,genchecksum(frame,framelength),1);
+}
+
 int main(int argc, char *argv[])
 {
-	unsigned char frame[5];
+	unsigned char frame[1];
 	int fd;
 	struct termios tio = {
 		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
@@ -45,8 +65,8 @@ int main(int argc, char *argv[])
 	tcflush(fd, TCIFLUSH);
 	tcsetattr(fd,TCSANOW,&tio);
 
-	write(fd,"\xB5",1);
-	usleep(20*1000);
+	//write(fd,"\xCA",1);
+	//usleep(20*1000);
 
 	/*bzero(frame,5);
 	frame[0] = 0xB5;
@@ -54,10 +74,16 @@ int main(int argc, char *argv[])
 	frame[4] = makecontrolbyte();
 	write(fd,frame,5);*/
 
-	bzero(frame,4);
+	/*bzero(frame,4);
 	frame[0] = makecontrolbyte();
 	frame[3] = makecontrolbyte();
-	write(fd,frame,4);
+	write(fd,frame,4);*/
+
+	bzero(frame,1);
+	frame[0] = 0x01;
+	sendcommand(fd,0xCA,frame,1);
+	//write(fd,frame,1);
+	//write(fd,genchecksum(frame,1),1);
 
 	return 0;
 }
