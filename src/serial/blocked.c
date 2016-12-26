@@ -23,8 +23,7 @@ struct a5framestruct {
 	char voltagepmt;
 };
 
-struct kalibrstruct {
-	unsigned char marker;
+struct afframestruct {
 	unsigned char coefficentamp3;
 	unsigned char coefficentamp2;
 	unsigned char coefficentamp1;
@@ -35,10 +34,7 @@ struct kalibrstruct {
 	short switch_threshhold;
 	short coefficentcalib;
 	unsigned char zerobias;
-	unsigned char checksum;
 };
-
-struct kalibrstruct kalibr;
 
 unsigned char genchecksum(unsigned char *massive, int sizeofmassive)
 {
@@ -89,7 +85,7 @@ int detecttransfersize(int fd)
 {
 	int counter = 0;
 	unsigned char frame[22];
-/*	while (1)
+	while (1)
 	{
 		if (read(fd,frame,1)==1)
 		{
@@ -102,8 +98,8 @@ int detecttransfersize(int fd)
 				return counter;
 			}
 		}
-	}*/
-	while (1)
+	}
+/*	while (1)
 	{
 		//printf("try read\n");
 		if (read(fd,frame,1) == 1)
@@ -119,7 +115,7 @@ int detecttransfersize(int fd)
 				return counter;
 			}
 		}
-	}
+	}*/
 }
 
 int main(int argc, char *argv[])
@@ -205,13 +201,14 @@ int main(int argc, char *argv[])
 		}
 	}*/
 
-	while (detecttransfersize(fd) != 22);
+	//while (detecttransfersize(fd) != 22);
 		transfermode(fd);
 
 	//printf("read %d\n",read(fd,frame,22));
 	int a5counter = 0;
 	int afcounter = 0;
 	struct a5framestruct a5frame;
+	struct afframestruct afframe;
 
 	while(1)
 	{
@@ -221,12 +218,12 @@ int main(int argc, char *argv[])
 			switch (frame[0])
 			{
 				case 0xA5:
-					/*printf("read a5 %d\n",read(fd,&a5frame,21));
+					printf("read a5 %d\n",read(fd,&a5frame,21));
 					printf("read checksum %d\n",read(fd,checksum,1));
 					printf("a5 checksum %x\n",checksum[0]);
 					if (genchecksum((unsigned char *)&a5frame,21)==checksum[0])
-						printf("valid frame\n");*/
-					if (!readframe(fd,21,&a5frame))
+						printf("valid frame\n");
+					/*if (!readframe(fd,21,&a5frame))
 					{
 						printf("a5 counter %d\n",a5counter++);
 						printf("%6d %6d %6d %6d %6d %6d %6d %6d\n",
@@ -238,17 +235,30 @@ int main(int argc, char *argv[])
 								a5frame.autosampler,
 								a5frame.temperature,
 								a5frame.currentbattery);
-					}
+					}*/
 				break;
-			//	case 0xAF:
-					/*printf("read af %d\n",read(fd,frame,16));
+				case 0xAF:
+					printf("read af %d\n",read(fd,frame,16));
 					printf("read checksum %d\n",read(fd,checksum,1));
 					printf("af checksum %x\n",checksum[0]);
 					if (genchecksum(frame,16)==checksum[0])
-						printf("valid frame\n");*/
-			//		if (!readframe(fd,16))
-			//			printf("af counter %d\n",afcounter++);
-			//	break;
+						printf("valid frame\n");
+					/*if (!readframe(fd,16,&afframe))
+					{
+						printf("af counter %d\n",afcounter++);
+						printf("%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d\n",
+								afframe.coefficentamp3,
+								afframe.coefficentamp2,
+								afframe.coefficentamp1,
+								afframe.dark_current,
+								afframe.biasamp3,
+								afframe.biasamp2,
+								afframe.biasamp1,
+								afframe.switch_threshhold,
+								afframe.coefficentcalib,
+								afframe.zerobias);
+					}*/
+				break;
 				/*case 0xAE:
 					readframe(fd,8);
 				break;
