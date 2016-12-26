@@ -90,13 +90,14 @@ int main(int argc, char *argv[])
 	unsigned char frame[22],checksum[1],confirm[1];
 	unsigned char buf[100];
 	int fd;
+	//struct termios tio;
 	struct termios tio = {
 		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
 		.c_iflag = IGNPAR,
 		.c_oflag = 0,
 		.c_lflag = 0,
 	       	.c_cc[VTIME] = 100,
-		.c_cc[VMIN] = 100
+		.c_cc[VMIN] = 22
 	};
 
 	if (argc != 2)
@@ -106,16 +107,37 @@ int main(int argc, char *argv[])
 	}
 
 	fd = open(argv[1],O_RDWR | O_NOCTTY);
+	printf("begin open\n");
+	//fd = open(argv[1],O_RDWR | O_NOCTTY | O_NONBLOCK);
+	//fd = open(argv[1],O_RDWR);
+	//fd = open(argv[1],O_RDONLY);
+	printf("open\n");
 
 	if (fd == -1)
 	{
 		perror("error open serial port");
 		exit(1);
 	}
+	else
+		printf("serial port open\n");
 
-	tcflush(fd, TCIFLUSH);
-//	cfmakeraw(&tio);
+	//fcntl(fd,F_SETFL,0);
+	//tcgetattr(fd,&tio);
+	//cfmakeraw(&tio);
+	//tio.c_cc[VMIN] = 10;
+	//tio.c_cc[VTIME] = 10;
+	cfsetspeed(&tio,B9600);
 	tcsetattr(fd,TCSANOW,&tio);
+
+	//tcflush(fd, TCIFLUSH);
+	//cfmakeraw(&tio);
+	//fcntl(fd,F_SETFL,0);
+	//tcsetattr(fd,TCSANOW,&tio);
+
+	/*while (1)
+	{
+		printf("read %d\n", read(fd,frame,10));
+	}*/
 
 	int counter=0;
 	/*bzero(frame,1);
