@@ -85,6 +85,43 @@ int readframe(int fd, int framelength, void *frame)
 	return 1;
 }
 
+int detecttransfersize(int fd)
+{
+	int counter = 0;
+	unsigned char frame[22];
+/*	while (1)
+	{
+		if (read(fd,frame,1)==1)
+		{
+			//printf("read %X\n",frame[0]);
+			if (frame[0] != 0xA5)
+				counter++;
+			else
+			{
+				printf("frame size %d\n",counter);
+				return counter;
+			}
+		}
+	}*/
+	while (1)
+	{
+		//printf("try read\n");
+		if (read(fd,frame,1) == 1)
+		{
+		//	printf("read %X\n",frame[0]);
+			if (frame[0] != 0xA5)
+			{
+				counter++;
+			}
+			else
+			{
+				printf("a5 length %d\n", counter);
+				return counter;
+			}
+		}
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	unsigned char frame[22],checksum[1],confirm[1];
@@ -146,7 +183,7 @@ int main(int argc, char *argv[])
 	//transfermode(fd);
 
 	printf("start\n");
-	while (1)
+/*	while (1)
 	{
 		//printf("try read\n");
 		if (read(fd,frame,1) == 1)
@@ -166,9 +203,12 @@ int main(int argc, char *argv[])
 				counter = 0;
 			}
 		}
-	}
+	}*/
 
-	printf("read %d\n",read(fd,frame,22));
+	while (detecttransfersize(fd) != 22);
+		transfermode(fd);
+
+	//printf("read %d\n",read(fd,frame,22));
 	int a5counter = 0;
 	int afcounter = 0;
 	struct a5framestruct a5frame;
