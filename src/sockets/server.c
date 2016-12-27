@@ -13,23 +13,23 @@ int main()
 	int sock = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock < 0)
 	{
-		printf("socket error\n");
+		perror("socket error");
 		exit(0);
 	}
-	struct sockaddr_in server;
-	memset(&server,0,sizeof(server));
-	server.sin_family = AF_INET;
-	server.sin_port = htons(1100);
-	server.sin_addr.s_addr = htonl(INADDR_ANY);
-	if (bind(sock,&server,sizeof server))
+	struct sockaddr_in server = {
+		.sin_family = AF_INET,
+		.sin_port = htons(1100),
+		.sin_addr.s_addr = htonl(INADDR_ANY)
+	};
+	if (bind(sock,(struct sockaddr *)&server,sizeof(server)))
 	{
-		printf("bind error\n");
+		perror("bind error");
 		close(sock);
 		exit(0);
 	}
 	if (listen(sock,10))
 	{
-		printf("listen error\n");
+		perror("listen error\n");
 		close(sock);
 		exit(0);
 	}
@@ -39,7 +39,7 @@ int main()
 		int msgsock = accept(sock,NULL,NULL);
 		if (msgsock < 0)
 		{
-			printf("accept error\n");
+			perror("accept error");
 			close(sock);
 			exit(0);
 		}

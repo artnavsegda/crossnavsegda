@@ -15,11 +15,10 @@ int main()
 		printf("socket error\n");
 		exit(0);
 	}
-	struct sockaddr_in client;
-	memset(&client,0,sizeof(client));
-	client.sin_family = AF_INET;
-	client.sin_port = htons(1100);
-	//inet_pton(AF_INET, "192.168.1.105", &client.sin_addr);
+	struct sockaddr_in client = {
+		.sin_family = AF_INET,
+		.sin_port = htons(1100)
+	};
 	inet_pton(AF_INET, "127.0.0.1", &client.sin_addr);
 	if (connect(sock,&client,sizeof client) == -1)
 	{
