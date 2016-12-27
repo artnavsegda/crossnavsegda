@@ -1,1 +1,1 @@
-bin_PROGRAMS = serial2 output blocked nonblocked
+bin_PROGRAMS = serial2 output blocked nonblocked serialrec
