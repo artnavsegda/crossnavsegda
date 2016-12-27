@@ -12,7 +12,7 @@ int main()
 	int sock = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock < 0)
 	{
-		printf("socket error\n");
+		perror("socket error");
 		exit(0);
 	}
 	struct sockaddr_in client = {
@@ -20,9 +20,9 @@ int main()
 		.sin_port = htons(1100)
 	};
 	inet_pton(AF_INET, "127.0.0.1", &client.sin_addr);
-	if (connect(sock,&client,sizeof client) == -1)
+	if (connect(sock,(struct sockaddr *)&client,sizeof(client)) == -1)
 	{
-		printf("connect error\n");
+		perror("connect error");
 		close(sock);
 		exit(0);
 	}
