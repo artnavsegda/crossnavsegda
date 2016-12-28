@@ -6,9 +6,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <netdb.h>
 
 int main()
 {
+	struct addrinfo hints = {
+		.ai_family = AF_INET,
+		.ai_socktype = SOCK_STREAM,
+		.ai_protocol = IPPROTO_TCP,
+		.ai_flags = AI_PASSIVE
+	};
+	struct addrinfo *result;
+	getaddrinfo(NULL,"1100",&hints,&result);
+
 	int buf[100];
 	int sock = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock < 0)
