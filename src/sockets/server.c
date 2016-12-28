@@ -27,18 +27,14 @@ int main()
 		freeaddrinfo(result);
 		return 1;
 	}
-	struct sockaddr_in server = {
-		.sin_family = AF_INET,
-		.sin_port = htons(1100),
-		.sin_addr.s_addr = htonl(INADDR_ANY)
-	};
 	if (bind(sock,result->ai_addr,result->ai_addrlen) == -1)
 	{
 		perror("bind error");
+		freeaddrinfo(result);
 		close(sock);
 		return 1;
 	}
-	if (listen(sock,10))
+	if (listen(sock,10) == -1)
 	{
 		perror("listen error");
 		close(sock);
@@ -48,7 +44,7 @@ int main()
 	while(1)
 	{
 		int msgsock = accept(sock,NULL,NULL);
-		if (msgsock < 0)
+		if (msgsock == -1)
 		{
 			perror("accept error");
 			close(sock);
