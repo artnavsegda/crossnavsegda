@@ -10,27 +10,23 @@
 
 int main()
 {
-	struct addrinfo hints = {
-		.ai_family = AF_INET,
-		.ai_socktype = SOCK_STREAM,
-		.ai_protocol = IPPROTO_TCP,
-		.ai_flags = AI_PASSIVE
-	};
-	struct addrinfo *result;
-	getaddrinfo(NULL,"1100",&hints,&result);
-
 	int buf[100];
-	int sock = socket(result->ai_family,result->ai_socktype,result->ai_protocol);
+	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
 	{
 		perror("socket error");
-		freeaddrinfo(result);
 		return 1;
 	}
-	if (bind(sock,result->ai_addr,result->ai_addrlen) == -1)
+
+	struct sockaddr_in server = {
+		.sin_family = AF_INET,
+		.sin_addr.s_addr = INADDR_ANY,
+		.sin_port = htons(1100)
+	};
+
+	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
 	{
 		perror("bind error");
-		freeaddrinfo(result);
 		close(sock);
 		return 1;
 	}
