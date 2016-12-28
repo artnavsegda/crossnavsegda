@@ -14,7 +14,7 @@ int main()
 	if (sock < 0)
 	{
 		perror("socket error");
-		exit(0);
+		return 1;
 	}
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
@@ -25,13 +25,13 @@ int main()
 	{
 		perror("bind error");
 		close(sock);
-		exit(0);
+		return 1;
 	}
 	if (listen(sock,10))
 	{
-		perror("listen error\n");
+		perror("listen error");
 		close(sock);
-		exit(0);
+		return 1;
 	}
 
 	while(1)
@@ -41,7 +41,7 @@ int main()
 		{
 			perror("accept error");
 			close(sock);
-			exit(0);
+			return 1;
 		}
 		read(msgsock,buf,100);
 		if (shutdown(msgsock, SHUT_RDWR) == -1)
@@ -49,7 +49,7 @@ int main()
 			perror("shutdown error");
 			close(msgsock);
 			close(sock);
-			exit(0);
+			return 1;
 		}
 		close(msgsock);
 	}

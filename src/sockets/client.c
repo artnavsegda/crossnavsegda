@@ -13,7 +13,7 @@ int main()
 	if (sock < 0)
 	{
 		perror("socket error");
-		exit(0);
+		return 1;
 	}
 	struct sockaddr_in client = {
 		.sin_family = AF_INET,
@@ -24,7 +24,7 @@ int main()
 	{
 		perror("connect error");
 		close(sock);
-		exit(0);
+		return 1;
 	}
 
 	write(sock,"hello",6);
