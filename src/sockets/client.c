@@ -10,26 +10,18 @@
 
 int main()
 {
-	struct addrinfo hints = {
-		.ai_family = AF_UNSPEC,
-		.ai_socktype = SOCK_STREAM,
-		.ai_protocol = IPPROTO_TCP
-	};
-	struct addrinfo *result;
-	getaddrinfo("127.0.0.1", "1100", &hints, &result);
-	int sock = socket(result->ai_family,result->ai_socktype,result->ai_protocol);
+	int sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 	{
 		perror("socket error");
-		freeaddrinfo(result);
 		return 1;
 	}
 	struct sockaddr_in client = {
+		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
 		.sin_port = htons(1100)
 	};
-	inet_pton(AF_INET, "127.0.0.1", &client.sin_addr);
-	if (connect(sock,result->ai_addr,result->ai_addrlen) == -1)
+	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
 		perror("connect error");
 		close(sock);
