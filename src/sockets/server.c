@@ -47,7 +47,7 @@ int main()
 			return 1;
 		}
 		recv(msgsock,buf,100,0);
-		if (shutdown(msgsock, SHUT_RDWR) == -1)
+		if (shutdown(msgsock, 2) == -1)
 		{
 			perror("shutdown error");
 			close(msgsock);

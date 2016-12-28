@@ -30,7 +30,7 @@ int main()
 
 	send(sock,"hello",6,0);
 
-	shutdown(sock, SHUT_RDWR);
+	shutdown(sock, 2);
 	close(sock);
 
 	return 0;
