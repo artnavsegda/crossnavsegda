@@ -27,7 +27,7 @@ int main()
 		return 1;
 	}
 
-	write(sock,"hello",6);
+	send(sock,"hello",6,0);
 
 	shutdown(sock, SHUT_RDWR);
 	close(sock);
