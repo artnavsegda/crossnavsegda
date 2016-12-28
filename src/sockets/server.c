@@ -20,10 +20,11 @@ int main()
 	getaddrinfo(NULL,"1100",&hints,&result);
 
 	int buf[100];
-	int sock = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
+	int sock = socket(result->ai_family,result->ai_socktype,result->ai_protocol);
 	if (sock < 0)
 	{
 		perror("socket error");
+		freeaddrinfo(result);
 		return 1;
 	}
 	struct sockaddr_in server = {
