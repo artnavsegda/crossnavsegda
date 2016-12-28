@@ -6,13 +6,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <netdb.h>
 
 int main()
 {
-	int sock = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP);
-	if (sock < 0)
+	struct addrinfo hints = {
+		.ai_family = AF_UNSPEC,
+		.ai_socktype = SOCK_STREAM,
+		.ai_protocol = IPPROTO_TCP
+	};
+	struct addrinfo *result;
+	getaddrinfo("127.0.0.1", "1100", &hints, &result);
+	int sock = socket(result->ai_family,result->ai_socktype,result->ai_protocol);
+	if (sock == -1)
 	{
 		perror("socket error");
+		freeaddrinfo(result);
 		return 1;
 	}
 	struct sockaddr_in client = {
@@ -20,7 +29,7 @@ int main()
 		.sin_port = htons(1100)
 	};
 	inet_pton(AF_INET, "127.0.0.1", &client.sin_addr);
-	if (connect(sock,(struct sockaddr *)&client,sizeof(client)) == -1)
+	if (connect(sock,result->ai_addr,result->ai_addrlen) == -1)
 	{
 		perror("connect error");
 		close(sock);

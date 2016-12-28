@@ -21,7 +21,7 @@ int main()
 
 	int buf[100];
 	int sock = socket(result->ai_family,result->ai_socktype,result->ai_protocol);
-	if (sock < 0)
+	if (sock == -1)
 	{
 		perror("socket error");
 		freeaddrinfo(result);
