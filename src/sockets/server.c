@@ -32,7 +32,7 @@ int main()
 		.sin_port = htons(1100),
 		.sin_addr.s_addr = htonl(INADDR_ANY)
 	};
-	if (bind(sock,(struct sockaddr *)&server,sizeof(server)))
+	if (bind(sock,result->ai_addr,result->ai_addrlen) == -1)
 	{
 		perror("bind error");
 		close(sock);
