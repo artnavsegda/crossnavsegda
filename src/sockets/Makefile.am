@@ -1,1 +1,1 @@
-bin_PROGRAMS = client-send  client-recv server-send-forever server-recv-forever server-send-once server-recv-once
+bin_PROGRAMS = client-send-once client-send-forever client-recv-once client-recv-forever server-send-forever server-recv-forever server-send-once server-recv-once
