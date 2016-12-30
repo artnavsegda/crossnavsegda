@@ -64,8 +64,8 @@ int main()
 			printf("listen ok\n");
 		}
 
-		while (send(msgsock,"hello\n",6,0) != -1)
-			;
+		int numwrite = send(msgsock,"hello\n",6,0);
+
 		if (shutdown(msgsock, 2) == -1)
 		{
 			perror("shutdown error");

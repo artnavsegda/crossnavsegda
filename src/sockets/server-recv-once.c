@@ -64,8 +64,8 @@ int main()
 			printf("listen ok\n");
 		}
 
-		while (recv(msgsock,buf,100,0) != -1)
-			;
+		int numread = recv(msgsock,buf,100,0);
+
 		if (shutdown(msgsock, 2) == -1)
 		{
 			perror("shutdown error");
