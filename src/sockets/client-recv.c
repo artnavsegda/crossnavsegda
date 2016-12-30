@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <netdb.h>
 
+char buf[100];
+
 int main()
 {
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -15,6 +17,10 @@ int main()
 	{
 		perror("socket error");
 		return 1;
+	}
+	else
+	{
+		printf("socket ok\n");
 	}
 	struct sockaddr_in client = {
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
@@ -27,8 +33,19 @@ int main()
 		close(sock);
 		return 1;
 	}
+	else
+	{
+		printf("connect ok\n");
+	}
 
-	send(sock,"hello",6,0);
+	if (recv(sock,buf,100,0) == -1)
+	{
+		perror("recv error");
+	}
+	else
+	{
+		printf("send ok\n");
+	}
 
 	shutdown(sock, 2);
 	close(sock);

@@ -20,13 +20,11 @@ int main()
 	{
 		printf("socket ok\n");
 	}
-
 	struct sockaddr_in client = {
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
 		.sin_port = htons(502)
 	};
-
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
 		perror("connect error");
@@ -38,7 +36,14 @@ int main()
 		printf("connect ok\n");
 	}
 
-	send(sock,"hello",6,0);
+	if (send(sock,"hello",6,0) == -1)
+	{
+		perror("send error");
+	}
+	else
+	{
+		printf("send ok\n");
+	}
 
 	shutdown(sock, 2);
 	close(sock);
