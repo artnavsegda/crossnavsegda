@@ -1,1 +1,1 @@
-bin_PROGRAMS = client server
+bin_PROGRAMS = client-send  client-recv server

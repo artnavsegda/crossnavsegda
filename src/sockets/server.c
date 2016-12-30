@@ -17,6 +17,10 @@ int main()
 		perror("socket error");
 		return 1;
 	}
+	else
+	{
+		printf("socket ok\n");
+	}
 
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
@@ -30,11 +34,20 @@ int main()
 		close(sock);
 		return 1;
 	}
+	else
+	{
+		printf("bind ok\n");
+	}
+
 	if (listen(sock,10) == -1)
 	{
 		perror("listen error");
 		close(sock);
 		return 1;
+	}
+	else
+	{
+		printf("listen ok\n");
 	}
 
 	while(1)
@@ -46,6 +59,11 @@ int main()
 			close(sock);
 			return 1;
 		}
+		else
+		{
+			printf("listen ok\n");
+		}
+
 		while (recv(msgsock,buf,100,0) != -1)
 			;
 		if (shutdown(msgsock, 2) == -1)
@@ -54,6 +72,10 @@ int main()
 			close(msgsock);
 			close(sock);
 			return 1;
+		}
+		else
+		{
+			printf("listen ok\n");
 		}
 		close(msgsock);
 	}
