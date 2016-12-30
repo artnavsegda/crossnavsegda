@@ -16,16 +16,26 @@ int main()
 		perror("socket error");
 		return 1;
 	}
+	else
+	{
+		printf("socket ok\n");
+	}
+
 	struct sockaddr_in client = {
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
 		.sin_port = htons(502)
 	};
+
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
 		perror("connect error");
 		close(sock);
 		return 1;
+	}
+	else
+	{
+		printf("connect ok\n");
 	}
 
 	send(sock,"hello",6,0);
