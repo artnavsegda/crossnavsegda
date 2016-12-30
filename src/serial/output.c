@@ -50,9 +50,9 @@ int main(int argc, char *argv[])
 		.c_oflag = 0,
 		.c_lflag = 0 
 	};
-	if (argc != 2)
+	if (argc != 3)
 	{
-		printf("name serial port\n");
+		printf("name serial port and byte\n");
 		exit(1);
 	}
 	fd = open(argv[1],O_RDWR | O_NOCTTY);
@@ -62,9 +62,13 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	//tcgetattr(fd,&tio);
-	tcflush(fd, TCIFLUSH);
-	tcsetattr(fd,TCSANOW,&tio);
+	//tcflush(fd, TCIFLUSH);
+	//tcsetattr(fd,TCSANOW,&tio);
 
+	unsigned char controlbyte[1];
+	sscanf(argv[2],"%X",&controlbyte[0]);
+	write(fd,controlbyte,1);
+	//write(fd,"\xAF",1);
 	//write(fd,"\xCA",1);
 	//usleep(20*1000);
 
@@ -79,9 +83,9 @@ int main(int argc, char *argv[])
 	frame[3] = makecontrolbyte();
 	write(fd,frame,4);*/
 
-	bzero(frame,1);
+	/*bzero(frame,1);
 	frame[0] = 0x01;
-	sendcommand(fd,0xCA,frame,1);
+	sendcommand(fd,0xCA,frame,1);*/
 	//write(fd,frame,1);
 	//write(fd,genchecksum(frame,1),1);
 

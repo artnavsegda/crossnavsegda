@@ -218,12 +218,12 @@ int main(int argc, char *argv[])
 			switch (frame[0])
 			{
 				case 0xA5:
-					printf("read a5 %d\n",read(fd,&a5frame,21));
+					/*printf("read a5 %d\n",read(fd,&a5frame,21));
 					printf("read checksum %d\n",read(fd,checksum,1));
 					printf("a5 checksum %x\n",checksum[0]);
 					if (genchecksum((unsigned char *)&a5frame,21)==checksum[0])
-						printf("valid frame\n");
-					/*if (!readframe(fd,21,&a5frame))
+						printf("valid frame\n");*/
+					if (!readframe(fd,21,&a5frame))
 					{
 						printf("a5 counter %d\n",a5counter++);
 						printf("%6d %6d %6d %6d %6d %6d %6d %6d\n",
@@ -235,15 +235,15 @@ int main(int argc, char *argv[])
 								a5frame.autosampler,
 								a5frame.temperature,
 								a5frame.currentbattery);
-					}*/
+					}
 				break;
 				case 0xAF:
-					printf("read af %d\n",read(fd,frame,16));
+					/*printf("read af %d\n",read(fd,frame,16));
 					printf("read checksum %d\n",read(fd,checksum,1));
 					printf("af checksum %x\n",checksum[0]);
 					if (genchecksum(frame,16)==checksum[0])
-						printf("valid frame\n");
-					/*if (!readframe(fd,16,&afframe))
+						printf("valid frame\n");*/
+					if (!readframe(fd,16,&afframe))
 					{
 						printf("af counter %d\n",afcounter++);
 						printf("%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d\n",
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
 								afframe.switch_threshhold,
 								afframe.coefficentcalib,
 								afframe.zerobias);
-					}*/
+					}
 				break;
 				/*case 0xAE:
 					readframe(fd,8);
