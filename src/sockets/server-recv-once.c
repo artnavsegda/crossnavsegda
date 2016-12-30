@@ -25,7 +25,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(502)
+		.sin_port = htons(1100)
 	};
 
 	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
@@ -50,8 +50,8 @@ int main()
 		printf("listen ok\n");
 	}
 
-	while(1)
-	{
+	//while(1)
+	//{
 		int msgsock = accept(sock,NULL,NULL);
 		if (msgsock == -1)
 		{
@@ -68,12 +68,10 @@ int main()
 		if (numread == -1)
 		{
 			perror("recv error");
-			close(msgsock);
-			close(sock);
 		}
 		else
 		{
-			printf("read %d bytes ok\n",numread);
+			printf("read %d bytes = %s\n",numread,buf);
 		}
 
 		if (shutdown(msgsock, 2) == -1)
@@ -88,7 +86,7 @@ int main()
 			printf("listen ok\n");
 		}
 		close(msgsock);
-	}
+	//}
 	close(sock);
 
 	return 0;
