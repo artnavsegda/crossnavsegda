@@ -71,7 +71,7 @@ int main()
 		}
 		else
 		{
-			printf("read %d bytes = %s\n",numread,buf);
+			printf("recv %d bytes\n",numread);
 		}
 
 		if (shutdown(msgsock, 2) == -1)

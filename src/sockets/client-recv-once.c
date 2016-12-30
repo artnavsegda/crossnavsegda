@@ -47,7 +47,7 @@ int main()
 	}
 	else
 	{
-		printf("recv %d bytes ok\n");
+		printf("recv %d bytes\n",numread);
 	}
 
 	if (shutdown(sock, 2) == -1)
