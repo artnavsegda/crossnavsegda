@@ -25,7 +25,7 @@ int main()
 	struct sockaddr_in client = {
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
-		.sin_port = htons(502)
+		.sin_port = htons(1100)
 	};
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
@@ -47,7 +47,7 @@ int main()
 	}
 	else
 	{
-		printf("recv %d bytes = %s\n",buf);
+		printf("recv %d bytes ok\n");
 	}
 
 	if (shutdown(sock, 2) == -1)
