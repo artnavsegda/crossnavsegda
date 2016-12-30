@@ -36,7 +36,9 @@ int main()
 		printf("connect ok\n");
 	}
 
-	int numwrite = send(sock,"hello",6,0);
+	do {
+		numwrite = send(sock,"hello",6,0);
+	} while (numwrite > 0)
 
 	if (numwrite == -1)
 	{
@@ -44,7 +46,7 @@ int main()
 	}
 	else
 	{
-		printf("send %d bytes ok\n", numwrite);
+		printf("send %d bytes\n", numwrite);
 	}
 
 	shutdown(sock, 2);
