@@ -64,7 +64,7 @@ int main()
 			printf("listen ok\n");
 		}
 
-		while (recv(msgsock,buf,100,0) != -1)
+		while (send(msgsock,"hello\n",6,0) != -1)
 			;
 		if (shutdown(msgsock, 2) == -1)
 		{
