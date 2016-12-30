@@ -36,9 +36,10 @@ int main()
 		printf("connect ok\n");
 	}
 
+	int numwrite = 0;
 	do {
 		numwrite = send(sock,"hello",6,0);
-	} while (numwrite > 0)
+	} while (numwrite > 0);
 
 	if (numwrite == -1)
 	{

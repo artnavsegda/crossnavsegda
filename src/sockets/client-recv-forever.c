@@ -38,9 +38,10 @@ int main()
 		printf("connect ok\n");
 	}
 
+	int numread = 0;
 	do {
-		int numread = recv(sock,buf,100,0);
-	while (numread > 0);
+		numread = recv(sock,buf,100,0);
+	} while (numread > 0);
 
        	if (numread == -1)
 	{
