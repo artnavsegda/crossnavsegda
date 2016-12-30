@@ -65,6 +65,17 @@ int main()
 		}
 
 		int numwrite = send(msgsock,"hello\n",6,0);
+		if (numwrite == -1)
+		{
+			perror("send error");
+			close(msgsock);
+			close(sock);
+			return 1;
+		}
+		else
+		{
+			printf("send %d bytes ok\n",numwrite);
+		}
 
 		if (shutdown(msgsock, 2) == -1)
 		{

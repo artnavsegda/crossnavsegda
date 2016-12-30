@@ -65,6 +65,16 @@ int main()
 		}
 
 		int numread = recv(msgsock,buf,100,0);
+		if (numread == -1)
+		{
+			perror("recv error");
+			close(msgsock);
+			close(sock);
+		}
+		else
+		{
+			printf("read %d bytes ok\n",numread);
+		}
 
 		if (shutdown(msgsock, 2) == -1)
 		{
