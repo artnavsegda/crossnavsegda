@@ -36,13 +36,15 @@ int main()
 		printf("connect ok\n");
 	}
 
-	if (send(sock,"hello",6,0) == -1)
+	int numwrite = send(sock,"hello",6,0);
+
+	if (numwrite == -1)
 	{
 		perror("send error");
 	}
 	else
 	{
-		printf("send ok\n");
+		printf("send %d bytes ok\n", numwrite);
 	}
 
 	shutdown(sock, 2);
