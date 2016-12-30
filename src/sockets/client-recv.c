@@ -38,13 +38,14 @@ int main()
 		printf("connect ok\n");
 	}
 
-	if (recv(sock,buf,100,0) == -1)
+	int numread = recv(sock,buf,100,0);
+       	if (numread == -1)
 	{
 		perror("recv error");
 	}
 	else
 	{
-		printf("send ok\n");
+		printf("recv %d bytes ok\n");
 	}
 
 	shutdown(sock, 2);
