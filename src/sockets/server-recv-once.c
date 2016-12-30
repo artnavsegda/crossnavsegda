@@ -61,7 +61,7 @@ int main()
 		}
 		else
 		{
-			printf("listen ok\n");
+			printf("accept ok\n");
 		}
 
 		int numread = recv(msgsock,buf,100,0);
@@ -83,7 +83,7 @@ int main()
 		}
 		else
 		{
-			printf("listen ok\n");
+			printf("shutdown ok\n");
 		}
 		close(msgsock);
 	//}
