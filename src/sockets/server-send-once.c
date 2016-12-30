@@ -50,8 +50,8 @@ int main()
 		printf("listen ok\n");
 	}
 
-	while(1)
-	{
+//	while(1)
+//	{
 		int msgsock = accept(sock,NULL,NULL);
 		if (msgsock == -1)
 		{
@@ -61,7 +61,7 @@ int main()
 		}
 		else
 		{
-			printf("listen ok\n");
+			printf("accept ok\n");
 		}
 
 		int numwrite = send(msgsock,"hello\n",6,0);
@@ -86,10 +86,10 @@ int main()
 		}
 		else
 		{
-			printf("listen ok\n");
+			printf("shutdown ok\n");
 		}
 		close(msgsock);
-	}
+//	}
 	close(sock);
 
 	return 0;
