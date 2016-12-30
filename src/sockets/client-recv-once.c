@@ -42,13 +42,20 @@ int main()
        	if (numread == -1)
 	{
 		perror("recv error");
+		close(sock);
+		return 1;
 	}
 	else
 	{
-		printf("recv %d bytes ok\n");
+		printf("recv %d bytes = %s\n",buf);
 	}
 
-	shutdown(sock, 2);
+	if (shutdown(sock, 2) == -1)
+	{
+		perror("shutdown error");
+		close(sock);
+		return 1;
+	}
 	close(sock);
 
 	return 0;
