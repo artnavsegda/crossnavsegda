@@ -21,7 +21,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(1100)
+		.sin_port = htons(502)
 	};
 
 	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
@@ -46,7 +46,8 @@ int main()
 			close(sock);
 			return 1;
 		}
-		recv(msgsock,buf,100,0);
+		while (recv(msgsock,buf,100,0) != -1)
+			;
 		if (shutdown(msgsock, 2) == -1)
 		{
 			perror("shutdown error");
