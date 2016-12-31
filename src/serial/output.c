@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
 	write(fd,controlbyte,1);
 	//write(fd,"\xAF",1);
 	//write(fd,"\xCA",1);
+	//write(fd,"\xAF",1);
 	//usleep(20*1000);
 
 	/*bzero(frame,5);
