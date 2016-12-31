@@ -48,6 +48,11 @@ int main()
 	else
 	{
 		printf("recv %d bytes\n",numread);
+		for (int i=0; i<numread;i++)
+		{
+			printf("0x%02X ",buf[i]);
+		}
+		printf("\n");
 	}
 
 	if (shutdown(sock, 2) == -1)

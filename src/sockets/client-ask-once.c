@@ -9,6 +9,7 @@
 #include <netdb.h>
 
 char buf[100];
+char ask[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0xFF, 0x03, 0x00, 0x00, 0x00, 0x01 };
 
 int main()
 {
@@ -38,7 +39,7 @@ int main()
 		printf("connect ok\n");
 	}
 
-	int numwrite = send(sock,"hello",6,0);
+	int numwrite = send(sock,ask,12,0);
 	if (numwrite == -1)
 	{
 		perror("send error");
@@ -58,6 +59,11 @@ int main()
 	else
 	{
 		printf("recv %d bytes\n",numread);
+		for (int i=0; i<numread;i++)
+		{
+			printf("0x%02X ",buf[i]);
+		}
+		printf("\n");
 	}
 
 	if (shutdown(sock, 2) == -1)
