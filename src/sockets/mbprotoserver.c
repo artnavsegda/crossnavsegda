@@ -25,6 +25,13 @@ struct pduframestruct {
 	unsigned short data[256];
 };
 
+struct mbframestruct {
+	unsigned short tsid;
+	unsigned short protoid;
+	unsigned short length;
+	struct pduframestruct pduframe;
+};
+
 struct tcpframestruct tcpframe = {
 	.tsid = 1,
 	.protoid = 0,
