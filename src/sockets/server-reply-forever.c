@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <netdb.h>
 
-unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
+unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
 
 int main()
 {
@@ -54,8 +54,8 @@ int main()
 		printf("listen ok\n");
 	}
 
-	//while(1)
-	//{
+	while(1)
+	{
 		int msgsock = accept(sock,NULL,NULL);
 		if (msgsock == -1)
 		{
@@ -98,7 +98,8 @@ int main()
 			printf("send %d bytes ok\n",numwrite);
 		}
 
-		if (shutdown(msgsock, 2) == -1)
+		shutdown(msgsock, 2);
+		/*if (shutdown(msgsock, 2) == -1)
 		{
 			perror("shutdown error");
 			close(msgsock);
@@ -108,9 +109,9 @@ int main()
 		else
 		{
 			printf("shutdown ok\n");
-		}
+		}*/
 		close(msgsock);
-	//}
+	}
 	close(sock);
 
 	return 0;
