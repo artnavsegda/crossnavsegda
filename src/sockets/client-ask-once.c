@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <netdb.h>
 
+char buf[100];
+
 int main()
 {
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -37,7 +39,6 @@ int main()
 	}
 
 	int numwrite = send(sock,"hello",6,0);
-
 	if (numwrite == -1)
 	{
 		perror("send error");
@@ -45,6 +46,18 @@ int main()
 	else
 	{
 		printf("send %d bytes ok\n", numwrite);
+	}
+
+	int numread = recv(sock,buf,100,0);
+	if (numread == -1)
+	{
+		perror("recv error");
+		close(sock);
+		return 1;
+	}
+	else
+	{
+		printf("recv %d bytes\n",numread);
 	}
 
 	if (shutdown(sock, 2) == -1)
