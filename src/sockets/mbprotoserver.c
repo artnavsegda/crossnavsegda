@@ -10,6 +10,28 @@
 
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
 
+struct tcpframestruct {
+	unsigned short tsid;
+	unsigned short protoid;
+	unsigned short length;
+};
+
+struct pduframestruct {
+	unsigned char unitid;
+	unsigned char fncode;
+};
+
+struct tcpframestruct tcpframe = {
+	.tsid = 1,
+	.protoid = 0,
+	.length = 5,
+};
+
+struct pduframestruct pduframe = {
+	.unitid = 50,
+	.fncode = 3
+};
+
 int main()
 {
 	unsigned char buf[100];
