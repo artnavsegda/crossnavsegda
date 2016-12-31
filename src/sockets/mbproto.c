@@ -13,7 +13,7 @@ char ask[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x32, 0x03, 0x00, 0x00, 0x0
 
 struct tcpframestruct {
 	unsigned short tsid;
-	unsigned short protocolid;
+	unsigned short protoid;
 	unsigned short length;
 };
 
@@ -22,8 +22,16 @@ struct pduframestruct {
 	unsigned char fncode;
 };
 
-struct tcpframestruct tcpframe;
-unsigned char framebuf;
+struct tcpframestruct tcpframe = {
+	.tsid = 1,
+	.protoid = 0,
+	.length = 6,
+};
+
+struct pduframestruct pduframe = {
+	.unitid = 50,
+	.fncode = 3,
+}
 
 int main()
 {
