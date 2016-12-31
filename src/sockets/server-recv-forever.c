@@ -10,7 +10,7 @@
 
 int main()
 {
-	int buf[100];
+	unsigned char buf[100];
 	int numread = 0;
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
@@ -26,7 +26,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(1100)
+		.sin_port = htons(502)
 	};
 
 	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
@@ -74,6 +74,9 @@ int main()
 			else
 			{
 				printf("recv %d bytes\n",numread);
+				for (int i=0; i<numread;i++)
+					printf("0x%02X ",buf[i]);
+				printf("\n");
 			}
 		} while (numread > 0);
 
