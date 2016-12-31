@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <netdb.h>
 
+unsigned char data[12] = { 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0 };
+
 int main()
 {
 	unsigned char buf[100];
@@ -21,6 +23,8 @@ int main()
 	{
 		printf("socket ok\n");
 	}
+	int optval = 1;
+	setsockopt(sock,SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
@@ -81,7 +85,7 @@ int main()
 			}
 			printf("\n");
 		}
-		int numwrite = send(msgsock,"hello\n",6,0);
+		int numwrite = send(msgsock,data,12,0);
 		if (numwrite == -1)
 		{
 			perror("send error");
