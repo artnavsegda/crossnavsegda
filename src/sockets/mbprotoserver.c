@@ -15,7 +15,7 @@ unsigned char crmassive[20];
 
 unsigned short generatecoils(int firstcoil, int numberofcoils)
 {
-	return 0;
+	return crmassive[0]>>firstcoil;
 }
 
 unsigned char buf[100];
