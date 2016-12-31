@@ -21,7 +21,7 @@ struct tcpframestruct {
 struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
-	unsigned short data[256];
+	unsigned char data[256];
 };
 
 struct tcpframestruct tcpframe = {
@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
 		printf("send %d bytes ok\n", numwrite);
 	}
 
-	int numread = recv(sock,buf,100,0);
+	//int numread = recv(sock,buf,100,0);
+	int numread = recv(sock,&askframe,6,0);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -118,10 +119,30 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("recv %d bytes\n",numread);
-		for (int i=0; i<numread;i++)
+		printf("TS id: %d\n", bswap_16(askframe.tsid));
+		printf("Protocol id: %d\n", bswap_16(askframe.protoid));
+		printf("Length: %d\n", bswap_16(askframe.length));
+		/*for (int i=0; i<numread;i++)
 		{
 			printf("0x%02hhX ",buf[i]);
 		}
+		printf("\n");*/
+	}
+
+	numread = recv(sock,&askpduframe,bswap_16(askframe.length),0);
+	if (numread == -1)
+	{
+		perror("recv error");
+		close(sock);
+		return 1;
+	}
+	else
+	{
+		printf("recv %d bytes\n",numread);
+		printf("Unit id: %d\n", askpduframe.unitid);
+		printf("Function code: %d\n", askpduframe.fncode);
+		for (int i=0; i<numread-2;i++)
+			printf("0x%02hhX ",askpduframe.data[i]);
 		printf("\n");
 	}
 
