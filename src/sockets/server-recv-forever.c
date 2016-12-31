@@ -11,6 +11,7 @@
 int main()
 {
 	int buf[100];
+	int numread = 0;
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
 	{
@@ -25,7 +26,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(502)
+		.sin_port = htons(1100)
 	};
 
 	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
@@ -61,11 +62,21 @@ int main()
 		}
 		else
 		{
-			printf("listen ok\n");
+			printf("accept ok\n");
 		}
 
-		while (recv(msgsock,buf,100,0) != -1)
-			;
+		do {
+			numread = recv(msgsock,buf,100,0);
+			if (numread == -1)
+			{
+				perror("recv error");
+			}
+			else
+			{
+				printf("recv %d bytes\n",numread);
+			}
+		} while (numread > 0);
+
 		if (shutdown(msgsock, 2) == -1)
 		{
 			perror("shutdown error");
@@ -75,7 +86,7 @@ int main()
 		}
 		else
 		{
-			printf("listen ok\n");
+			printf("shutdown ok\n");
 		}
 		close(msgsock);
 	}

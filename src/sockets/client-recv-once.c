@@ -56,6 +56,10 @@ int main()
 		close(sock);
 		return 1;
 	}
+	else
+	{
+		printf("shutdown ok\n");
+	}
 	close(sock);
 
 	return 0;
