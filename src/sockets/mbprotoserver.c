@@ -135,6 +135,29 @@ int main()
 			printf("\n");
 		}
 
+		switch (askpduframe.fncode) {
+			case 1:
+			case 2:
+				// read coils/discrete inputs
+				// data[0] = address of first coil/discrete
+				// data[1] = number of colis to read
+			case 3:
+			case 4:
+				// read holding/input registers
+				// data[0] = address of first register
+				// data[1] = number of registers to read
+			case 5:
+				// write coil
+				// data[0] = address of coil
+				// data[1] = value to write(0 = off, 0xFF00 for on)
+			case 6:
+				// write holding
+				// data[0] = address of holding
+				// data[1] = value of holding to write
+			break;
+
+		}
+
 		int numwrite = send(msgsock,data,12,0);
 		if (numwrite == -1)
 		{
@@ -166,4 +189,3 @@ int main()
 
 	return 0;
 }
-
