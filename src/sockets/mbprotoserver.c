@@ -9,6 +9,15 @@
 #include <netdb.h>
 #include <byteswap.h>
 
+unsigned short hrmassive[50];
+
+unsigned char crmassive[20];
+
+unsigned short generatecoils(int firstcoil, int numberofcoils)
+{
+	return 0;
+}
+
 unsigned char buf[100];
 
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
@@ -170,7 +179,7 @@ int main()
 				// reply
 				//askmbframe.pduframe.data[0] = askmbframe.pduframe.data[1];
 				//for (int i = 1;i>=bswap_16(askmbframe.pduframe.data[1]);i++)
-				//	askmbframe.pduframe.data[i] = registers[i+bswap_16(askmbframe.pduframe.data[1])];
+				//	askmbframe.pduframe.data[i] = hrmassive[i+bswap_16(askmbframe.pduframe.data[1])];
 				//askframe.length = 3+(bswap_16(askmbframe.pduframe.data[1])*2);
 			case 5:
 				// write coil
