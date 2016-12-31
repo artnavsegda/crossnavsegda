@@ -31,7 +31,7 @@ struct tcpframestruct tcpframe = {
 struct pduframestruct pduframe = {
 	.unitid = 50,
 	.fncode = 3,
-}
+};
 
 int main()
 {

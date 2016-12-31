@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <netdb.h>
 
+unsigned char buf[100];
+
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
 
 struct tcpframestruct {
@@ -32,9 +34,10 @@ struct pduframestruct pduframe = {
 	.fncode = 3
 };
 
+struct tcpframestruct askframe;
+
 int main()
 {
-	unsigned char buf[100];
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
 	{
@@ -90,7 +93,28 @@ int main()
 			printf("accept ok\n");
 		}
 
-		int numread = recv(msgsock,buf,100,0);
+		int numread = recv(msgsock,&askframe,6,0);
+		if (numread == -1)
+		{
+			perror("recv error");
+			close(msgsock);
+			close(sock);
+			return 1;
+		}
+		else
+		{
+			printf("recv %d bytes\n",numread);
+			printf("TS id: %d\n", askframe.tsid);
+			printf("Protocol id: %d\n", askframe.protoid);
+			printf("Length: %d\n", askframe.length);
+			/*for (int i=0; i<numread;i++)
+			{
+				printf("0x%02X ",buf[i]);
+			}
+			printf("\n");*/
+		}
+
+		numread = recv(msgsock,&buf,askframe.length,0);
 		if (numread == -1)
 		{
 			perror("recv error");
@@ -102,11 +126,10 @@ int main()
 		{
 			printf("recv %d bytes\n",numread);
 			for (int i=0; i<numread;i++)
-			{
 				printf("0x%02X ",buf[i]);
-			}
 			printf("\n");
 		}
+
 		int numwrite = send(msgsock,data,12,0);
 		if (numwrite == -1)
 		{
