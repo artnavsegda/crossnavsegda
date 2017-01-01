@@ -187,13 +187,10 @@ int main()
 		switch (askmbframe.pdu.fncode) {
 			case 1:
 			case 2:
-				// read coils/discrete inputs
-				// data[0] = address of first coil/discrete
-				// data[1] = number of colis to read
-				// reply
-				//askmbframe.pduframe.data[1] = generatecoils(askmbframe.pduframe.data[0],askmbframe.pduframe.data[1]);
-				//askmbframe.pduframe.data[0] = 1;
-				//askframe.length = 4;
+				askmbframe.pdu.data.reqreadcoils.bytestofollow = askmbframe.pdu.data.askreadregs.regnumber / 8;
+				if ((askmbframe.pdu.data.askreadregs.regnumber % 8)>0)
+					askmbframe.pdu.data.reqreadcoils.bytestofollow++;
+				askframe.length = askmbframe.pdu.data.reqreadcoils.bytestofollow + 3;
 			case 3:
 			case 4:
 				askmbframe.pdu.data.reqreadholdings.bytestofollow = askmbframe.pdu.data.askreadregs.regnumber * 2;
