@@ -34,20 +34,20 @@ struct askreadcoilsstruct {
 
 struct reqreadcoilsstruct {
 	unsigned char bytestofollow;
-	unsigned char data[256];
+	unsigned char coils[256];
 };
 
 union pdudataunion {
 	struct askreadcoilsstruct askreadcoils;
 	struct reqreadcoilsstruct reqreadcoils;
-	unsigned short data[127];
-	unsigned short bytes[254];
+	unsigned short words[127];
+	unsigned char bytes[254];
 };
 
 struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
-	union pdudataunion pdudata;
+	union pdudataunion data;
 //	unsigned short data[256];
 };
 
@@ -55,7 +55,7 @@ struct mbframestruct {
 	unsigned short tsid;
 	unsigned short protoid;
 	unsigned short length;
-	struct pduframestruct pduframe;
+	struct pduframestruct pdu;
 };
 
 struct mbframestruct askmbframe, reqmbframe;
@@ -157,7 +157,7 @@ int main()
 		}
 
 		//numread = recv(msgsock,&askpduframe,bswap_16(askframe.length),0);
-		numread = recv(msgsock,&askmbframe.pduframe,ntohs(askmbframe.length),0);
+		numread = recv(msgsock,&askmbframe.pdu,ntohs(askmbframe.length),0);
 		if (numread == -1)
 		{
 			perror("recv error");
@@ -169,16 +169,16 @@ int main()
 		{
 			printf("recv %d bytes\n",numread);
 			//printf("Unit id: %d\n", askpduframe.unitid);
-			printf("Unit id: %d\n", askmbframe.pduframe.unitid);
+			printf("Unit id: %d\n", askmbframe.pdu.unitid);
 			//printf("Function code: %d\n", askpduframe.fncode);
-			printf("Function code: %d\n", askmbframe.pduframe.fncode);
+			printf("Function code: %d\n", askmbframe.pdu.fncode);
 			for (int i=0; i<(numread-2)/2;i++)
-				printf("%u ",ntohs(askmbframe.pduframe.pdudata.data[i]));
+				printf("%u ",ntohs(askmbframe.pdu.data.words[i]));
 				//printf("%u ",bswap_16(askpduframe.data[i]));
 			printf("\n");
 		}
 
-		switch (askmbframe.pduframe.fncode) {
+		switch (askmbframe.pdu.fncode) {
 			case 1:
 			case 2:
 				// read coils/discrete inputs
