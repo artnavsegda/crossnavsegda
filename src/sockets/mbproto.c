@@ -41,6 +41,7 @@ union pdudataunion {
 	struct askreadregstruct askreadregs;
 	struct reqreadbitstruct reqreadcoils;
 	struct reqreadwords reqreadholdings;
+	struct writeregstruct writereg;
 	unsigned char bytes[254];
 	unsigned short words[127];
 };
@@ -194,6 +195,11 @@ int main(int argc, char *argv[])
 			{
 				printf("0x%04hX ",askframe.pdu.data.reqreadholdings.registers[i]);
 			}
+		break;
+		case 5:
+		case 6:
+			printf("register number %u", askframe.pdu.data.writereg.regaddress);
+			printf("register value %u", askframe.pdu.data.writereg.regvalue);
 		break;
 		}
 	}
