@@ -81,6 +81,9 @@ struct mbframestruct mbframe = {
 	.tsid = 0x0100,
 	.protoid = 0x0000,
 	.length = 0x0600,
+	.pdu = {
+		.unitid = 50
+	}
 //	.unitid = 50,
 //	.fncode = 3,
 //	.data = { 0x0000, 0x0100 }
@@ -195,11 +198,12 @@ int main(int argc, char *argv[])
 			{
 				printf("0x%04hX ",askframe.pdu.data.reqreadholdings.registers[i]);
 			}
+			printf("\n");
 		break;
 		case 5:
 		case 6:
-			printf("register number %u", askframe.pdu.data.writereg.regaddress);
-			printf("register value %u", askframe.pdu.data.writereg.regvalue);
+			printf("register number %u\n", ntohs(askframe.pdu.data.writereg.regaddress));
+			printf("register value %u\n", ntohs(askframe.pdu.data.writereg.regvalue));
 		break;
 		}
 	}

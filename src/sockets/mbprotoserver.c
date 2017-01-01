@@ -190,15 +190,17 @@ int main()
 				askmbframe.pdu.data.reqreadcoils.bytestofollow = askmbframe.pdu.data.askreadregs.regnumber / 8;
 				if ((askmbframe.pdu.data.askreadregs.regnumber % 8)>0)
 					askmbframe.pdu.data.reqreadcoils.bytestofollow++;
-				askframe.length = askmbframe.pdu.data.reqreadcoils.bytestofollow + 3;
+				askmbframe.length = htons(askmbframe.pdu.data.reqreadcoils.bytestofollow + 3);
 			case 3:
 			case 4:
-				askmbframe.pdu.data.reqreadholdings.bytestofollow = askmbframe.pdu.data.askreadregs.regnumber * 2;
-				askframe.length = askmbframe.pdu.data.reqreadholdings.bytestofollow + 3;
+				printf("numer of registers requested %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
+				askmbframe.pdu.data.reqreadholdings.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) * 2;
+				askmbframe.length = htons(askmbframe.pdu.data.reqreadholdings.bytestofollow + 3);
 			break;
 		}
 
-		int replylength = ntohs(askframe.length) + 6;
+		int replylength = ntohs(askmbframe.length) + 6;
+		printf("replylength %d\n",replylength);
 
 		int numwrite = send(msgsock,&askmbframe,replylength,0);
 		if (numwrite == -1)
