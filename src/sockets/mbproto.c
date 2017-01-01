@@ -7,7 +7,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <byteswap.h>
 
 char buf[100];
 char ask[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x32, 0x03, 0x00, 0x00, 0x00, 0x01 };
@@ -94,9 +93,9 @@ int main(int argc, char *argv[])
 	
 	sscanf(argv[1],"%hhu",&mbframe.fncode); // <-----
 	sscanf(argv[2],"%hu",&mbframe.data[0]);
-	mbframe.data[0] = bswap_16(mbframe.data[0]);
+	mbframe.data[0] = htons(mbframe.data[0]);
 	sscanf(argv[3],"%hu",&mbframe.data[1]);
-	mbframe.data[1] = bswap_16(mbframe.data[1]);
+	mbframe.data[1] = htons(mbframe.data[1]);
 
 	int numwrite = send(sock,&mbframe,12,0);
 	if (numwrite == -1)
@@ -119,9 +118,9 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("recv %d bytes\n",numread);
-		printf("TS id: %d\n", bswap_16(askframe.tsid));
-		printf("Protocol id: %d\n", bswap_16(askframe.protoid));
-		printf("Length: %d\n", bswap_16(askframe.length));
+		printf("TS id: %d\n", ntohs(askframe.tsid));
+		printf("Protocol id: %d\n", ntohs(askframe.protoid));
+		printf("Length: %d\n", ntohs(askframe.length));
 		/*for (int i=0; i<numread;i++)
 		{
 			printf("0x%02hhX ",buf[i]);
@@ -129,7 +128,7 @@ int main(int argc, char *argv[])
 		printf("\n");*/
 	}
 
-	numread = recv(sock,&askpduframe,bswap_16(askframe.length),0);
+	numread = recv(sock,&askpduframe,ntohs(askframe.length),0);
 	if (numread == -1)
 	{
 		perror("recv error");

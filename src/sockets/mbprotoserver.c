@@ -7,7 +7,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <byteswap.h>
 
 unsigned short hrmassive[50];
 
@@ -127,11 +126,11 @@ int main()
 		{
 			printf("recv %d bytes\n",numread);
 			//printf("TS id: %d\n", bswap_16(askframe.tsid));
-			printf("TS id: %d\n", bswap_16(askmbframe.tsid));
+			printf("TS id: %d\n", ntohs(askmbframe.tsid));
 			//printf("Protocol id: %d\n", bswap_16(askframe.protoid));
-			printf("Protocol id: %d\n", bswap_16(askmbframe.protoid));
+			printf("Protocol id: %d\n", ntohs(askmbframe.protoid));
 			//printf("Length: %d\n", bswap_16(askframe.length));
-			printf("Length: %d\n", bswap_16(askmbframe.length));
+			printf("Length: %d\n", ntohs(askmbframe.length));
 			/*for (int i=0; i<numread;i++)
 			{
 				printf("0x%02X ",buf[i]);
@@ -140,7 +139,7 @@ int main()
 		}
 
 		//numread = recv(msgsock,&askpduframe,bswap_16(askframe.length),0);
-		numread = recv(msgsock,&askmbframe.pduframe,bswap_16(askmbframe.length),0);
+		numread = recv(msgsock,&askmbframe.pduframe,ntohs(askmbframe.length),0);
 		if (numread == -1)
 		{
 			perror("recv error");
@@ -156,7 +155,7 @@ int main()
 			//printf("Function code: %d\n", askpduframe.fncode);
 			printf("Function code: %d\n", askmbframe.pduframe.fncode);
 			for (int i=0; i<(numread-2)/2;i++)
-				printf("%u ",bswap_16(askmbframe.pduframe.data[i]));
+				printf("%u ",ntohs(askmbframe.pduframe.data[i]));
 				//printf("%u ",bswap_16(askpduframe.data[i]));
 			printf("\n");
 		}
@@ -192,7 +191,7 @@ int main()
 			break;
 		}
 
-		int replylength = bswap_16(askframe.length) + 6;
+		int replylength = ntohs(askframe.length) + 6;
 
 		int numwrite = send(msgsock,&askmbframe,replylength,0);
 		if (numwrite == -1)
