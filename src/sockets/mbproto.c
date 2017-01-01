@@ -22,6 +22,11 @@ struct askreadregstruct {
 	unsigned short regnumber;
 };
 
+struct writeregstruct {
+	unsigned short regaddress;
+	unsigned short regvalue;
+};
+
 struct reqreadbitstruct {
 	unsigned char bytestofollow;
 	unsigned char coils[256];
