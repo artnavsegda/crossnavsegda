@@ -17,10 +17,28 @@ struct tcpframestruct {
 	unsigned short length;
 };
 
+struct askreadcoilsstruct {
+	unsigned short firstcoil;
+	unsigned short coilnumber;
+};
+
+struct reqreadcoilsstruct {
+	unsigned char bytestofollow;
+	unsigned char data[256];
+};
+
+union pdudataunion {
+	struct askreadcoilsstruct askreadcoils;
+	struct reqreadcoilsstruct reqreadcoils;
+	unsigned char data[254];
+	unsigned short words[127];
+};
+
 struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
-	unsigned char data[256];
+	union pdudataunion pdu;
+	//unsigned char data[256];
 };
 
 struct tcpframestruct tcpframe = {
@@ -141,7 +159,7 @@ int main(int argc, char *argv[])
 		printf("Unit id: %d\n", askpduframe.unitid);
 		printf("Function code: %d\n", askpduframe.fncode);
 		for (int i=0; i<numread-2;i++)
-			printf("%u ",askpduframe.data[i]);
+			printf("%u ",askpduframe.pdu.data[i]);
 			//printf("0x%02hhX ",askpduframe.data[i]);
 		printf("\n");
 	}
