@@ -141,7 +141,8 @@ int main(int argc, char *argv[])
 		printf("Unit id: %d\n", askpduframe.unitid);
 		printf("Function code: %d\n", askpduframe.fncode);
 		for (int i=0; i<numread-2;i++)
-			printf("0x%02hhX ",askpduframe.data[i]);
+			printf("%u ",askpduframe.data[i]);
+			//printf("0x%02hhX ",askpduframe.data[i]);
 		printf("\n");
 	}
 
