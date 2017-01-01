@@ -27,10 +27,28 @@ struct tcpframestruct {
 	unsigned short length;
 };
 
+struct askreadcoilsstruct {
+	unsigned short firstcoil;
+	unsigned short coilnumber;
+};
+
+struct reqreadcoilsstruct {
+	unsigned char bytestofollow;
+	unsigned char data[256];
+};
+
+union pdudataunion {
+	struct askreadcoilsstruct askreadcoils;
+	struct reqreadcoilsstruct reqreadcoils;
+	unsigned short data[127];
+	unsigned short bytes[254];
+};
+
 struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
-	unsigned short data[256];
+	union pdudataunion pdudata;
+//	unsigned short data[256];
 };
 
 struct mbframestruct {
@@ -155,7 +173,7 @@ int main()
 			//printf("Function code: %d\n", askpduframe.fncode);
 			printf("Function code: %d\n", askmbframe.pduframe.fncode);
 			for (int i=0; i<(numread-2)/2;i++)
-				printf("%u ",ntohs(askmbframe.pduframe.data[i]));
+				printf("%u ",ntohs(askmbframe.pduframe.pdudata.data[i]));
 				//printf("%u ",bswap_16(askpduframe.data[i]));
 			printf("\n");
 		}
