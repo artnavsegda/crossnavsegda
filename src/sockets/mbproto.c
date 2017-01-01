@@ -24,20 +24,20 @@ struct askreadcoilsstruct {
 
 struct reqreadcoilsstruct {
 	unsigned char bytestofollow;
-	unsigned char data[256];
+	unsigned char coils[256];
 };
 
 union pdudataunion {
 	struct askreadcoilsstruct askreadcoils;
 	struct reqreadcoilsstruct reqreadcoils;
-	unsigned char data[254];
+	unsigned char bytes[254];
 	unsigned short words[127];
 };
 
 struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
-	union pdudataunion pdu;
+	union pdudataunion data;
 	//unsigned char data[256];
 };
 
@@ -52,26 +52,29 @@ struct pduframestruct pduframe = {
 	.fncode = 3,
 };
 
-struct tcpframestruct askframe;
-struct pduframestruct askpduframe;
+//struct tcpframestruct askframe;
+//struct pduframestruct askpduframe;
 
 struct mbframestruct {
 	unsigned short tsid;
 	unsigned short protoid;
 	unsigned short length;
-	unsigned char unitid;
-	unsigned char fncode;
-	unsigned short data[2];
+	struct pduframestruct pdu;
+//	unsigned char unitid;
+//	unsigned char fncode;
+//	unsigned short data[2];
 };
 
 struct mbframestruct mbframe = {
 	.tsid = 0x0100,
 	.protoid = 0x0000,
 	.length = 0x0600,
-	.unitid = 50,
-	.fncode = 3,
-	.data = { 0x0000, 0x0100 }
+//	.unitid = 50,
+//	.fncode = 3,
+//	.data = { 0x0000, 0x0100 }
 };
+
+struct mbframestruct askframe;
 
 int main(int argc, char *argv[])
 {
@@ -109,11 +112,11 @@ int main(int argc, char *argv[])
 
 	//int numwrite = send(sock,ask,12,0);
 	
-	sscanf(argv[1],"%hhu",&mbframe.fncode); // <-----
-	sscanf(argv[2],"%hu",&mbframe.data[0]);
-	mbframe.data[0] = htons(mbframe.data[0]);
-	sscanf(argv[3],"%hu",&mbframe.data[1]);
-	mbframe.data[1] = htons(mbframe.data[1]);
+	sscanf(argv[1],"%hhu",&mbframe.pdu.fncode); // <-----
+	sscanf(argv[2],"%hu",&mbframe.pdu.data.words[0]);
+	mbframe.pdu.data.words[0] = htons(mbframe.pdu.data.words[0]);
+	sscanf(argv[3],"%hu",&mbframe.pdu.data.words[1]);
+	mbframe.pdu.data.words[1] = htons(mbframe.pdu.data.words[1]);
 
 	int numwrite = send(sock,&mbframe,12,0);
 	if (numwrite == -1)
@@ -146,7 +149,7 @@ int main(int argc, char *argv[])
 		printf("\n");*/
 	}
 
-	numread = recv(sock,&askpduframe,ntohs(askframe.length),0);
+	numread = recv(sock,&askframe.pdu,ntohs(askframe.length),0);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -156,20 +159,20 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("recv %d bytes\n",numread);
-		printf("Unit id: %d\n", askpduframe.unitid);
-		printf("Function code: %d\n", askpduframe.fncode);
+		printf("Unit id: %d\n", askframe.pdu.unitid);
+		printf("Function code: %d\n", askframe.pdu.fncode);
 		for (int i=0; i<numread-2;i++)
-			printf("%u ",askpduframe.pdu.data[i]);
+			printf("%u ",askframe.pdu.data.bytes[i]);
 			//printf("0x%02hhX ",askpduframe.data[i]);
 		printf("\n");
-		switch(askpduframe.fncode)
+		switch(askframe.pdu.fncode)
 		{
 		case 1:
 		case 2:
-			printf("number of bytes: %d\n",askpduframe.pdu.reqreadcoils.bytestofollow);
-			for (int i=0;i<askpduframe.pdu.reqreadcoils.bytestofollow;i++)
+			printf("number of bytes: %d\n",askframe.pdu.data.reqreadcoils.bytestofollow);
+			for (int i=0;i<askframe.pdu.data.reqreadcoils.bytestofollow;i++)
 			{
-				printf("0x%02hhX ",askpduframe.pdu.reqreadcoils.data[i]);
+				printf("0x%02hhX ",askframe.pdu.data.reqreadcoils.coils[i]);
 			}
 			printf("\n");
 		break;
