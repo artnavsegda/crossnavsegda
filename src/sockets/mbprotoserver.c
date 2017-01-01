@@ -187,8 +187,8 @@ int main()
 		switch (askmbframe.pdu.fncode) {
 			case 1:
 			case 2:
-				askmbframe.pdu.data.reqreadcoils.bytestofollow = askmbframe.pdu.data.askreadregs.regnumber / 8;
-				if ((askmbframe.pdu.data.askreadregs.regnumber % 8)>0)
+				askmbframe.pdu.data.reqreadcoils.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) / 8;
+				if ((ntohs(askmbframe.pdu.data.askreadregs.regnumber) % 8)>0)
 					askmbframe.pdu.data.reqreadcoils.bytestofollow++;
 				askmbframe.length = htons(askmbframe.pdu.data.reqreadcoils.bytestofollow + 3);
 			break;
