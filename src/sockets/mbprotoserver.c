@@ -27,9 +27,9 @@ struct tcpframestruct {
 	unsigned short length;
 };
 
-struct askreadcoilsstruct {
-	unsigned short firstcoil;
-	unsigned short coilnumber;
+struct askreadregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
 };
 
 struct reqreadcoilsstruct {
@@ -37,9 +37,15 @@ struct reqreadcoilsstruct {
 	unsigned char coils[256];
 };
 
+struct reqreadwordstruct {
+	unsigned char bytestofollow;
+	unsigned short registers[127];
+};
+
 union pdudataunion {
-	struct askreadcoilsstruct askreadcoils;
+	struct askreadregstruct askreadregs;
 	struct reqreadcoilsstruct reqreadcoils;
+	struct reqreadwordstruct reqreadholdings;
 	unsigned short words[127];
 	unsigned char bytes[254];
 };
@@ -190,22 +196,8 @@ int main()
 				//askframe.length = 4;
 			case 3:
 			case 4:
-				// read holding/input registers
-				// data[0] = address of first register
-				// data[1] = number of registers to read
-				// reply
-				//askmbframe.pduframe.data[0] = askmbframe.pduframe.data[1];
-				//for (int i = 1;i>=bswap_16(askmbframe.pduframe.data[1]);i++)
-				//	askmbframe.pduframe.data[i] = hrmassive[i+bswap_16(askmbframe.pduframe.data[1])];
-				//askframe.length = 3+(bswap_16(askmbframe.pduframe.data[1])*2);
-			case 5:
-				// write coil
-				// data[0] = address of coil
-				// data[1] = value to write(0 = off, 0xFF00 for on)
-			case 6:
-				// write holding
-				// data[0] = address of holding
-				// data[1] = value of holding to write
+				askmbframe.pdu.data.reqreadholdings.bytestofollow = askmbframe.pdu.data.askreadregs.regnumber * 2;
+				askframe.length = askmbframe.pdu.data.reqreadholdings.bytestofollow + 3;
 			break;
 		}
 

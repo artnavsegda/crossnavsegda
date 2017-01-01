@@ -32,7 +32,7 @@ struct reqreadbitstruct {
 	unsigned char coils[256];
 };
 
-struct reqreadwords {
+struct reqreadwordstruct {
 	unsigned char bytestofollow;
 	unsigned short registers[127];
 };
@@ -40,7 +40,7 @@ struct reqreadwords {
 union pdudataunion {
 	struct askreadregstruct askreadregs;
 	struct reqreadbitstruct reqreadcoils;
-	struct reqreadwords reqreadholdings;
+	struct reqreadwordstruct reqreadholdings;
 	struct writeregstruct writereg;
 	unsigned char bytes[254];
 	unsigned short words[127];
