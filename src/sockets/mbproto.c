@@ -17,19 +17,25 @@ struct tcpframestruct {
 	unsigned short length;
 };
 
-struct askreadcoilsstruct {
-	unsigned short firstcoil;
-	unsigned short coilnumber;
+struct askreadregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
 };
 
-struct reqreadcoilsstruct {
+struct reqreadbitstruct {
 	unsigned char bytestofollow;
 	unsigned char coils[256];
 };
 
+struct reqreadwords {
+	unsigned char bytestofollow;
+	unsigned short registers[127];
+};
+
 union pdudataunion {
-	struct askreadcoilsstruct askreadcoils;
-	struct reqreadcoilsstruct reqreadcoils;
+	struct askreadregstruct askreadregs;
+	struct reqreadbitstruct reqreadcoils;
+	struct reqreadwords reqreadholdings;
 	unsigned char bytes[254];
 	unsigned short words[127];
 };
@@ -175,6 +181,14 @@ int main(int argc, char *argv[])
 				printf("0x%02hhX ",askframe.pdu.data.reqreadcoils.coils[i]);
 			}
 			printf("\n");
+		break;
+		case 3:
+		case 4:
+			printf("number of registers: %d\n",askframe.pdu.data.reqreadholdings.bytestofollow/2);
+			for (int i=0;i<askframe.pdu.data.reqreadholdings.bytestofollow/2;i++)
+			{
+				printf("0x%04hX ",askframe.pdu.data.reqreadholdings.registers[i]);
+			}
 		break;
 		}
 	}
