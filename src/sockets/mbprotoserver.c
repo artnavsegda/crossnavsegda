@@ -191,6 +191,7 @@ int main()
 				if ((askmbframe.pdu.data.askreadregs.regnumber % 8)>0)
 					askmbframe.pdu.data.reqreadcoils.bytestofollow++;
 				askmbframe.length = htons(askmbframe.pdu.data.reqreadcoils.bytestofollow + 3);
+			break;
 			case 3:
 			case 4:
 				printf("numer of registers requested %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
