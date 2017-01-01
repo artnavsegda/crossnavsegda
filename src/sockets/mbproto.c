@@ -162,6 +162,18 @@ int main(int argc, char *argv[])
 			printf("%u ",askpduframe.pdu.data[i]);
 			//printf("0x%02hhX ",askpduframe.data[i]);
 		printf("\n");
+		switch(askpduframe.fncode)
+		{
+		case 1:
+		case 2:
+			printf("number of bytes: %d\n",askpduframe.pdu.reqreadcoils.bytestofollow);
+			for (int i=0;i<askpduframe.pdu.reqreadcoils.bytestofollow;i++)
+			{
+				printf("0x%02hhX ",askpduframe.pdu.reqreadcoils.data[i]);
+			}
+			printf("\n");
+		break;
+		}
 	}
 
 	if (shutdown(sock, 2) == -1)
