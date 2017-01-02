@@ -192,7 +192,7 @@ int main()
 				// fill all requested coil bytes with zeroes
 				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
 					askmbframe.pdu.data.reqread.bytes[i] = 0x00;
-					//askmbframe.pdu.data.reqread.bytes[i] = injpadbyte(firstreg+(8*i));
+					//askmbframe.pdu.data.reqread.bytes[i] = xskl(firstreg+(8*i),requestnumber-(i*8));
 			break;
 			case 3:
 			case 4:
