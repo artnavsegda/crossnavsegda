@@ -81,9 +81,6 @@ struct mbframestruct {
 
 struct mbframestruct askmbframe, reqmbframe;
 
-struct tcpframestruct askframe;
-struct pduframestruct askpduframe;
-
 unsigned short table[100];
 unsigned short amount = 100;
 
