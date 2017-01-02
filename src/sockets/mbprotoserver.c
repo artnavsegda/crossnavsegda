@@ -21,12 +21,6 @@ unsigned char buf[100];
 
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
 
-struct tcpframestruct {
-	unsigned short tsid;
-	unsigned short protoid;
-	unsigned short length;
-};
-
 struct askreadregstruct {
 	unsigned short firstreg;
 	unsigned short regnumber;
@@ -34,10 +28,29 @@ struct askreadregstruct {
 
 struct reqreadcoilsstruct {
 	unsigned char bytestofollow;
-	unsigned char coils[256];
+	unsigned char coils[254];
 };
 
 struct reqreadwordstruct {
+	unsigned char bytestofollow;
+	unsigned short registers[127];
+};
+
+struct writeregstruct {
+	unsigned short regaddress;
+	unsigned short regvalue;
+};
+
+struct writemulticoilstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
+	unsigned char bytestofollow;
+	unsigned char coils[256];
+};
+
+struct writemultiregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
 	unsigned char bytestofollow;
 	unsigned short registers[127];
 };
@@ -46,6 +59,9 @@ union pdudataunion {
 	struct askreadregstruct askreadregs;
 	struct reqreadcoilsstruct reqreadcoils;
 	struct reqreadwordstruct reqreadholdings;
+	struct writeregstruct writereg;
+	struct writemulticoilstruct writemulticoil;
+	struct writemultiregstruct writemultireg;
 	unsigned short words[127];
 	unsigned char bytes[254];
 };
@@ -54,7 +70,6 @@ struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
 	union pdudataunion data;
-//	unsigned short data[256];
 };
 
 struct mbframestruct {
@@ -65,17 +80,6 @@ struct mbframestruct {
 };
 
 struct mbframestruct askmbframe, reqmbframe;
-
-struct tcpframestruct tcpframe = {
-	.tsid = 1,
-	.protoid = 0,
-	.length = 5,
-};
-
-struct pduframestruct pduframe = {
-	.unitid = 50,
-	.fncode = 3
-};
 
 struct tcpframestruct askframe;
 struct pduframestruct askpduframe;
@@ -137,7 +141,6 @@ int main()
 			printf("accept ok\n");
 		}
 
-		//int numread = recv(msgsock,&askframe,6,0);
 		int numread = recv(msgsock,&askmbframe,6,0);
 		if (numread == -1)
 		{
@@ -149,11 +152,8 @@ int main()
 		else
 		{
 			printf("recv %d bytes\n",numread);
-			//printf("TS id: %d\n", bswap_16(askframe.tsid));
 			printf("TS id: %d\n", ntohs(askmbframe.tsid));
-			//printf("Protocol id: %d\n", bswap_16(askframe.protoid));
 			printf("Protocol id: %d\n", ntohs(askmbframe.protoid));
-			//printf("Length: %d\n", bswap_16(askframe.length));
 			printf("Length: %d\n", ntohs(askmbframe.length));
 			/*for (int i=0; i<numread;i++)
 			{
@@ -162,7 +162,6 @@ int main()
 			printf("\n");*/
 		}
 
-		//numread = recv(msgsock,&askpduframe,bswap_16(askframe.length),0);
 		numread = recv(msgsock,&askmbframe.pdu,ntohs(askmbframe.length),0);
 		if (numread == -1)
 		{
@@ -174,13 +173,10 @@ int main()
 		else
 		{
 			printf("recv %d bytes\n",numread);
-			//printf("Unit id: %d\n", askpduframe.unitid);
 			printf("Unit id: %d\n", askmbframe.pdu.unitid);
-			//printf("Function code: %d\n", askpduframe.fncode);
 			printf("Function code: %d\n", askmbframe.pdu.fncode);
 			for (int i=0; i<(numread-2)/2;i++)
 				printf("%u ",ntohs(askmbframe.pdu.data.words[i]));
-				//printf("%u ",bswap_16(askpduframe.data[i]));
 			printf("\n");
 		}
 
@@ -191,12 +187,26 @@ int main()
 				if ((ntohs(askmbframe.pdu.data.askreadregs.regnumber) % 8)>0)
 					askmbframe.pdu.data.reqreadcoils.bytestofollow++;
 				askmbframe.length = htons(askmbframe.pdu.data.reqreadcoils.bytestofollow + 3);
+				// fill all requested coil bytes with zeroes
+				for (int i = 0; i < askmbframe.pdu.data.reqreadcoils.bytestofollow; i++)
+					askmbframe.pdu.data.reqreadcoils.coils[i] = 0x00;
 			break;
 			case 3:
 			case 4:
 				printf("numer of registers requested %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
 				askmbframe.pdu.data.reqreadholdings.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) * 2;
 				askmbframe.length = htons(askmbframe.pdu.data.reqreadholdings.bytestofollow + 3);
+				// fill every requested register with 0xABCD
+				for (int i = 0; i < ntohs(askmbframe.pdu.data.askreadregs.regnumber);i++)
+					askmbframe.pdu.data.reqreadholdings.registers[i] = htons(0xABCD);
+			case 5:
+			case 6:
+				//same as request
+				break;
+			case 15:
+			case 16:
+				askmbframe.length = htons(6);
+				break;
 			break;
 		}
 
