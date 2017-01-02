@@ -9,6 +9,9 @@ unsigned char xskl(unsigned short start, unsigned short length);
 
 	unsigned char interim = crmassive[byteshift] << bitshift;
 
+	if (byteshift != 19)
+		interim = interim & (crmassive[byteshift+1] >> 8-bitshift);
+
 	if (length > 8)
 		return interim;
 	else
@@ -16,4 +19,3 @@ unsigned char xskl(unsigned short start, unsigned short length);
 		return interim & (0xFF >> length);
 	}
 }
-
