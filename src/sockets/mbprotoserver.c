@@ -84,6 +84,9 @@ struct mbframestruct askmbframe, reqmbframe;
 struct tcpframestruct askframe;
 struct pduframestruct askpduframe;
 
+unsigned short table[100];
+unsigned short amount = 100;
+
 int main()
 {
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
@@ -193,12 +196,18 @@ int main()
 			break;
 			case 3:
 			case 4:
-				printf("numer of registers requested %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
+				printf("Requesing register starting from: %d\n", ntohs(askmbframe.pdu.data.askreadregs.firstreg));
+				printf("Number of registers requested: %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
 				askmbframe.pdu.data.reqreadholdings.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) * 2;
 				askmbframe.length = htons(askmbframe.pdu.data.reqreadholdings.bytestofollow + 3);
-				// fill every requested register with 0xABCD
+				// fill every requested register with table values
 				for (int i = 0; i < ntohs(askmbframe.pdu.data.askreadregs.regnumber);i++)
-					askmbframe.pdu.data.reqreadholdings.registers[i] = htons(0xABCD);
+				{
+					if (ntohs(askmbframe.pdu.data.askreadregs.firstreg)+i < amount)
+						askmbframe.pdu.data.reqreadholdings.registers[i] = htons(table[ntohs(askmbframe.pdu.data.askreadregs.firstreg)+i]);
+					else
+						askmbframe.pdu.data.reqreadholdings.registers[i] = htons(0x0000);
+				}
 			case 5:
 			case 6:
 				//same as request
