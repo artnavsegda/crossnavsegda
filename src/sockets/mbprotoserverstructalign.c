@@ -78,6 +78,8 @@ struct mbframestruct askmbframe, reqmbframe;
 unsigned short table[100] = {0xABCD, 0xDEAD};
 unsigned short amount = 100;
 
+unsigned char coils[16];
+
 int main()
 {
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
@@ -179,8 +181,12 @@ int main()
 		switch (askmbframe.pdu.fncode) {
 			case 1:
 			case 2:
-				askmbframe.pdu.data.reqread.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) / 8;
-				if ((ntohs(askmbframe.pdu.data.askreadregs.regnumber) % 8)>0)
+				firstrequest = ntohs(askmbframe.pdu.data.askreadregs.firstreg);
+				printf("Requesting bits starting from: %d\n", firstrequest);
+				requestnumber = ntohs(askmbframe.pdu.data.askreadregs.regnumber);
+				printf("Number of bits requested: %d\n", requestnumber);
+				askmbframe.pdu.data.reqread.bytestofollow = requestnumber / 8;
+				if ((requestnumber % 8)>0)
 					askmbframe.pdu.data.reqread.bytestofollow++;
 				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 				// fill all requested coil bytes with zeroes
