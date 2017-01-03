@@ -205,11 +205,19 @@ int main()
 					((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(table[i]);*/
 			break;
 			case 5:
-			case 6:
 				//same as request
 				break;
+			case 6:
+				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < 100)
+					table[ntohs(askmbframe.pdu.data.writereg.regaddress)] = ntohs(askmbframe.pdu.data.writereg.regvalue);
+				break;
 			case 15:
+				askmbframe.length = htons(6);
+				break;
 			case 16:
+				for (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
+					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < 100)
+						table[ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i] = ntohs(askmbframe.pdu.data.writemultireg.registers[i]);
 				askmbframe.length = htons(6);
 				break;
 			break;
