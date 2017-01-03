@@ -26,14 +26,9 @@ struct askreadregstruct {
 	unsigned short regnumber;
 };
 
-struct reqreadcoilsstruct {
+struct reqreadstruct {
 	unsigned char bytestofollow;
-	unsigned char coils[254];
-};
-
-struct reqreadwordstruct {
-	unsigned char bytestofollow;
-	unsigned short registers[127];
+	unsigned char bytes[254];
 };
 
 struct writeregstruct {
@@ -57,8 +52,7 @@ struct writemultiregstruct {
 
 union pdudataunion {
 	struct askreadregstruct askreadregs;
-	struct reqreadcoilsstruct reqreadcoils;
-	struct reqreadwordstruct reqreadholdings;
+	struct reqreadstruct reqread;
 	struct writeregstruct writereg;
 	struct writemulticoilstruct writemulticoil;
 	struct writemultiregstruct writemultireg;
@@ -81,7 +75,7 @@ struct mbframestruct {
 
 struct mbframestruct askmbframe, reqmbframe;
 
-unsigned short table[100];
+unsigned short table[100] = {0xABCD, 0xDEAD};
 unsigned short amount = 100;
 
 int main()
@@ -180,31 +174,36 @@ int main()
 			printf("\n");
 		}
 
+		int firstrequest = 0;
+		int requestnumber = 0;
 		switch (askmbframe.pdu.fncode) {
 			case 1:
 			case 2:
-				askmbframe.pdu.data.reqreadcoils.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) / 8;
+				askmbframe.pdu.data.reqread.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) / 8;
 				if ((ntohs(askmbframe.pdu.data.askreadregs.regnumber) % 8)>0)
-					askmbframe.pdu.data.reqreadcoils.bytestofollow++;
-				askmbframe.length = htons(askmbframe.pdu.data.reqreadcoils.bytestofollow + 3);
+					askmbframe.pdu.data.reqread.bytestofollow++;
+				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 				// fill all requested coil bytes with zeroes
-				for (int i = 0; i < askmbframe.pdu.data.reqreadcoils.bytestofollow; i++)
-					askmbframe.pdu.data.reqreadcoils.coils[i] = 0x00;
+				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
+					askmbframe.pdu.data.reqread.bytes[i] = 0x00;
 			break;
 			case 3:
 			case 4:
-				printf("Requesing register starting from: %d\n", ntohs(askmbframe.pdu.data.askreadregs.firstreg));
-				printf("Number of registers requested: %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
-				askmbframe.pdu.data.reqreadholdings.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) * 2;
-				askmbframe.length = htons(askmbframe.pdu.data.reqreadholdings.bytestofollow + 3);
+				firstrequest = ntohs(askmbframe.pdu.data.askreadregs.firstreg);
+				printf("Requesing register starting from: %d\n", firstrequest);
+				requestnumber = ntohs(askmbframe.pdu.data.askreadregs.regnumber);
+				printf("Number of registers requested: %d\n", requestnumber);
+				askmbframe.pdu.data.reqread.bytestofollow = requestnumber * 2;
+				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 				// fill every requested register with table values
-				for (int i = 0; i < ntohs(askmbframe.pdu.data.askreadregs.regnumber);i++)
-				{
-					if (ntohs(askmbframe.pdu.data.askreadregs.firstreg)+i < amount)
-						askmbframe.pdu.data.reqreadholdings.registers[i] = htons(table[ntohs(askmbframe.pdu.data.askreadregs.firstreg)+i]);
+				for (int i = 0; i < requestnumber;i++)
+					if (firstrequest+i < amount)
+						((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(table[firstrequest+i]);
 					else
-						askmbframe.pdu.data.reqreadholdings.registers[i] = htons(0x0000);
-				}
+						((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(0x0000);
+				/*for (int i = 0; i < requestnumber;i++)
+					((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(table[i]);*/
+			break;
 			case 5:
 			case 6:
 				//same as request

@@ -27,22 +27,15 @@ struct writeregstruct {
 	unsigned short regvalue;
 };
 
-struct reqreadbitstruct {
+struct reqreadstruct {
 	unsigned char bytestofollow;
-	unsigned char coils[256];
-};
-
-struct reqreadwordstruct {
-	unsigned char bytestofollow;
-	unsigned short registers[127];
+	unsigned char bytes[254];
 };
 
 union pdudataunion {
 	struct askreadregstruct askreadregs;
-	struct reqreadbitstruct reqreadcoils;
-	struct reqreadwordstruct reqreadholdings;
+	struct reqreadstruct reqread;
 	struct writeregstruct writereg;
-	unsigned char bytes[254];
 	unsigned short words[127];
 };
 
@@ -50,7 +43,6 @@ struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
 	union pdudataunion data;
-	//unsigned char data[256];
 };
 
 struct tcpframestruct tcpframe = {
@@ -176,27 +168,26 @@ int main(int argc, char *argv[])
 		printf("recv %d bytes\n",numread);
 		printf("Unit id: %d\n", askframe.pdu.unitid);
 		printf("Function code: %d\n", askframe.pdu.fncode);
-		for (int i=0; i<numread-2;i++)
-			printf("%u ",askframe.pdu.data.bytes[i]);
-			//printf("0x%02hhX ",askpduframe.data[i]);
+		for (int i=0; i<numread;i++)
+			printf("0x%02hhX ",((char *)&askframe.pdu)[i]);
 		printf("\n");
 		switch(askframe.pdu.fncode)
 		{
 		case 1:
 		case 2:
-			printf("number of bytes: %d\n",askframe.pdu.data.reqreadcoils.bytestofollow);
-			for (int i=0;i<askframe.pdu.data.reqreadcoils.bytestofollow;i++)
+			printf("number of bytes: %d\n",askframe.pdu.data.reqread.bytestofollow);
+			for (int i=0;i<askframe.pdu.data.reqread.bytestofollow;i++)
 			{
-				printf("0x%02hhX ",askframe.pdu.data.reqreadcoils.coils[i]);
+				printf("0x%02hhX ",askframe.pdu.data.reqread.bytes[i]);
 			}
 			printf("\n");
 		break;
 		case 3:
 		case 4:
-			printf("number of registers: %d\n",askframe.pdu.data.reqreadholdings.bytestofollow/2);
-			for (int i=0;i<askframe.pdu.data.reqreadholdings.bytestofollow/2;i++)
+			printf("number of registers: %d\n",askframe.pdu.data.reqread.bytestofollow/2);
+			for (int i=0;i<askframe.pdu.data.reqread.bytestofollow/2;i++)
 			{
-				printf("0x%04hX ",askframe.pdu.data.reqreadholdings.registers[i]);
+				printf("0x%04hX ",((short *)&askframe.pdu.data.reqread.bytes)[i]);
 			}
 			printf("\n");
 		break;
