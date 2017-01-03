@@ -10,6 +10,8 @@
 
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
 
+char page[100];
+
 int main()
 {
 	unsigned char buf[100];
@@ -29,7 +31,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(80)
+		.sin_port = htons(1100)
 	};
 
 	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
@@ -81,9 +83,11 @@ int main()
 			printf("recv %d bytes\n",numread);
 			for (int i=0; i<numread;i++)
 			{
-				printf("0x%02X ",buf[i]);
+				printf("%c",buf[i]);
 			}
 			printf("\n");
+			sscanf(buf,"GET %s HTTP/1.1/n",page);
+			printf("requested %s page\n",page);
 		}
 		int numwrite = send(msgsock,data,12,0);
 		if (numwrite == -1)
