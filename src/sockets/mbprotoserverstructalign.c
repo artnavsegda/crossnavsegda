@@ -78,7 +78,7 @@ struct mbframestruct askmbframe, reqmbframe;
 unsigned short table[100] = {0xABCD, 0xDEAD};
 unsigned short amount = 100;
 
-unsigned char coils[16];
+unsigned char crmassive[16];
 
 int main()
 {
@@ -191,9 +191,7 @@ int main()
 				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 				// fill all requested coil bytes with zeroes
 				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
-					askmbframe.pdu.data.reqread.bytes[i] = 0x00;
-					//askmbframe.pdu.data.reqread.bytes[i] = xskl(firstreg+(8*i),requestnumber-(i*8));
-					//xslk2(askframe.pdu.data.reqread.bytes,firstrequest,requestnumber)
+					askmbframe.pdu.data.reqread.bytes[i] = (crmassive[firstrequest/8] << (firstrequest%8)) | (crmassive[(firstrequest/8)+1] >> 8-(firstrequest%8); // = 0x00;
 			break;
 			case 3:
 			case 4:
