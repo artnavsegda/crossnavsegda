@@ -22,8 +22,12 @@ void shiftarray(unsigned char *value, int amount, int shift)
 
 void cutarray(unsigned char *value, int amount, int shift, int cut)
 {
-	for (int i = 0; i < amount; i++)
+	unsigned char full = 0xFF;
+	unsigned char zero = 0x00;
+	unsigned char part = 0x3F;
+	for (int i = 0; i < cut/8; i++)
 		printbinary((value[i+(shift/8)] << (shift%8)) | (value[i+(shift/8)+1] >> 8-(shift%8)));
+	printbinary(((value[(cut/8)+(shift/8)] << (shift%8)) | (value[(cut/8)+(shift/8)+1] >> 8-(shift%8))) & (full << 8-(cut%8)));
 }
 
 int main(void)
@@ -83,6 +87,24 @@ int main(void)
 	shiftarray("hello",5,10);
 	printf("\n");
 	shiftarray("hello",5,11);
+	printf("\n");
+	cutarray("hello",5,11,11);
+	printf("\n");
+	cutarray("hello",5,11,10);
+	printf("\n");
+	cutarray("hello",5,11,9);
+	printf("\n");
+	cutarray("hello",5,11,8);
+	printf("\n");
+	cutarray("hello",5,11,7);
+	printf("\n");
+	cutarray("hello",5,11,6);
+	printf("\n");
+	cutarray("hello",5,11,5);
+	printf("\n");
+	cutarray("hello",5,11,4);
+	printf("\n");
+	cutarray("hello",5,11,3);
 	printf("\n");
 
 	return 0;
