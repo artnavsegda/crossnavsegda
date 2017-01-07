@@ -19,6 +19,13 @@ void shiftarray(unsigned char *value, int amount, int shift)
 		printbinary((value[i+(shift/8)] << (shift%8)) | (value[i+(shift/8)+1] >> 8-(shift%8)));
 }
 
+
+void cutarray(unsigned char *value, int amount, int shift, int cut)
+{
+	for (int i = 0; i < amount; i++)
+		printbinary((value[i+(shift/8)] << (shift%8)) | (value[i+(shift/8)+1] >> 8-(shift%8)));
+}
+
 int main(void)
 {
 	unsigned char chet = 0xAA;
