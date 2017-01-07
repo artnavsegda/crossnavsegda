@@ -4,7 +4,19 @@ void printbinary(unsigned char value)
 {
 	for (int i = 0; i < 8; i++)
 		printf("%hhu", (value >> 7-i) & 0x01);
-	printf("\n");
+	//printf("\n");
+}
+
+void printarbin(unsigned char *value, int amount)
+{
+	for (int i = 0; i < amount; i++)
+		printbinary(value[i]);
+}
+
+void shiftarray(unsigned char *value, int amount, int shift)
+{
+	for (int i = 0; i < amount; i++)
+		printbinary((value[i+(shift/8)] << (shift%8)) | (value[i+(shift/8)+1] >> 8-(shift%8)));
 }
 
 int main(void)
@@ -32,10 +44,39 @@ int main(void)
 	printf("one << 1 0x%02X\n",one << 1);
 
 	printbinary(full);
+	printf("\n");
 	printbinary(zero);
+	printf("\n");
 	printbinary(one);
+	printf("\n");
 	printbinary(chet);
+	printf("\n");
 	printbinary(nechet);
+	printf("\n");
+	printarbin("hello",5);
+	printf("\n");
+	shiftarray("hello",5,1);
+	printf("\n");
+	shiftarray("hello",5,2);
+	printf("\n");
+	shiftarray("hello",5,3);
+	printf("\n");
+	shiftarray("hello",5,4);
+	printf("\n");
+	shiftarray("hello",5,5);
+	printf("\n");
+	shiftarray("hello",5,6);
+	printf("\n");
+	shiftarray("hello",5,7);
+	printf("\n");
+	shiftarray("hello",5,8);
+	printf("\n");
+	shiftarray("hello",5,9);
+	printf("\n");
+	shiftarray("hello",5,10);
+	printf("\n");
+	shiftarray("hello",5,11);
+	printf("\n");
 
 	return 0;
 }
