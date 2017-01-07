@@ -19,3 +19,8 @@ unsigned char xskl(unsigned short start, unsigned short length);
 		return interim & (0xFF >> length);
 	}
 }
+
+void xslk2(unsigned char *accessmassive,int startpostion,int amount)
+{
+
+}

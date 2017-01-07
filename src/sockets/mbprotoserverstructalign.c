@@ -193,6 +193,7 @@ int main()
 				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
 					askmbframe.pdu.data.reqread.bytes[i] = 0x00;
 					//askmbframe.pdu.data.reqread.bytes[i] = xskl(firstreg+(8*i),requestnumber-(i*8));
+					//xslk2(askframe.pdu.data.reqread.bytes,firstrequest,requestnumber)
 			break;
 			case 3:
 			case 4:
