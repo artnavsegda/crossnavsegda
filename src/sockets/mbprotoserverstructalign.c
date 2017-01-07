@@ -10,13 +10,6 @@
 
 unsigned short hrmassive[50];
 
-unsigned char crmassive[20];
-
-unsigned short generatecoils(int firstcoil, int numberofcoils)
-{
-	return crmassive[0]>>firstcoil;
-}
-
 unsigned char buf[100];
 
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
@@ -190,8 +183,9 @@ int main()
 					askmbframe.pdu.data.reqread.bytestofollow++;
 				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 				// fill all requested coil bytes with zeroes
-				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
-					askmbframe.pdu.data.reqread.bytes[i] = (crmassive[i+(firstrequest/8)] << (firstrequest%8)) | (crmassive[i+(firstrequest/8)+1] >> 8-(firstrequest%8); // not cropped yet
+				for (int i = 0; i < requestnumber/8; i++)
+					askmbframe.pdu.data.reqread.bytes[i] = (crmassive[i+(firstrequest/8)] << (firstrequest%8)) | (crmassive[i+(firstrequest/8)+1] >> 8-(firstrequest%8));
+				askmbframe.pdu.data.reqread.bytes[requestnumber/8] = (((crmassive[(requestnumber/8)+(firstrequest/8)] << (firstrequest%8)) | (crmassive[(requestnumber/8)+(firstrequest/8)+1] >> 8-(firstrequest%8))) & (0xFF << 8-(requestnumber%8)));
 			break;
 			case 3:
 			case 4:

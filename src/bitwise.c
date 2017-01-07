@@ -27,7 +27,7 @@ void cutarray(unsigned char *value, int amount, int shift, int cut)
 	unsigned char part = 0x3F;
 	for (int i = 0; i < cut/8; i++)
 		printbinary((value[i+(shift/8)] << (shift%8)) | (value[i+(shift/8)+1] >> 8-(shift%8)));
-	printbinary(((value[(cut/8)+(shift/8)] << (shift%8)) | (value[(cut/8)+(shift/8)+1] >> 8-(shift%8))) & (full << 8-(cut%8)));
+	printbinary(((value[(cut/8)+(shift/8)] << (shift%8)) | (value[(cut/8)+(shift/8)+1] >> 8-(shift%8))) & (0xFF << 8-(cut%8)));
 }
 
 int main(void)
@@ -105,6 +105,10 @@ int main(void)
 	cutarray("hello",5,11,4);
 	printf("\n");
 	cutarray("hello",5,11,3);
+	printf("\n");
+	cutarray("hello",5,11,2);
+	printf("\n");
+	cutarray("hello",5,11,1);
 	printf("\n");
 
 	return 0;
