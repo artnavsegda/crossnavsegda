@@ -191,7 +191,7 @@ int main()
 				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 				// fill all requested coil bytes with zeroes
 				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
-					askmbframe.pdu.data.reqread.bytes[i] = (crmassive[firstrequest/8] << (firstrequest%8)) | (crmassive[(firstrequest/8)+1] >> 8-(firstrequest%8); // = 0x00;
+					askmbframe.pdu.data.reqread.bytes[i] = (crmassive[i+(firstrequest/8)] << (firstrequest%8)) | (crmassive[i+(firstrequest/8)+1] >> 8-(firstrequest%8); // not cropped yet
 			break;
 			case 3:
 			case 4:
