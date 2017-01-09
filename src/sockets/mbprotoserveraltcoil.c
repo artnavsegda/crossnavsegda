@@ -208,22 +208,29 @@ int main()
 					((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(table[i]);*/
 			break;
 			case 5:
-				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < 100)
+				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < amount)
 					if (askmbframe.pdu.data.writereg.regvalue == 0)
 						bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 0;
 					else
 						bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 1;
 				break;
 			case 6:
-				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < 100)
+				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < amount)
 					table[ntohs(askmbframe.pdu.data.writereg.regaddress)] = ntohs(askmbframe.pdu.data.writereg.regvalue);
 				break;
 			case 15:
+				or (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
+					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < amount)
+						if (askmbframe.pdu.data.writereg.regvalue == 0)
+							bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 0;
+						else
+							bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 1;
+				break;
 				askmbframe.length = htons(6);
 				break;
 			case 16:
 				for (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
-					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < 100)
+					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < amount)
 						table[ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i] = ntohs(askmbframe.pdu.data.writemultireg.registers[i]);
 				askmbframe.length = htons(6);
 				break;
