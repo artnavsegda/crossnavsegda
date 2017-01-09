@@ -205,7 +205,10 @@ int main()
 					((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(table[i]);*/
 			break;
 			case 5:
-				//same as request
+				if (askmbframe.pdu.data.writereg.regvalue == 0)
+					crmassive[askmbframe.pdu.data.writereg.regaddress/8] & (0x80 >> askmbframe.pdu.data.writereg.regaddress%8);
+				else
+					crmassive[askmbframe.pdu.data.writereg.regaddress/8] | ~(0x80 >> askmbframe.pdu.data.writereg.regaddress%8);
 				break;
 			case 6:
 				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < 100)
