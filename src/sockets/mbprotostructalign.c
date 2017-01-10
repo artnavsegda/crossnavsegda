@@ -96,6 +96,12 @@ int main(int argc, char *argv[])
 	if (argc < 2)
 	{
 		printf("name function code and its values\n");
+		printf("1 first amount: read coil\n");
+		printf("2 first amount: read discrete\n");
+		printf("3 first amount: read input\n");
+		printf("4 first amount: read holding\n");
+		printf("5 number value: write coil\n");
+		printf("6 number value: write holding\n");
 		return 1;
 	}
 
@@ -110,8 +116,10 @@ int main(int argc, char *argv[])
 				printf("name first coil/discrete and amount to return\n");
 				return 1;
 			}
-			sscanf(argv[2],"%hhu",&mbframe.pdu.data.askreadregs.firstreg);
-			sscanf(argv[3],"%hhu",&mbframe.pdu.data.askreadregs.regnumber);
+			sscanf(argv[2],"%hu",&mbframe.pdu.data.askreadregs.firstreg);
+			mbframe.pdu.data.askreadregs.firstreg = htons(mbframe.pdu.data.askreadregs.firstreg);
+			sscanf(argv[3],"%hu",&mbframe.pdu.data.askreadregs.regnumber);
+			mbframe.pdu.data.askreadregs.regnumber = htons(mbframe.pdu.data.askreadregs.regnumber);
 		case 3:
 		case 4:
 			if (argc < 4)
@@ -119,8 +127,10 @@ int main(int argc, char *argv[])
 				printf("name first input/holding and amount to return\n");
 				return 1;
 			}
-			sscanf(argv[2],"%hhu",&mbframe.pdu.data.askreadregs.firstreg);
-			sscanf(argv[3],"%hhu",&mbframe.pdu.data.askreadregs.regnumber);
+			sscanf(argv[2],"%hu",&mbframe.pdu.data.askreadregs.firstreg);
+			mbframe.pdu.data.askreadregs.firstreg = htons(mbframe.pdu.data.askreadregs.firstreg);
+			sscanf(argv[3],"%hu",&mbframe.pdu.data.askreadregs.regnumber);
+			mbframe.pdu.data.askreadregs.regnumber = htons(mbframe.pdu.data.askreadregs.regnumber);
 		case 5:
 		case 6:
 			if (argc < 4)
