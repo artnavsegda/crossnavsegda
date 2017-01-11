@@ -94,7 +94,7 @@ struct mbframestruct askframe;
 void printbinary(unsigned char value)
 {
 	for (int i = 0; i < 8; i++)
-		printf("%hhu", (value >> 7-i) & 0x01);
+		printf("%u", (value >> (7-i)) & 0x01);
 }
 
 int main(int argc, char *argv[])
