@@ -91,6 +91,12 @@ struct mbframestruct mbframe = {
 
 struct mbframestruct askframe;
 
+void printbinary(unsigned char value)
+{
+	for (int i = 0; i < 8; i++)
+		printf("%hhu", (value >> 7-i) & 0x01);
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc < 2)
@@ -247,7 +253,9 @@ int main(int argc, char *argv[])
 			printf("number of bytes containing bit values: %d\n",askframe.pdu.data.reqread.bytestofollow);
 			for (int i=0;i<askframe.pdu.data.reqread.bytestofollow;i++)
 			{
-				printf("0x%02hhX ",askframe.pdu.data.reqread.bytes[i]);
+				printf("0x%02hhX(",askframe.pdu.data.reqread.bytes[i]);
+				printbinary(askframe.pdu.data.reqread.bytes[i]);
+				printf(") ");
 			}
 			printf("\n");
 		break;
