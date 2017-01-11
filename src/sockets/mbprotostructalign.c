@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
 	sscanf(argv[3],"%hu",&mbframe.pdu.data.words[1]);
 	mbframe.pdu.data.words[1] = htons(mbframe.pdu.data.words[1]);
 
-	ssizet_t numwrite = send(sock,&mbframe,12,0);
+	ssize_t numwrite = send(sock,&mbframe,12,0);
 	if (numwrite == -1)
 	{
 		perror("send error");
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 	}
 
 	//int numread = recv(sock,buf,100,0);
-	ssizet_t numread = recv(sock,&askframe,6,0);
+	ssize_t numread = recv(sock,&askframe,6,0);
 	if (numread == -1)
 	{
 		perror("recv error");
