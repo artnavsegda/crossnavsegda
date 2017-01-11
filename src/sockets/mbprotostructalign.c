@@ -190,13 +190,6 @@ int main(int argc, char *argv[])
 		printf("connect ok\n");
 	}
 
-	//int numwrite = send(sock,ask,12,0);
-
-	sscanf(argv[2],"%hu",&mbframe.pdu.data.words[0]);
-	mbframe.pdu.data.words[0] = htons(mbframe.pdu.data.words[0]);
-	sscanf(argv[3],"%hu",&mbframe.pdu.data.words[1]);
-	mbframe.pdu.data.words[1] = htons(mbframe.pdu.data.words[1]);
-
 	ssize_t numwrite = send(sock,&mbframe,12,0);
 	if (numwrite == -1)
 	{
