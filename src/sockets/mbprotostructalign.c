@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 		printf("5 number value: write coil\n");
 		printf("6 number value: write holding\n");
 		printf("15 first amount number value: write miltiple coil\n");
-		printf("15 first amount number value: write miltiple holding\n");
+		printf("16 first amount number value: write miltiple holding\n");
 		return 1;
 	}
 
