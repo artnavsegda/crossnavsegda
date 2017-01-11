@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
 		{
 		case 1:
 		case 2:
-			printf("number of bytes: %d\n",askframe.pdu.data.reqread.bytestofollow);
+			printf("number of bytes containing bit values: %d\n",askframe.pdu.data.reqread.bytestofollow);
 			for (int i=0;i<askframe.pdu.data.reqread.bytestofollow;i++)
 			{
 				printf("0x%02hhX ",askframe.pdu.data.reqread.bytes[i]);
@@ -260,6 +260,11 @@ int main(int argc, char *argv[])
 		case 6:
 			printf("register number %u\n", ntohs(askframe.pdu.data.writereg.regaddress));
 			printf("register value %u\n", ntohs(askframe.pdu.data.writereg.regvalue));
+		break;
+		case 15:
+		case 16:
+			printf("first register %u\n", ntohs(askframe.pdu.data.writemulticoil.firstreg));
+			printf("registers amount %u\n", ntohs(askframe.pdu.data.writemulticoil.regnumber));
 		break;
 		default:
 			printf("unknown function number");
