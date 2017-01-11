@@ -189,24 +189,24 @@ int main(int argc, char *argv[])
 	}
 
 	//int numwrite = send(sock,ask,12,0);
-	
+
 	sscanf(argv[2],"%hu",&mbframe.pdu.data.words[0]);
 	mbframe.pdu.data.words[0] = htons(mbframe.pdu.data.words[0]);
 	sscanf(argv[3],"%hu",&mbframe.pdu.data.words[1]);
 	mbframe.pdu.data.words[1] = htons(mbframe.pdu.data.words[1]);
 
-	int numwrite = send(sock,&mbframe,12,0);
+	ssizet_t numwrite = send(sock,&mbframe,12,0);
 	if (numwrite == -1)
 	{
 		perror("send error");
 	}
 	else
 	{
-		printf("send %d bytes ok\n", numwrite);
+		printf("send %zd bytes ok\n", numwrite);
 	}
 
 	//int numread = recv(sock,buf,100,0);
-	int numread = recv(sock,&askframe,6,0);
+	ssizet_t numread = recv(sock,&askframe,6,0);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		printf("recv %d bytes\n",numread);
+		printf("recv %zd bytes\n",numread);
 		printf("TS id: %d\n", ntohs(askframe.tsid));
 		printf("Protocol id: %d\n", ntohs(askframe.protoid));
 		printf("Length: %d\n", ntohs(askframe.length));
@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		printf("recv %d bytes\n",numread);
+		printf("recv %zd bytes\n",numread);
 		printf("Unit id: %d\n", askframe.pdu.unitid);
 		printf("Function code: %d\n", askframe.pdu.fncode);
 		for (int i=0; i<numread;i++)
@@ -286,4 +286,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-
