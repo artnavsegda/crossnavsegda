@@ -5,8 +5,10 @@
 char str[] = "one=1 two=2 three=3.14";
 
 
-char * getopt(char *config, char *token)
+char * getopt(char *config2, char *token)
 {
+	char config[100];
+	strcpy(config,config2);
 	char * pch = strtok(strstr(config,token),"=");
 	printf("token %s, ",pch);
 	pch = strtok(NULL," ");
@@ -30,6 +32,7 @@ int main(void)
 
 	printf("int value %d\n",atoi(getopt(str,"one")));
 	printf("int value %d\n",atoi(getopt(str,"two")));
+	printf("int value %d\n",atoi(getopt(str,"one")));
 	printf("float value %f\n",atof(getopt(str,"three")));
 
 	return 0;
