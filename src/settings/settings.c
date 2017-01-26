@@ -27,17 +27,8 @@ char * getip(char *config2, char *token)
 
 int main(void)
 {
-/*	char * pch = strtok(strstr(str,"two"),"=");
-	printf("token %s, ",pch);
-	pch = strtok(NULL," ");
-	printf("string value %s, ",pch);
-	printf("int value %d\n",atoi(pch)); 
+	FILE * setfile = fopen("./settings.txt","r");
 
-	pch = strtok(strstr(str,"three"),"=");
-	printf("token %s, ",pch);
-	pch = strtok(NULL," ");
-	printf("string value %s, ",pch);
-	printf("float value %f\n",atof(pch));*/
 
 	printf("int value %d\n",atoi(getopt(str,"one")));
 	printf("int value %d\n",atoi(getopt(str,"two")));
