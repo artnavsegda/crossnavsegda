@@ -200,7 +200,7 @@ int main()
 			printf("send %d bytes ok\n",numwrite);
 		}
 
-		shutdown(msgsock, 2);
+		//shutdown(msgsock, 2);
 		/*if (shutdown(msgsock, 2) == -1)
 		{
 			perror("shutdown error");
@@ -212,7 +212,7 @@ int main()
 		{
 			printf("shutdown ok\n");
 		}*/
-		close(msgsock);
+		//close(msgsock);
 	}
 	close(sock);
 

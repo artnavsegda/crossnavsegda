@@ -42,9 +42,9 @@ void printbinary(unsigned char value)
 
 int main(int argc, char *argv[])
 {
-	if (argc < 2)
+	if (argc < 3)
 	{
-		printf("name function code and its values\n");
+		printf("name ip addr function code and its values\n");
 		printf("1 first amount: read coil\n");
 		printf("2 first amount: read discrete\n");
 		printf("3 first amount: read input\n");
@@ -56,58 +56,58 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	sscanf(argv[1],"%hhu",&mbframe.pdu.fncode); // <-----
+	sscanf(argv[2],"%hhu",&mbframe.pdu.fncode); // <-----
 
 	switch (mbframe.pdu.fncode)
 	{
 		case 1:
 		case 2:
-			if (argc < 4)
+			if (argc < 5)
 			{
 				printf("name first coil/discrete and amount to return\n");
 				return 1;
 			}
-			sscanf(argv[2],"%hu",&mbframe.pdu.data.askreadregs.firstreg);
+			sscanf(argv[3],"%hu",&mbframe.pdu.data.askreadregs.firstreg);
 			mbframe.pdu.data.askreadregs.firstreg = htons(mbframe.pdu.data.askreadregs.firstreg);
-			sscanf(argv[3],"%hu",&mbframe.pdu.data.askreadregs.regnumber);
+			sscanf(argv[4],"%hu",&mbframe.pdu.data.askreadregs.regnumber);
 			mbframe.pdu.data.askreadregs.regnumber = htons(mbframe.pdu.data.askreadregs.regnumber);
 			break;
 		case 3:
 		case 4:
-			if (argc < 4)
+			if (argc < 5)
 			{
 				printf("name first input/holding and amount to return\n");
 				return 1;
 			}
-			sscanf(argv[2],"%hu",&mbframe.pdu.data.askreadregs.firstreg);
+			sscanf(argv[3],"%hu",&mbframe.pdu.data.askreadregs.firstreg);
 			mbframe.pdu.data.askreadregs.firstreg = htons(mbframe.pdu.data.askreadregs.firstreg);
-			sscanf(argv[3],"%hu",&mbframe.pdu.data.askreadregs.regnumber);
+			sscanf(argv[4],"%hu",&mbframe.pdu.data.askreadregs.regnumber);
 			mbframe.pdu.data.askreadregs.regnumber = htons(mbframe.pdu.data.askreadregs.regnumber);
 			break;
 		case 5:
 		case 6:
-			if (argc < 4)
+			if (argc < 5)
 			{
 				printf("name register number and value to set\n");
 				return 1;
 			}
-			sscanf(argv[2],"%hu",&mbframe.pdu.data.writereg.regaddress);
+			sscanf(argv[3],"%hu",&mbframe.pdu.data.writereg.regaddress);
 			mbframe.pdu.data.writereg.regaddress = htons(mbframe.pdu.data.writereg.regaddress);
-			sscanf(argv[3],"%hu",&mbframe.pdu.data.writereg.regvalue);
+			sscanf(argv[4],"%hu",&mbframe.pdu.data.writereg.regvalue);
 			mbframe.pdu.data.writereg.regvalue = htons(mbframe.pdu.data.writereg.regvalue);
 			break;
 		case 15:
 		case 16:
-			if (argc < 5)
+			if (argc < 6)
 			{
 				printf("name first register, registers amount to set, number of bytes to follow and bytes with values\n");
 				return 1;
 			}
-			sscanf(argv[2],"%hu",&mbframe.pdu.data.writemulticoil.firstreg);
+			sscanf(argv[3],"%hu",&mbframe.pdu.data.writemulticoil.firstreg);
 			mbframe.pdu.data.writemulticoil.firstreg = htons(mbframe.pdu.data.writemulticoil.firstreg);
-			sscanf(argv[3],"%hu",&mbframe.pdu.data.writemulticoil.regnumber);
+			sscanf(argv[4],"%hu",&mbframe.pdu.data.writemulticoil.regnumber);
 			mbframe.pdu.data.writemulticoil.regnumber = htons(mbframe.pdu.data.writemulticoil.regnumber);
-			sscanf(argv[4],"%hhu",&mbframe.pdu.data.writemulticoil.bytestofollow);
+			sscanf(argv[5],"%hhu",&mbframe.pdu.data.writemulticoil.bytestofollow);
 			for (int i=0;i<mbframe.pdu.data.writemulticoil.bytestofollow;i++)
 				sscanf(argv[4+i],"%hhu",&mbframe.pdu.data.writemulticoil.coils[i]);
 			break;
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 		printf("socket ok\n");
 	}
 	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
+		.sin_addr.s_addr = inet_addr(argv[1]),
 		.sin_family = AF_INET,
 		.sin_port = htons(1100)
 	};
