@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
+#include "modbus.h"
 
 unsigned short hrmassive[50];
 
@@ -14,65 +15,11 @@ unsigned char buf[100];
 
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
 
-struct askreadregstruct {
-	unsigned short firstreg;
-	unsigned short regnumber;
-};
-
-struct reqreadstruct {
-	unsigned char bytestofollow;
-	unsigned char bytes[254];
-};
-
-struct writeregstruct {
-	unsigned short regaddress;
-	unsigned short regvalue;
-};
-
-struct writemulticoilstruct {
-	unsigned short firstreg;
-	unsigned short regnumber;
-	unsigned char bytestofollow;
-	unsigned char coils[256];
-};
-
-struct writemultiregstruct {
-	unsigned short firstreg;
-	unsigned short regnumber;
-	unsigned char bytestofollow;
-	unsigned short registers[127];
-};
-
-union pdudataunion {
-	struct askreadregstruct askreadregs;
-	struct reqreadstruct reqread;
-	struct writeregstruct writereg;
-	struct writemulticoilstruct writemulticoil;
-	struct writemultiregstruct writemultireg;
-	unsigned short words[127];
-	unsigned char bytes[254];
-};
-
-struct pduframestruct {
-	unsigned char unitid;
-	unsigned char fncode;
-	union pdudataunion data;
-};
-
-struct mbframestruct {
-	unsigned short tsid;
-	unsigned short protoid;
-	unsigned short length;
-	struct pduframestruct pdu;
-};
-
 struct mbframestruct askmbframe, reqmbframe;
 
 unsigned short table[100] = {0xABCD, 0xDEAD};
+unsigned char bctable[100];
 unsigned short amount = 100;
-
-unsigned char crmassive[16];
-unsigned char bcrmassive[100];
 
 int main()
 {
@@ -219,7 +166,7 @@ int main()
 					table[ntohs(askmbframe.pdu.data.writereg.regaddress)] = ntohs(askmbframe.pdu.data.writereg.regvalue);
 				break;
 			case 15:
-				or (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
+				for (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
 					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < amount)
 						if (askmbframe.pdu.data.writereg.regvalue == 0)
 							bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 0;

@@ -7,51 +7,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
+#include "modbus.h"
 
 char buf[100];
 char ask[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x32, 0x03, 0x00, 0x00, 0x00, 0x01 };
-
-struct tcpframestruct {
-	unsigned short tsid;
-	unsigned short protoid;
-	unsigned short length;
-};
-
-struct askreadregstruct {
-	unsigned short firstreg;
-	unsigned short regnumber;
-};
-
-struct writeregstruct {
-	unsigned short regaddress;
-	unsigned short regvalue;
-};
-
-struct reqreadstruct {
-	unsigned char bytestofollow;
-	unsigned char bytes[254];
-};
-
-struct writemulticoilstruct {
-	unsigned short firstreg;
-	unsigned short regnumber;
-	unsigned char bytestofollow;
-	unsigned char coils[256];
-};
-
-union pdudataunion {
-	struct askreadregstruct askreadregs;
-	struct reqreadstruct reqread;
-	struct writeregstruct writereg;
-	struct writemulticoilstruct writemulticoil;
-	unsigned short words[127];
-};
-
-struct pduframestruct {
-	unsigned char unitid;
-	unsigned char fncode;
-	union pdudataunion data;
-};
 
 struct tcpframestruct tcpframe = {
 	.tsid = 1,
@@ -64,19 +23,6 @@ struct pduframestruct pduframe = {
 	.fncode = 3,
 };
 
-//struct tcpframestruct askframe;
-//struct pduframestruct askpduframe;
-
-struct mbframestruct {
-	unsigned short tsid;
-	unsigned short protoid;
-	unsigned short length;
-	struct pduframestruct pdu;
-//	unsigned char unitid;
-//	unsigned char fncode;
-//	unsigned short data[2];
-};
-
 struct mbframestruct mbframe = {
 	.tsid = 0x0100,
 	.protoid = 0x0000,
@@ -84,9 +30,6 @@ struct mbframestruct mbframe = {
 	.pdu = {
 		.unitid = 50
 	}
-//	.unitid = 50,
-//	.fncode = 3,
-//	.data = { 0x0000, 0x0100 }
 };
 
 struct mbframestruct askframe;

@@ -169,8 +169,8 @@ int main()
 			printf("\n");
 		}
 
-		int firstrequest = 0;
-		int requestnumber = 0;
+		unsigned short firstrequest = 0;
+		unsigned short requestnumber = 0;
 		switch (askmbframe.pdu.fncode) {
 			case 1:
 			case 2:

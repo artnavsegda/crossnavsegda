@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	}
 
 	//int numwrite = send(sock,ask,12,0);
-	
+
 	sscanf(argv[1],"%hhu",&mbframe.pdu.fncode); // <-----
 	sscanf(argv[2],"%hu",&mbframe.pdu.data.words[0]);
 	mbframe.pdu.data.words[0] = htons(mbframe.pdu.data.words[0]);
@@ -213,4 +213,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-

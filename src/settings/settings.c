@@ -2,8 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//char str[100] = "one=1 two=2 three=3.14 ip=192.168.1.150";
-char str[100];
+char str[100] = "one=1\n\
+two=2\n\
+three=3.14\n\
+ip=192.168.1.150";
+//char str[100];
 
 char * getopt(char *config2, char *token)
 {
@@ -30,11 +33,11 @@ char * getip(char *config2, char *token)
 
 int main(void)
 {
-	FILE * setfile = fopen("./settings.txt","r");
+/*	FILE * setfile = fopen("./settings.txt","r");
 	if (setfile != NULL)
 	{
 		fread(str,1,100,setfile);
-	}
+	}*/
 
 	printf("one int value %d\n",atoi(getopt(str,"one")));
 	printf("two int value %d\n",atoi(getopt(str,"two")));
