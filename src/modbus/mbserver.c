@@ -9,12 +9,6 @@
 #include <netdb.h>
 #include "modbus.h"
 
-unsigned short hrmassive[50];
-
-unsigned char buf[100];
-
-unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
-
 struct mbframestruct askmbframe, reqmbframe;
 
 unsigned short table[100] = {0xABCD, 0xDEAD};
@@ -92,11 +86,6 @@ int main()
 			printf("TS id: %d\n", ntohs(askmbframe.tsid));
 			printf("Protocol id: %d\n", ntohs(askmbframe.protoid));
 			printf("Length: %d\n", ntohs(askmbframe.length));
-			/*for (int i=0; i<numread;i++)
-			{
-				printf("0x%02X ",buf[i]);
-			}
-			printf("\n");*/
 		}
 
 		numread = recv(msgsock,&askmbframe.pdu,ntohs(askmbframe.length),0);
@@ -156,10 +145,12 @@ int main()
 			break;
 			case 5:
 				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < amount)
+				{	
 					if (askmbframe.pdu.data.writereg.regvalue == 0)
 						bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 0;
 					else
 						bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 1;
+				}	
 				break;
 			case 6:
 				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < amount)
@@ -168,10 +159,12 @@ int main()
 			case 15:
 				for (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
 					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < amount)
+					{	
 						if (askmbframe.pdu.data.writereg.regvalue == 0)
 							bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 0;
 						else
 							bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 1;
+					}	
 				break;
 				askmbframe.length = htons(6);
 				break;
