@@ -12,7 +12,7 @@
 struct mbframestruct askmbframe, reqmbframe;
 
 unsigned short table[100] = {0xABCD, 0xDEAD};
-unsigned char bctable[100];
+unsigned char bctable[100] = {0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 ,0 , 0, 1 };
 unsigned short amount = 100;
 
 int main()
@@ -120,11 +120,12 @@ int main()
 					askmbframe.pdu.data.reqread.bytestofollow++;
 				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 				// fill all requested coil bytes with zeroes
+				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow;i++)
+					askmbframe.pdu.data.reqread.bytes[i] = 0;
+				// fill requested coil in bytes with bits
 				for (int i = 0; i < requestnumber;i++)
 					if (bctable[firstrequest+i] != 0)
-						askmbframe.pdu.data.reqread.bytes[i/8] = askmbframe.pdu.data.reqread.bytes[i/8] & (0x80 >> i%8);
-					else
-						askmbframe.pdu.data.reqread.bytes[i/8] = askmbframe.pdu.data.reqread.bytes[i/8] | ~(0x80 >> i%8);
+						askmbframe.pdu.data.reqread.bytes[i/8] = askmbframe.pdu.data.reqread.bytes[i/8] | (0x01 << i%8);
 			break;
 			case 3:
 			case 4:
