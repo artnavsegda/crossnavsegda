@@ -124,8 +124,9 @@ int main()
 					askmbframe.pdu.data.reqread.bytes[i] = 0;
 				// fill requested coil in bytes with bits
 				for (int i = 0; i < requestnumber;i++)
-					if (bctable[firstrequest+i] != 0)
-						askmbframe.pdu.data.reqread.bytes[i/8] = askmbframe.pdu.data.reqread.bytes[i/8] | (0x01 << i%8);
+					if (firstrequest+i < amount)
+						if (bctable[firstrequest+i] != 0)
+							askmbframe.pdu.data.reqread.bytes[i/8] = askmbframe.pdu.data.reqread.bytes[i/8] | (0x01 << i%8);
 			break;
 			case 3:
 			case 4:

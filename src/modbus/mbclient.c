@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 	struct sockaddr_in client = {
 		.sin_addr.s_addr = inet_addr(argv[1]),
 		.sin_family = AF_INET,
-		.sin_port = htons(1100)
+		.sin_port = htons(502)
 	};
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
