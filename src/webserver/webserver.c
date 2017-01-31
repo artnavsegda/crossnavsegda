@@ -11,9 +11,9 @@
 
 char data[1000] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
 
-char httpHeader[] = "HTTP/1.1 200 OK\nContent-type: " ;  // HTTP header
-char httpMimeTypeHTML[] = "text/html\n\n" ;              // HTML MIME type
-char httpMimeTypeScript[] = "text/plain\n\n" ;           // TEXT MIME type
+char httpHeader[1000] = "HTTP/1.1 200 OK"; // HTTP header
+char httpMimeTypeHTML[] = "\nContent-type: text/html\n\n" ;              // HTML MIME type
+char httpMimeTypeScript[] = "\nContent-type: text/plain\n\n" ;           // TEXT MIME type
 
 char page[100];
 char method[100];
@@ -108,9 +108,11 @@ int main()
 		if (webpage == -1)
 		{
 			perror(page);
-			close(msgsock);
-			close(sock);
-			return 1;
+			sprintf(httpHeader,"HTTP/1.1 %d Not Found",404);
+			sprintf(data,"<!doctype html><html><head><title>404 Not Found</title></head><body><p>%s not found</p></body></html>",page);
+			//close(msgsock);
+			//close(sock);
+			//return 1;
 		}
 		else
 		{
@@ -127,6 +129,7 @@ int main()
 			else
 			{
 				printf("read %d bytes\n",numread);
+				sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 				close(webpage);
 			}
 		}
