@@ -12,14 +12,17 @@
 char data[1000] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
 
 char httpHeader[1000] = "HTTP/1.1 200 OK"; // HTTP header
+char * httpMimeType;
 char httpMimeTypeHTML[] = "\nContent-type: text/html\n\n" ;              // HTML MIME type
-char httpMimeTypeScript[] = "\nContent-type: text/plain\n\n" ;           // TEXT MIME type
+char httpMimeTypeScript[] = "\nContent-type: application/javascript\n\n" ;           // JS MIME type
+char httpMimeTypeText[] = "\nContent-type: text/plain\n\n" ;           // TEXT MIME type
 
 char page[100];
 char method[100];
 
 int main()
 {
+	int hv;
 	char buf[100];
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
@@ -93,7 +96,7 @@ int main()
 			}
 			printf("\n");
 
-			sscanf(buf,"%s %s HTTP/1.1/n",method, page);
+			sscanf(buf,"%s %s HTTP/1.%d/n",method, page, &hv);
 
 			printf("method %s\n", method);
 
@@ -147,7 +150,14 @@ int main()
 			printf("send %d bytes http header ok\n",numwrite);
 		}
 
-		numwrite = send(msgsock,httpMimeTypeHTML,strlen(httpMimeTypeHTML),0);
+		if (strcmp(strchr(page,'.'),".html")==0)
+			httpMimeType = httpMimeTypeHTML;
+		else if (strcmp(strchr(page,'.'),".js")==0)
+			httpMimeType = httpMimeTypeScript;
+		else if (strcmp(strchr(page,'.'),".txt")==0)
+			httpMimeType = httpMimeTypeText;
+
+		numwrite = send(msgsock,httpMimeType,strlen(httpMimeType),0);
 		if (numwrite == -1)
 		{
 			perror("send mime type error");
