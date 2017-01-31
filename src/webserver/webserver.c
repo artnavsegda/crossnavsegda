@@ -16,6 +16,7 @@ char * httpMimeType;
 char httpMimeTypeHTML[] = "\nContent-type: text/html\n\n" ;              // HTML MIME type
 char httpMimeTypeScript[] = "\nContent-type: application/javascript\n\n" ;           // JS MIME type
 char httpMimeTypeText[] = "\nContent-type: text/plain\n\n" ;           // TEXT MIME type
+char httpMimeTypeCSS[] = "\nContent-type: text/CSS\n\n" ;           // TEXT MIME type
 
 char page[100];
 char method[100];
@@ -112,6 +113,7 @@ int main()
 		{
 			perror(page);
 			sprintf(httpHeader,"HTTP/1.1 %d Not Found",404);
+			httpMimeType = httpMimeTypeHTML;
 			sprintf(data,"<!doctype html><html><head><title>404 Not Found</title></head><body><p>%s not found</p></body></html>",page);
 			//close(msgsock);
 			//close(sock);
@@ -134,6 +136,14 @@ int main()
 				printf("read %d bytes\n",numread);
 				sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 				close(webpage);
+				if (strcmp(strchr(page,'.'),".html")==0)
+					httpMimeType = httpMimeTypeHTML;
+				else if (strcmp(strchr(page,'.'),".js")==0)
+					httpMimeType = httpMimeTypeScript;
+				else if (strcmp(strchr(page,'.'),".txt")==0)
+					httpMimeType = httpMimeTypeText;
+				else if (strcmp(strchr(page,'.'),".css")==0)
+					httpMimeType = httpMimeTypeCSS;
 			}
 		}
 
@@ -149,13 +159,6 @@ int main()
 		{
 			printf("send %d bytes http header ok\n",numwrite);
 		}
-
-		if (strcmp(strchr(page,'.'),".html")==0)
-			httpMimeType = httpMimeTypeHTML;
-		else if (strcmp(strchr(page,'.'),".js")==0)
-			httpMimeType = httpMimeTypeScript;
-		else if (strcmp(strchr(page,'.'),".txt")==0)
-			httpMimeType = httpMimeTypeText;
 
 		numwrite = send(msgsock,httpMimeType,strlen(httpMimeType),0);
 		if (numwrite == -1)
