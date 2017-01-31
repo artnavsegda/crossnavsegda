@@ -1,1 +1,1 @@
-bin_PROGRAMS = client-send-once client-send-forever client-recv-once client-recv-forever server-send-forever server-recv-forever server-send-once server-recv-once server-reply-once server-ask-once client-ask-once server-reply-forever mbprotostructalign mbprotoserverstructalign webserver
+bin_PROGRAMS = client-send-once client-send-forever client-recv-once client-recv-forever server-send-forever server-recv-forever server-send-once server-recv-once server-reply-once server-ask-once client-ask-once server-reply-forever mbprotostructalign mbprotoserverstructalign

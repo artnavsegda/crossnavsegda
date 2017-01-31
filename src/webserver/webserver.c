@@ -7,8 +7,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <fcntl.h>
 
-char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
+char data[1000] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
 
 char httpHeader[] = "HTTP/1.1 200 OK\nContent-type: " ;  // HTTP header
 char httpMimeTypeHTML[] = "text/html\n\n" ;              // HTML MIME type
@@ -102,17 +103,61 @@ int main()
 		if (strncmp(page,"/",1) == 0)
 			strcpy(page,"/index.html");
 
-		FILE * webpage = fopen(&page[1],"r");
+		int webpage = open(&page[1],O_RDONLY);
 
-		if (webpage == NULL)
+		if (webpage == -1)
 		{
 			perror(page);
 			close(msgsock);
 			close(sock);
 			return 1;
 		}
+		else
+		{
+			printf("open webpage ok");
+			numread = read(webpage,data,1000);
+			if (numread == -1)
+			{
+				perror("read error");
+				close(webpage);
+				close(msgsock);
+				close(sock);
+				return 1;
+			}
+			else
+			{
+				printf("read %d bytes\n",numread);
+				close(webpage);
+			}
+		}
 
-		int numwrite = send(msgsock,data,12,0);
+		int numwrite = send(msgsock,httpHeader,strlen(httpHeader),0);
+		if (numwrite == -1)
+		{
+			perror("send http header error");
+			close(msgsock);
+			close(sock);
+			return 1;
+		}
+		else
+		{
+			printf("send %d bytes http header ok\n",numwrite);
+		}
+
+		numwrite = send(msgsock,httpMimeTypeHTML,strlen(httpMimeTypeHTML),0);
+		if (numwrite == -1)
+		{
+			perror("send mime type error");
+			close(msgsock);
+			close(sock);
+			return 1;
+		}
+		else
+		{
+			printf("send %d bytes mime type ok\n",numwrite);
+		}
+
+		numwrite = send(msgsock,data,strlen(data),0);
 		if (numwrite == -1)
 		{
 			perror("send error");
@@ -122,7 +167,7 @@ int main()
 		}
 		else
 		{
-			printf("send %d bytes ok\n",numwrite);
+			printf("send %d bytes webpage ok\n",numwrite);
 		}
 
 		if (shutdown(msgsock, 2) == -1)
