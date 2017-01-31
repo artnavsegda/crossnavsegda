@@ -62,8 +62,8 @@ int main()
 		printf("listen ok\n");
 	}
 
-	//while(1)
-	//{
+	while(1)
+	{
 		int msgsock = accept(sock,NULL,NULL);
 		if (msgsock == -1)
 		{
@@ -100,7 +100,7 @@ int main()
 			printf("requested %s page\n",page);
 		}
 
-		if (strncmp(page,"/",1) == 0)
+		if (strlen(page) == 1)
 			strcpy(page,"/index.html");
 
 		int webpage = open(&page[1],O_RDONLY);
@@ -114,7 +114,7 @@ int main()
 		}
 		else
 		{
-			printf("open webpage ok");
+			printf("open webpage %s ok\n",page);
 			numread = read(webpage,data,1000);
 			if (numread == -1)
 			{
@@ -182,7 +182,7 @@ int main()
 			printf("shutdown ok\n");
 		}
 		close(msgsock);
-	//}
+	}
 	close(sock);
 
 	return 0;
