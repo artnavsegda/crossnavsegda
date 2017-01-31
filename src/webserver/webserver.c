@@ -8,13 +8,18 @@
 #include <unistd.h>
 #include <netdb.h>
 
-unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
+char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
+
+char httpHeader[] = "HTTP/1.1 200 OK\nContent-type: " ;  // HTTP header
+char httpMimeTypeHTML[] = "text/html\n\n" ;              // HTML MIME type
+char httpMimeTypeScript[] = "text/plain\n\n" ;           // TEXT MIME type
 
 char page[100];
+char method[100];
 
 int main()
 {
-	unsigned char buf[100];
+	char buf[100];
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
 	{
@@ -86,9 +91,27 @@ int main()
 				printf("%c",buf[i]);
 			}
 			printf("\n");
-			sscanf(buf,"GET %s HTTP/1.1/n",page);
+
+			sscanf(buf,"%s %s HTTP/1.1/n",method, page);
+
+			printf("method %s\n", method);
+
 			printf("requested %s page\n",page);
 		}
+
+		if (strncmp(page,"/",1) == 0)
+			strcpy(page,"/index.html");
+
+		FILE * webpage = fopen(&page[1],"r");
+
+		if (webpage == NULL)
+		{
+			perror(page);
+			close(msgsock);
+			close(sock);
+			return 1;
+		}
+
 		int numwrite = send(msgsock,data,12,0);
 		if (numwrite == -1)
 		{
@@ -119,4 +142,3 @@ int main()
 
 	return 0;
 }
-
