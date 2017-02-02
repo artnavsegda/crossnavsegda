@@ -120,6 +120,7 @@ int main()
 			{
 				printf("open webpage %s ok\n",page);
 				numread = read(webpage,data,1000);
+				data[numread] = 0;
 				if (numread == -1)
 				{
 					perror("read error");
