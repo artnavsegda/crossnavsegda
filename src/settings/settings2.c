@@ -33,16 +33,36 @@ char * getip(char *config2, char *token)
 	return ip;
 }
 
+char *options[100];
+char *values[100];
+int i = 0;
+int optisize;
+
+void setopt(char *parameter, char *newset)
+{
+	for (i=0;i<optisize;i++)
+	{
+		if (strcmp(options[i],parameter)==0)
+		{
+			if (strlen(newset)>strlen(values[i]))
+			{
+				//values[i] = newset; //just change the pointer
+				values[i] = malloc(strlen(newset)); //or to allocate new memory ?
+				strcpy(values[i],newset);
+			}
+			else
+				strcpy(values[i],newset);
+		}
+	}
+}
+
 int main(void)
 {
-	char *options[100];
-	char *values[100];
-	int i = 0;
 	options[i] = strtok(str," \n");
 	while (options[i]!=NULL)
 		options[++i] = strtok(NULL," \n");
 
-	int optisize = i;
+	optisize = i;
 
 	for (i=0;i<optisize;i++)
 	{
@@ -57,10 +77,10 @@ int main(void)
 			values[i] = three;
 	}
 
+	setopt("two","2.017");
+
 	for (i=0;i<optisize;i++)
 		printf("%s=%s\n",options[i],values[i]);
-
-
 
 /*	FILE * setfile = fopen("./settings.txt","r");
 	if (setfile != NULL)
