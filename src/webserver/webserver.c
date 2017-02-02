@@ -16,7 +16,7 @@ char * httpMimeType;
 char httpMimeTypeHTML[] = "\nContent-type: text/html\n\n" ;              // HTML MIME type
 char httpMimeTypeScript[] = "\nContent-type: application/javascript\n\n" ;           // JS MIME type
 char httpMimeTypeText[] = "\nContent-type: text/plain\n\n" ;           // TEXT MIME type
-char httpMimeTypeCSS[] = "\nContent-type: text/CSS\n\n" ;           // TEXT MIME type
+char httpMimeTypeCSS[] = "\nContent-type: text/CSS\n\n" ;           // CSS MIME type
 
 char page[100];
 char method[100];
@@ -32,9 +32,7 @@ int main()
 		return 1;
 	}
 	else
-	{
 		printf("socket ok\n");
-	}
 	int optval = 1;
 	setsockopt(sock,SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 
@@ -51,9 +49,7 @@ int main()
 		return 1;
 	}
 	else
-	{
 		printf("bind ok\n");
-	}
 
 	if (listen(sock,10) == -1)
 	{
@@ -62,9 +58,7 @@ int main()
 		return 1;
 	}
 	else
-	{
 		printf("listen ok\n");
-	}
 
 	while(1)
 	{
@@ -76,9 +70,7 @@ int main()
 			return 1;
 		}
 		else
-		{
 			printf("accept ok\n");
-		}
 
 		int numread = recv(msgsock,buf,100,0);
 		if (numread == -1)
@@ -96,54 +88,60 @@ int main()
 				printf("%c",buf[i]);
 			}
 			printf("\n");
-
 			sscanf(buf,"%s %s HTTP/1.%d/n",method, page, &hv);
-
 			printf("method %s\n", method);
-
 			printf("requested %s page\n",page);
 		}
 
 		if (strlen(page) == 1)
 			strcpy(page,"/index.html");
 
-		int webpage = open(&page[1],O_RDONLY);
-
-		if (webpage == -1)
+		if (strcmp(page,"/special.html")==0)
 		{
-			perror(page);
-			sprintf(httpHeader,"HTTP/1.1 %d Not Found",404);
+			printf("requested special page\n");
+			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 			httpMimeType = httpMimeTypeHTML;
-			sprintf(data,"<!doctype html><html><head><title>404 Not Found</title></head><body><p>%s not found</p></body></html>",page);
-			//close(msgsock);
-			//close(sock);
-			//return 1;
+			sprintf(data,"<!doctype html><html><head><title>Special</title></head><body><p>yay very special page yay</p></body></html>");
 		}
 		else
 		{
-			printf("open webpage %s ok\n",page);
-			numread = read(webpage,data,1000);
-			if (numread == -1)
+			int webpage = open(&page[1],O_RDONLY);
+			if (webpage == -1)
 			{
-				perror("read error");
-				close(webpage);
-				close(msgsock);
-				close(sock);
-				return 1;
+				perror(page);
+				sprintf(httpHeader,"HTTP/1.1 %d Not Found",404);
+				httpMimeType = httpMimeTypeHTML;
+				sprintf(data,"<!doctype html><html><head><title>404 Not Found</title></head><body><p>%s not found</p></body></html>",page);
+				//close(msgsock);
+				//close(sock);
+				//return 1;
 			}
 			else
 			{
-				printf("read %d bytes\n",numread);
-				sprintf(httpHeader,"HTTP/1.1 %d OK",200);
-				close(webpage);
-				if (strcmp(strchr(page,'.'),".html")==0)
-					httpMimeType = httpMimeTypeHTML;
-				else if (strcmp(strchr(page,'.'),".js")==0)
-					httpMimeType = httpMimeTypeScript;
-				else if (strcmp(strchr(page,'.'),".txt")==0)
-					httpMimeType = httpMimeTypeText;
-				else if (strcmp(strchr(page,'.'),".css")==0)
-					httpMimeType = httpMimeTypeCSS;
+				printf("open webpage %s ok\n",page);
+				numread = read(webpage,data,1000);
+				if (numread == -1)
+				{
+					perror("read error");
+					close(webpage);
+					close(msgsock);
+					close(sock);
+					return 1;
+				}
+				else
+				{
+					printf("read %d bytes\n",numread);
+					sprintf(httpHeader,"HTTP/1.1 %d OK",200);
+					close(webpage);
+					if (strcmp(strchr(page,'.'),".html")==0)
+						httpMimeType = httpMimeTypeHTML;
+					else if (strcmp(strchr(page,'.'),".js")==0)
+						httpMimeType = httpMimeTypeScript;
+					else if (strcmp(strchr(page,'.'),".txt")==0)
+						httpMimeType = httpMimeTypeText;
+					else if (strcmp(strchr(page,'.'),".css")==0)
+						httpMimeType = httpMimeTypeCSS;
+				}
 			}
 		}
 
