@@ -24,7 +24,7 @@ char method[100];
 int main()
 {
 	int hv;
-	char buf[100];
+	char buf[1000];
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
 	{
@@ -72,7 +72,7 @@ int main()
 		else
 			printf("accept ok\n");
 
-		int numread = recv(msgsock,buf,100,0);
+		int numread = recv(msgsock,buf,1000,0);
 		if (numread == -1)
 		{
 			perror("recv error");
@@ -88,7 +88,7 @@ int main()
 				printf("%c",buf[i]);
 			}
 			printf("\n");
-			sscanf(buf,"%s %s HTTP/1.%d/n",method, page, &hv);
+			sscanf(buf,"%s %s HTTP/1.%d\n",method, page, &hv);
 			printf("method %s\n", method);
 			printf("requested %s page\n",page);
 		}
@@ -96,12 +96,14 @@ int main()
 		if (strlen(page) == 1)
 			strcpy(page,"/index.html");
 
-		if (strcmp(page,"/special.html")==0)
+		if (strcmp(page,"/special")==0)
 		{
 			printf("requested special page\n");
+			puts(strstr(buf,"\r\n\r\n")+4);
+			printf("thats what she said\n");
 			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
-			httpMimeType = httpMimeTypeHTML;
-			sprintf(data,"<!doctype html><html><head><title>Special</title></head><body><p>yay very special page yay</p></body></html>");
+			httpMimeType = httpMimeTypeText;
+			sprintf(data,"you're so special");
 		}
 		else
 		{
