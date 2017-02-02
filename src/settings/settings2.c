@@ -8,6 +8,7 @@ three=3.14\n\
 ip=192.168.1.150";
 //char str[100];
 
+char three[]="3.141592";
 
 char * getopt(char *config2, char *token)
 {
@@ -48,8 +49,16 @@ int main(void)
 //		puts(options[i]);
 		strtok(options[i],"=");
 		values[i] = strtok(NULL,"=");
-		printf("%s=%s\n",options[i],values[i]);
 	}
+
+	for (i=0;i<optisize;i++)
+	{
+		if (strcmp(options[i],"three")==0)
+			values[i] = three;
+	}
+
+	for (i=0;i<optisize;i++)
+		printf("%s=%s\n",options[i],values[i]);
 
 
 
