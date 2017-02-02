@@ -18,13 +18,16 @@ char httpMimeTypeScript[] = "\nContent-type: application/javascript\n\n" ;      
 char httpMimeTypeText[] = "\nContent-type: text/plain\n\n" ;           // TEXT MIME type
 char httpMimeTypeCSS[] = "\nContent-type: text/CSS\n\n" ;           // CSS MIME type
 
-char page[100];
-char method[100];
+//char page[100];
+//char method[100];
+char *page;
+char *method;
 
 int main()
 {
 	int hv;
 	char buf[1000];
+	char *buf2;
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
 	{
@@ -82,15 +85,20 @@ int main()
 		}
 		else
 		{
+			buf[numread] = 0;
 			printf("recv %d bytes\n",numread);
-			for (int i=0; i<numread;i++)
-			{
-				printf("%c",buf[i]);
-			}
+			//for (int i=0; i<numread;i++)
+			//{
+			//	printf("%c",buf[i]);
+			//}
 			printf("\n");
-			sscanf(buf,"%s %s HTTP/1.%d\n",method, page, &hv);
+			method = strtok(buf," ");
+			page = strtok(NULL," ");
+			//sscanf(buf,"%s %s HTTP/1.%d\n",method, page, &hv);
 			printf("method %s\n", method);
 			printf("requested %s page\n",page);
+			buf2 = strtok(NULL,"");
+			puts(buf2);
 		}
 
 		if (strlen(page) == 1)
@@ -99,7 +107,7 @@ int main()
 		if (strcmp(page,"/special")==0)
 		{
 			printf("requested special page\n");
-			puts(strstr(buf,"\r\n\r\n")+4);
+			puts(strstr(buf2,"\r\n\r\n")+4);
 			printf("thats what she said\n");
 			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 			httpMimeType = httpMimeTypeText;
