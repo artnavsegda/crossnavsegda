@@ -2,4 +2,5 @@ one=9
 something=2
 someone=42
 ip=192.168.1.220
+mac=de:ad:be:ed:fe:ed
 

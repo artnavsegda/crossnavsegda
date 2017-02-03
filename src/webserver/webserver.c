@@ -67,6 +67,15 @@ void setopt(char *parameter, char *newset)
 	}
 }
 
+void setsingleopt(char *equation)
+{
+	char *parname;
+	char *parvalue;
+	parname = strtok(equation,"=");
+	parvalue = strtok(NULL,"=");
+	setopt(parname,parvalue);
+}
+
 void makeopt(void)
 {
 	FILE * setfile = fopen("./settings.txt","r");
@@ -169,15 +178,25 @@ int main()
 		if (strlen(page) == 1)
 			strcpy(page,"/index.html");
 
-		if (strcmp(page,"/special")==0)
+		if (strcmp(page,"/getopt")==0)
 		{
-			printf("requested special page\n");
+			printf("requested options\n");
 			puts(strstr(buf2,"\r\n\r\n")+4);
-			printf("thats what she said\n");
+			printf("that what was requested\n");
 			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 			httpMimeType = httpMimeTypeText;
 			strcpy(data,getmyopt(strstr(buf2,"\r\n\r\n")+4));
 			//sprintf(data,"you're so special");
+		}
+		else if (strcmp(page,"/setopt")==0)
+		{
+			printf("setting options\n");
+			puts(strstr(buf2,"\r\n\r\n")+4);
+			printf("that what was planning to set\n");
+			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
+			httpMimeType = httpMimeTypeText;
+			strcpy(data,buf2);
+			//setsingleopt(strstr(buf2,"\r\n\r\n")+4);
 		}
 		else
 		{
