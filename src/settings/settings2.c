@@ -40,12 +40,14 @@ int optisize;
 
 void setopt(char *parameter, char *newset)
 {
+	int found = 0;
 	for (i=0;i<optisize;i++)
 	{
 		if (strcmp(options[i],parameter)==0)
 		{
 			if (strlen(newset)>strlen(values[i]))
 			{
+				found = 1;
 				//values[i] = newset; //just change the pointer
 				values[i] = malloc(strlen(newset)); //or to allocate new memory ?
 				strcpy(values[i],newset);
@@ -54,6 +56,20 @@ void setopt(char *parameter, char *newset)
 				strcpy(values[i],newset);
 		}
 	}
+	if (found == 0)
+	{
+		options[optisize] = parameter;
+		values[optisize] = newset;
+		optisize++;
+	}
+}
+
+char * getoptnew(char *parameter)
+{
+	for (i=0;i<optisize;i++)
+		if (strcmp(options[i],parameter)==0)
+			return values[i];
+	return NULL;
 }
 
 int main(void)
@@ -78,6 +94,7 @@ int main(void)
 	}
 
 	setopt("two","2.017");
+	setopt("four","4.04");
 
 	for (i=0;i<optisize;i++)
 		printf("%s=%s\n",options[i],values[i]);
