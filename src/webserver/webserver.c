@@ -9,7 +9,8 @@
 #include <netdb.h>
 #include <fcntl.h>
 
-char data[1000] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0xFF, 0x03, 0x02, 0x00, 0x00 };
+char data[1000];
+char buf[1000];
 
 char httpHeader[1000] = "HTTP/1.1 200 OK"; // HTTP header
 char * httpMimeType;
@@ -23,10 +24,74 @@ char httpMimeTypeCSS[] = "\nContent-type: text/CSS\n\n" ;           // CSS MIME 
 char *page;
 char *method;
 
+char str[100] = "one=1\n\
+two=2\n\
+three=3.14\n\
+ip=192.168.1.150";
+
+char *options[100];
+char *values[100];
+int optisize;
+
+char * getmyopt(char *parameter)
+{
+	for (int i=0;i<optisize;i++)
+		if (strcmp(options[i],parameter)==0)
+			return values[i];
+	return NULL;
+}
+
+void setopt(char *parameter, char *newset)
+{
+	int found = 0;
+	for (int i=0;i<optisize;i++)
+	{
+		if (strcmp(options[i],parameter)==0)
+		{
+			if (strlen(newset)>strlen(values[i]))
+			{
+				found = 1;
+				//values[i] = newset; //just change the pointer
+				values[i] = malloc(strlen(newset)); //or to allocate new memory ?
+				strcpy(values[i],newset);
+			}
+			else
+				strcpy(values[i],newset);
+		}
+	}
+	if (found == 0)
+	{
+		options[optisize] = parameter;
+		values[optisize] = newset;
+		optisize++;
+	}
+}
+
+void makeopt(void)
+{
+	FILE * setfile = fopen("./settings.txt","r");
+	if (setfile != NULL)
+	{
+		int numread = fread(str,1,100,setfile);
+		printf("read %d bytes\n",numread);
+		str[numread] = '\0';
+	}
+	int i = 0;
+	options[i] = strtok(str," \n");
+	while (options[i]!=NULL)
+		options[++i] = strtok(NULL," \n");
+	optisize = i;
+	for (i=0;i<optisize;i++)
+	{
+		strtok(options[i],"=");
+		values[i] = strtok(NULL,"=");
+	}
+}
+
 int main()
 {
+	makeopt();
 	int hv;
-	char buf[1000];
 	char *buf2;
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (sock == -1)
@@ -111,7 +176,8 @@ int main()
 			printf("thats what she said\n");
 			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 			httpMimeType = httpMimeTypeText;
-			sprintf(data,"you're so special");
+			strcpy(data,getmyopt(strstr(buf2,"\r\n\r\n")+4));
+			//sprintf(data,"you're so special");
 		}
 		else
 		{
