@@ -7,6 +7,7 @@ console.log(xhttp.responseText);
 
 function fillform()
 {
-        document.forms["settings"]["data"].value = "bullshit";
+        xhttp.send("ip");
+        document.forms["settings"]["ip"].value = xhttp.responseText;
         return false;
 }
