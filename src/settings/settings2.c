@@ -6,30 +6,18 @@ char str[100] = "one=1\n\
 two=2\n\
 three=3.14\n\
 ip=192.168.1.150";
-//char str[100];
 
 char three[]="3.141592";
 
-char * getopt(char *config2, char *token)
-{
-	if (strstr(config2,token)==NULL)
-		return "0";
-	static char config[100];
-	strcpy(config,config2);
-	char * pch = strtok(strstr(config,token),"=");
-	printf("token %s, ",pch);
-	pch = strtok(NULL," \n");
-	printf("string value %s, ",pch);
-	return pch;
-}
-
-char * getip(char *config2, char *token)
+char * getip(char *token)
 {
 	static char ip[4];
-	ip[0] = atoi(strtok(getopt(config2,token),"."));
+	char *temp = malloc(strlen(token));
+	ip[0] = atoi(strtok(temp,"."));
 	ip[1] = atoi(strtok(NULL,"."));
 	ip[2] = atoi(strtok(NULL,"."));
 	ip[3] = atoi(strtok(NULL,"."));
+	free(temp);
 	return ip;
 }
 
@@ -64,7 +52,7 @@ void setopt(char *parameter, char *newset)
 	}
 }
 
-char * getoptnew(char *parameter)
+char * getopt(char *parameter)
 {
 	for (i=0;i<optisize;i++)
 		if (strcmp(options[i],parameter)==0)
@@ -74,6 +62,14 @@ char * getoptnew(char *parameter)
 
 int main(void)
 {
+	FILE * setfile = fopen("./settings.txt","r");
+	if (setfile != NULL)
+	{
+		int numread = fread(str,1,100,setfile);
+		printf("read %d bytes\n",numread);
+		str[numread] = '\0';
+	}
+
 	options[i] = strtok(str," \n");
 	while (options[i]!=NULL)
 		options[++i] = strtok(NULL," \n");
@@ -98,12 +94,6 @@ int main(void)
 
 	for (i=0;i<optisize;i++)
 		printf("%s=%s\n",options[i],values[i]);
-
-/*	FILE * setfile = fopen("./settings.txt","r");
-	if (setfile != NULL)
-	{
-		fread(str,1,100,setfile);
-	}*/
 
 //	printf("one int value %d\n",atoi(getopt(str,"one")));
 //	printf("two int value %d\n",atoi(getopt(str,"two")));
