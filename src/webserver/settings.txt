@@ -3,4 +3,16 @@ something=2
 someone=42
 ip=192.168.1.220
 mac=de:ad:be:ed:fe:ed
-
+sll=10
+cdl=10
+cel=10
+zdl=10
+ztl=10
+prg=10
+tdl=10
+tml=100
+edl=10
+eml=10
+rcl=10
+cal=10
+pcl=10

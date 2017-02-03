@@ -9,8 +9,8 @@
 #include <netdb.h>
 #include <fcntl.h>
 
-char data[1000];
-char buf[1000];
+char data[10000];
+char buf[10000];
 
 char httpHeader[1000] = "HTTP/1.1 200 OK"; // HTTP header
 char * httpMimeType;
@@ -24,7 +24,7 @@ char httpMimeTypeCSS[] = "\nContent-type: text/CSS\n\n" ;           // CSS MIME 
 char *page;
 char *method;
 
-char str[100] = "one=1\n\
+char str[1000] = "one=1\n\
 two=2\n\
 three=3.14\n\
 ip=192.168.1.150";
@@ -81,9 +81,10 @@ void makeopt(void)
 	FILE * setfile = fopen("./settings.txt","r");
 	if (setfile != NULL)
 	{
-		int numread = fread(str,1,100,setfile);
+		int numread = fread(str,1,1000,setfile);
 		printf("read %d bytes\n",numread);
 		str[numread] = '\0';
+		fclose(setfile);
 	}
 	int i = 0;
 	options[i] = strtok(str," \n");
@@ -95,6 +96,8 @@ void makeopt(void)
 		strtok(options[i],"=");
 		values[i] = strtok(NULL,"=");
 	}
+	for (i=0;i<optisize;i++)
+		printf("%s=%s\n",options[i],values[i]);
 }
 
 int main()
@@ -149,7 +152,7 @@ int main()
 		else
 			printf("accept ok\n");
 
-		int numread = recv(msgsock,buf,1000,0);
+		int numread = recv(msgsock,buf,10000,0);
 		if (numread == -1)
 		{
 			perror("recv error");
@@ -185,7 +188,9 @@ int main()
 			printf("that what was requested\n");
 			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 			httpMimeType = httpMimeTypeText;
+			printf("answer is %s\n",getmyopt(strstr(buf2,"\r\n\r\n")+4));
 			strcpy(data,getmyopt(strstr(buf2,"\r\n\r\n")+4));
+			//strcpy(data,"blank");
 			//sprintf(data,"you're so special");
 		}
 		else if (strcmp(page,"/setopt")==0)
@@ -214,7 +219,7 @@ int main()
 			else
 			{
 				printf("open webpage %s ok\n",page);
-				numread = read(webpage,data,1000);
+				numread = read(webpage,data,10000);
 				data[numread] = 0;
 				if (numread == -1)
 				{

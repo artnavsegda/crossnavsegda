@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char str[100] = "one=1\n\
+char str[1000] = "one=1\n\
 two=2\n\
 three=3.14\n\
 ip=192.168.1.150";
@@ -13,6 +13,7 @@ char * getip(char *token)
 {
 	static char ip[4];
 	char *temp = malloc(strlen(token));
+	strcpy(temp,token);
 	ip[0] = atoi(strtok(temp,"."));
 	ip[1] = atoi(strtok(NULL,"."));
 	ip[2] = atoi(strtok(NULL,"."));
@@ -65,20 +66,25 @@ int main(void)
 	FILE * setfile = fopen("./settings.txt","r");
 	if (setfile != NULL)
 	{
-		int numread = fread(str,1,100,setfile);
+		int numread = fread(str,1,1000,setfile);
 		printf("read %d bytes\n",numread);
 		str[numread] = '\0';
 	}
 
 	options[i] = strtok(str," \n");
 	while (options[i]!=NULL)
+	{
+		puts(options[i]);
 		options[++i] = strtok(NULL," \n");
+	}
 
 	optisize = i;
 
+	printf("aquired %d pairs\n",optisize);
+
+
 	for (i=0;i<optisize;i++)
 	{
-//		puts(options[i]);
 		strtok(options[i],"=");
 		values[i] = strtok(NULL,"=");
 	}
@@ -105,4 +111,3 @@ int main(void)
 
 	return 0;
 }
-
