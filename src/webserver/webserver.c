@@ -48,9 +48,9 @@ void setopt(char *parameter, char *newset)
 	{
 		if (strcmp(options[i],parameter)==0)
 		{
+			found = 1;
 			if (strlen(newset)>strlen(values[i]))
 			{
-				found = 1;
 				//values[i] = newset; //just change the pointer
 				values[i] = malloc(strlen(newset)); //or to allocate new memory ?
 				strcpy(values[i],newset);
@@ -76,6 +76,19 @@ void setsingleopt(char *equation)
 	setopt(parname,parvalue);
 }
 
+void setmultiopt(char *multistring)
+{
+	char *dispatch[100];
+	int i = 0;
+	char * pch;
+	dispatch[i] = strtok(multistring,"&");
+	while(dispatch[i] != NULL)
+		dispatch[++i] = strtok(NULL, "&");
+	int amount = i;
+	for (i=0;i<amount;i++)
+		setsingleopt(dispatch[i]);
+}
+
 void makeopt(void)
 {
 	FILE * setfile = fopen("./settings.txt","r");
@@ -96,8 +109,20 @@ void makeopt(void)
 		strtok(options[i],"=");
 		values[i] = strtok(NULL,"=");
 	}
-	for (i=0;i<optisize;i++)
-		printf("%s=%s\n",options[i],values[i]);
+	//for (i=0;i<optisize;i++)
+	//	printf("%s=%s\n",options[i],values[i]);
+	printf("optisize is %d\n",optisize);
+}
+
+void breakopt(void)
+{
+	FILE * setfile = fopen("./settings.txt","w");
+	if (setfile == NULL)
+		return;
+	printf("optisize is %d\n",optisize);
+	for (int i=0;i<optisize;i++)
+		fprintf(setfile,"%s=%s\n",options[i],values[i]);
+	fclose(setfile);
 }
 
 int main()
@@ -201,7 +226,8 @@ int main()
 			sprintf(httpHeader,"HTTP/1.1 %d OK",200);
 			httpMimeType = httpMimeTypeText;
 			strcpy(data,buf2);
-			//setsingleopt(strstr(buf2,"\r\n\r\n")+4);
+			setmultiopt(strstr(buf2,"\r\n\r\n")+4);
+			breakopt();
 		}
 		else
 		{

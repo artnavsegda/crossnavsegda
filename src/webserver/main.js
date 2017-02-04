@@ -7,7 +7,7 @@ var xhttp = new XMLHttpRequest();
 
 function fillform()
 {
-        var something = ["ip","mac","sll","cdl","cel","zdl","ztl","prg","tdl","tml","edl","eml","rcl","cal","pcl"];
+        var something = ["ip","sll","cdl","cel","zdl","ztl","prg","tdl","tml","edl","eml","rcl","cal","pcl"];
         for (var i = 0; i < something.length; i++)
         {
                 xhttp.open("LOL", "getopt", false);
