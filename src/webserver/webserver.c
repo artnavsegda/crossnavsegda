@@ -313,7 +313,7 @@ int main()
 		numwrite = send(msgsock,data,strlen(data),0);
 		if (numwrite == -1)
 		{
-			perror("send error");
+			perror("send webpage error");
 			close(msgsock);
 			close(sock);
 			return 1;
