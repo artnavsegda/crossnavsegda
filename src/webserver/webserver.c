@@ -31,7 +31,7 @@ ip=192.168.1.150";
 
 char *options[100];
 char *values[100];
-int optisize;
+int optisize = 0;
 
 char * getmyopt(char *parameter)
 {
@@ -91,14 +91,6 @@ void setmultiopt(char *multistring)
 
 void makeopt(void)
 {
-	FILE * setfile = fopen("./settings.txt","r");
-	if (setfile != NULL)
-	{
-		int numread = fread(str,1,1000,setfile);
-		printf("read %d bytes\n",numread);
-		str[numread] = '\0';
-		fclose(setfile);
-	}
 	int i = 0;
 	options[i] = strtok(str," \n");
 	while (options[i]!=NULL)
@@ -114,6 +106,24 @@ void makeopt(void)
 	printf("optisize is %d\n",optisize);
 }
 
+void makeopt2(void)
+{
+
+}
+
+void loadopt(void)
+{
+	FILE * setfile = fopen("./settings.txt","r");
+	if (setfile != NULL)
+	{
+		int numread = fread(str,1,1000,setfile);
+		printf("read %d bytes\n",numread);
+		str[numread] = '\0';
+		fclose(setfile);
+		//makeopt2();
+	}
+}
+
 void breakopt(void)
 {
 	FILE * setfile = fopen("./settings.txt","w");
@@ -127,7 +137,9 @@ void breakopt(void)
 
 int main()
 {
-	makeopt();
+	loadopt();
+	makeopt();//initialize default values
+	//loadopt();//replace with external values
 	int hv;
 	char *buf2;
 	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);

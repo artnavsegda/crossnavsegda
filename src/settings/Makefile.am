@@ -1,1 +1,1 @@
-bin_PROGRAMS = settings readip
+bin_PROGRAMS = settings readip settings2

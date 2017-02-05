@@ -8,9 +8,9 @@
 #include <unistd.h>
 #include <netdb.h>
 
-char buf[1000];
-//char ask[] = "GET / HTTP/1.0\n\n";
-char ask[] = "GET /main.js HTTP/1.0\n\n";
+char buf[1000] = "Goodbuy cruel world\n\n";
+char ask[] = "PUT /hello HTTP/1.0\n\n";
+//char ask[] = "GET /main.js HTTP/1.0\n\n";
 //char ask[] = "GET /main.css HTTP/1.0\n\n";
 
 struct tcpframestruct {
@@ -43,8 +43,8 @@ int main()
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		//.sin_addr.s_addr = inet_addr("192.168.1.150"),
 		.sin_family = AF_INET,
-		//.sin_port = htons(80)
-		.sin_port = htons(1100)
+		.sin_port = htons(80)
+		//.sin_port = htons(1100)
 	};
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
@@ -65,6 +65,26 @@ int main()
 	else
 	{
 		printf("send %d bytes ok\n", numwrite);
+		for (int i=0; i<numwrite;i++)
+		{
+			printf("%c",ask[i]);
+		}
+		printf("\n");
+	}
+
+	numwrite = send(sock,buf,strlen(buf),0);
+	if (numwrite == -1)
+	{
+		perror("send error");
+	}
+	else
+	{
+		printf("send %d bytes ok\n", numwrite);
+		for (int i=0; i<numwrite;i++)
+		{
+			printf("%c",buf[i]);
+		}
+		printf("\n");
 	}
 
 	int numread = recv(sock,buf,1000,0);
