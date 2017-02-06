@@ -8,6 +8,38 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+
+char * getmime(char * filename)
+{
+        if (strcmp(strchr(filename,'.'),".html")==0)
+                return "\nContent-type: text/html\n\n";
+        else if (strcmp(strchr(filename,'.'),".js")==0)
+                return "\nContent-type: application/javascript\n\n";
+        else if (strcmp(strchr(filename,'.'),".txt")==0)
+                return "\nContent-type: text/plain\n\n";
+        else if (strcmp(strchr(filename,'.'),".css")==0)
+                return "\nContent-type: text/CSS\n\n";
+        else
+                return "\nContent-type: text/plain\n\n";
+}
+
+char * response(int code)
+{
+        switch (code)
+        {
+                case 200:
+                        return "HTTP/1.1 200 OK";
+                break;
+                case 404:
+                        return "HTTP/1.1 404 Not Found";
+                break;
+                default:
+                        return "HTTP/1.1 200 OK";
+                break;
+        }
+        return "HTTP/1.1 200 OK";
+}
 
 void drop(int dropstatus, char *dropdesc)
 {
@@ -16,6 +48,13 @@ void drop(int dropstatus, char *dropdesc)
                 perror(dropdesc);
                 exit(1);
         }
+}
+
+long long filesize(int fd)
+{
+	struct stat filestat;
+	drop(fstat(fd,&filestat),"file status error");
+	return filestat.st_size;
 }
 
 void drop2(char *dropstatus, char *dropdesc)
@@ -51,22 +90,31 @@ int main(void)
                 char *method = strtok(buf," ");
                 char *page = strtok(NULL," ");
                 char *buf2 = strtok(NULL,"");
-                if (strlen(page) == 1)
+                if (strcmp(page,"/") == 0)
                         page = "/index.html";
                 int webpage = open(&page[1],O_RDONLY);
-                drop(webpage,"404 placeholder");
-                char *data = malloc(filesize(webpage)+1);
-                drop2(data,"out of memory");
-                numread = read(webpage,data,filesize(webpage)+1);
-                drop(numread,"read error");
-                data[numread] = '\0';
-                close(webpage);
-                char *httpMimeType = getmime(page);
-                drop(send(msgsock,"HTTP/1.1 200 OK",15,0),"send http header error");
+                if (webpage == -1)
+                {
+                        int code = 200;
+                        char *data = "<!doctype html><html><head><title>404 Not Found</title></head><body><p>%s not found</p></body></html>"
+                        char *httpMimeType = getmime(".html");
+                }
+                else
+                {
+                        int code = 404;
+                        char *data = malloc(filesize(webpage)+1);
+                        drop2(data,"out of memory");
+                        numread = read(webpage,data,filesize(webpage)+1);
+                        drop(numread,"read error");
+                        data[numread] = '\0';
+                        close(webpage);
+                        char *httpMimeType = getmime(page);
+                }
+                drop(send(msgsock,response(code),strlen(response(code)),0),"send response error");
                 drop(send(msgsock,httpMimeType,strlen(httpMimeType),0),"send mime type error");
                 drop(send(msgsock,data,strlen(data),0),"send webpage error");
                 free(data);
-                drop(shutdown(msgsock,2),"shutdown error");
+                shutdown(msgsock,2);
                 close(msgsock);
         }
         close(sock);
