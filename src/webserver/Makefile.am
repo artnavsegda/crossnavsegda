@@ -1,1 +1,1 @@
-bin_PROGRAMS = webserver
+bin_PROGRAMS = webserver webserver2

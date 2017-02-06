@@ -68,6 +68,8 @@ void drop2(char *dropstatus, char *dropdesc)
 
 int main(void)
 {
+	char *httpMimeType, *data;
+	int code;
         char buf[10000];
         int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
         drop(sock,"socket error");
@@ -95,25 +97,26 @@ int main(void)
                 int webpage = open(&page[1],O_RDONLY);
                 if (webpage == -1)
                 {
-                        int code = 200;
-                        char *data = "<!doctype html><html><head><title>404 Not Found</title></head><body><p>%s not found</p></body></html>"
-                        char *httpMimeType = getmime(".html");
+                        code = 404;
+                        data = "<!doctype html><html><head><title>404 Not Found</title></head><body><p>page not found</p></body></html>";
+                        httpMimeType = getmime(".html");
                 }
                 else
                 {
-                        int code = 404;
-                        char *data = malloc(filesize(webpage)+1);
+                        code = 200;
+                        data = malloc(filesize(webpage)+1);
                         drop2(data,"out of memory");
                         numread = read(webpage,data,filesize(webpage)+1);
                         drop(numread,"read error");
                         data[numread] = '\0';
                         close(webpage);
-                        char *httpMimeType = getmime(page);
+                        httpMimeType = getmime(page);
                 }
                 drop(send(msgsock,response(code),strlen(response(code)),0),"send response error");
                 drop(send(msgsock,httpMimeType,strlen(httpMimeType),0),"send mime type error");
                 drop(send(msgsock,data,strlen(data),0),"send webpage error");
-                free(data);
+		if (code == 200)
+                	free(data);
                 shutdown(msgsock,2);
                 close(msgsock);
         }
