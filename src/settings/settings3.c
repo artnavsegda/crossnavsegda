@@ -28,8 +28,10 @@ void setopt(struct settings *myset, char *parameter, char *newset)
 	}
 	if (found == 0)
 	{
-		myset->options[myset->optisize] = parameter;
-		myset->values[myset->optisize] = newset;
+		myset->options[myset->optisize] = malloc(strlen(parameter));
+                strcpy(parameter,myset->options[myset->optisize]);
+		myset->values[myset->optisize] = malloc(strlen(newset));
+                strcpy(newset,myset->values[myset->optisize]);
 		myset->optisize++;
 	}
 }
