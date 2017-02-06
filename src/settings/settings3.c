@@ -19,7 +19,7 @@ void setopt(struct settings *myset, char *parameter, char *newset)
 			{
 				found = 1;
 				//values[i] = newset; //just change the pointer
-				myset->values[i] = malloc(strlen(newset)); //or to allocate new memory ?
+				myset->values[i] = malloc(strlen(newset)+1); //or to allocate new memory ?
 				strcpy(myset->values[i],newset);
 			}
 			else
@@ -28,9 +28,9 @@ void setopt(struct settings *myset, char *parameter, char *newset)
 	}
 	if (found == 0)
 	{
-		myset->options[myset->optisize] = malloc(strlen(parameter));
+		myset->options[myset->optisize] = malloc(strlen(parameter)+1);
                 strcpy(parameter,myset->options[myset->optisize]);
-		myset->values[myset->optisize] = malloc(strlen(newset));
+		myset->values[myset->optisize] = malloc(strlen(newset)+1);
                 strcpy(newset,myset->values[myset->optisize]);
 		myset->optisize++;
 	}
