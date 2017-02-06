@@ -94,23 +94,32 @@ int main(void)
                 char *buf2 = strtok(NULL,"");
                 if (strcmp(page,"/") == 0)
                         page = "/index.html";
-                int webpage = open(&page[1],O_RDONLY);
-                if (webpage == -1)
+                if (strcmp(page,"/special") == 0)
                 {
-                        code = 404;
-                        data = "<!doctype html><html><head><title>404 Not Found</title></head><body><p>page not found</p></body></html>";
+                        code = 200;
+                        data = "<!doctype html><html><head><title>Special page</title></head><body><p>you're special</p></body></html>";
                         httpMimeType = getmime(".html");
                 }
                 else
                 {
-                        code = 200;
-                        data = malloc(filesize(webpage)+1);
-                        drop2(data,"out of memory");
-                        numread = read(webpage,data,filesize(webpage)+1);
-                        drop(numread,"read error");
-                        data[numread] = '\0';
-                        close(webpage);
-                        httpMimeType = getmime(page);
+                        int webpage = open(&page[1],O_RDONLY);
+                        if (webpage == -1)
+                        {
+                                code = 404;
+                                data = "<!doctype html><html><head><title>404 Not Found</title></head><body><p>page not found</p></body></html>";
+                                httpMimeType = getmime(".html");
+                        }
+                        else
+                        {
+                                code = 200;
+                                data = malloc(filesize(webpage)+1);
+                                drop2(data,"out of memory");
+                                numread = read(webpage,data,filesize(webpage)+1);
+                                drop(numread,"read error");
+                                data[numread] = '\0';
+                                close(webpage);
+                                httpMimeType = getmime(page);
+                        }
                 }
                 drop(send(msgsock,response(code),strlen(response(code)),0),"send response error");
                 drop(send(msgsock,httpMimeType,strlen(httpMimeType),0),"send mime type error");
