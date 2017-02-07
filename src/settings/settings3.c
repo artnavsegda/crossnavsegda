@@ -93,6 +93,27 @@ void feedfile(char *filename)
         free(data);
 }
 
+void evalueateopt(char *evaluation)
+{
+        char *parname;
+	char *parvalue;
+	parname = strtok(evaluation,"=");
+	parvalue = strtok(NULL,"=");
+	setopt(parname,parvalue);
+}
+
+void formdecode(char *formdata)
+{
+        char *dispatch[MAXOPT];
+        int i = 0;
+        dispatch[i] = strtok(formdata,"&");
+        while(dispatch[i] != NULL)
+                dispatch[++i] = strtok(NULL, "&");
+        int amount = i;
+        for (i=0;i<amount;i++)
+                setsingleopt(dispatch[i]);
+}
+
 int main(void)
 {
 
