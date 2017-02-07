@@ -19,6 +19,7 @@ void setopt(struct settings *myset, char *parameter, char *newset)
 			{
 				found = 1;
 				//values[i] = newset; //just change the pointer
+                                free(myset->values[i]);
 				myset->values[i] = malloc(strlen(newset)+1); //or to allocate new memory ?
 				strcpy(myset->values[i],newset);
 			}
