@@ -99,6 +99,11 @@ int main(void)
                         code = 200;
                         data = "<!doctype html><html><head><title>Special page</title></head><body><p>you're special</p></body></html>";
                         httpMimeType = getmime(".html");
+                } else if (strcmp(page,"/getopt") == 0)
+                {
+                        code = 200;
+                        data = strstr(buf2,"\r\n\r\n")+4;
+                        httpMimeType = getmime(".txt");
                 }
                 else
                 {
@@ -125,7 +130,11 @@ int main(void)
                 drop(send(msgsock,httpMimeType,strlen(httpMimeType),0),"send mime type error");
                 drop(send(msgsock,data,strlen(data),0),"send webpage error");
 		if (webpage != -1)
+                {
                 	free(data);
+                        data = NULL;
+                        webpage = -1;
+                }
                 shutdown(msgsock,2);
                 close(msgsock);
         }
