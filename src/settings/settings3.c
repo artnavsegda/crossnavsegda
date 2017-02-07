@@ -62,17 +62,10 @@ long long filesize(int fd)
 	return filestat.st_size;
 }
 
-void feedopt(char *filename)
+void feedopt(char *data)
 {
         char *options[MAXOPT];
         char *values[MAXOPT];
-        FILE * setfile = fopen(filename,"r");
-        drop2(setfile);
-        char *data = malloc(filesize(setfile)+1);
-        int numread = fread(data,1,filesize(setfile),setfile);
-        drop(numread);
-        str[numread] = '\0';
-        fclose(setfile);
         int i = 0;
         options[i] = strtok(str," \n");
         while (options[i]!=NULL)
@@ -85,6 +78,18 @@ void feedopt(char *filename)
         }
         for (i=0;i<optisize;i++)
                 setopt(NULL,options[i],values[i]);
+}
+
+void feedfile(char *filename)
+{
+        FILE * setfile = fopen(filename,"r");
+        drop2(setfile);
+        char *data = malloc(filesize(setfile)+1);
+        int numread = fread(data,1,filesize(setfile),setfile);
+        drop(numread);
+        str[numread] = '\0';
+        fclose(setfile);
+        feedopt(str);
         free(data);
 }
 
