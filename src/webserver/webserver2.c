@@ -99,7 +99,14 @@ int main(void)
                         code = 200;
                         data = "<!doctype html><html><head><title>Special page</title></head><body><p>you're special</p></body></html>";
                         httpMimeType = getmime(".html");
-                } else if (strcmp(page,"/getopt") == 0)
+                }
+                else if (strcmp(page,"/getopt") == 0)
+                {
+                        code = 200;
+                        data = strstr(buf2,"\r\n\r\n")+4;
+                        httpMimeType = getmime(".txt");
+                }
+                else if (strcmp(page,"/setopt") == 0)
                 {
                         code = 200;
                         data = strstr(buf2,"\r\n\r\n")+4;
