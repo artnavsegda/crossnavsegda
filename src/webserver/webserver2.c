@@ -69,7 +69,7 @@ void drop2(char *dropstatus, char *dropdesc)
 int main(void)
 {
 	char *httpMimeType, *data;
-	int code;
+	int code, webpage = -1;
         char buf[10000];
         int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
         drop(sock,"socket error");
@@ -102,7 +102,7 @@ int main(void)
                 }
                 else
                 {
-                        int webpage = open(&page[1],O_RDONLY);
+                        webpage = open(&page[1],O_RDONLY);
                         if (webpage == -1)
                         {
                                 code = 404;
@@ -124,7 +124,7 @@ int main(void)
                 drop(send(msgsock,response(code),strlen(response(code)),0),"send response error");
                 drop(send(msgsock,httpMimeType,strlen(httpMimeType),0),"send mime type error");
                 drop(send(msgsock,data,strlen(data),0),"send webpage error");
-		if (code == 200)
+		if (webpage != -1)
                 	free(data);
                 shutdown(msgsock,2);
                 close(msgsock);
