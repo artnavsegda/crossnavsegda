@@ -10,8 +10,9 @@
 
 char buf[1000];
 //char ask[] = "GET / HTTP/1.0\n\n";
-char ask[] = "GET /main.js HTTP/1.0\n\n";
+//char ask[] = "GET /main.js HTTP/1.0\n\n";
 //char ask[] = "GET /main.css HTTP/1.0\n\n";
+char ask[] = "GET /getdata HTTP/1.0\r\n\r\nraw";
 
 struct tcpframestruct {
 	unsigned short tsid;
@@ -40,11 +41,11 @@ int main()
 		printf("socket ok\n");
 	}
 	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
-		//.sin_addr.s_addr = inet_addr("192.168.1.150"),
+		//.sin_addr.s_addr = inet_addr("127.0.0.1"),
+		.sin_addr.s_addr = inet_addr("192.168.1.151"),
 		.sin_family = AF_INET,
-		//.sin_port = htons(80)
-		.sin_port = htons(1100)
+		.sin_port = htons(80)
+		//.sin_port = htons(1100)
 	};
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
@@ -84,7 +85,8 @@ int main()
 		printf("\n");
 	}
 
-	if (shutdown(sock, 2) == -1)
+	shutdown(sock, 2);
+	/*if (shutdown(sock, 2) == -1)
 	{
 		perror("shutdown error");
 		close(sock);
@@ -93,7 +95,7 @@ int main()
 	else
 	{
 		printf("shutdown ok\n");
-	}
+	}*/
 	close(sock);
 
 	return 0;

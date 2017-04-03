@@ -12,18 +12,18 @@
 char buf[100];
 char ask[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x32, 0x03, 0x00, 0x00, 0x00, 0x01 };
 
-struct tcpframestruct tcpframe = {
+tcpframestruct tcpframe = {
 	.tsid = 1,
 	.protoid = 0,
 	.length = 6,
 };
 
-struct pduframestruct pduframe = {
+pduframestruct pduframe = {
 	.unitid = 50,
 	.fncode = 3,
 };
 
-struct mbframestruct mbframe = {
+mbframestruct mbframe = {
 	.tsid = 0x0100,
 	.protoid = 0x0000,
 	.length = 0x0600,
@@ -32,7 +32,7 @@ struct mbframestruct mbframe = {
 	}
 };
 
-struct mbframestruct askframe;
+mbframestruct askframe;
 
 void printbinary(unsigned char value)
 {

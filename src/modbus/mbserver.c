@@ -9,7 +9,7 @@
 #include <netdb.h>
 #include "modbus.h"
 
-struct mbframestruct askmbframe, reqmbframe;
+mbframestruct askmbframe, reqmbframe;
 
 unsigned short table[100] = {0xABCD, 0xDEAD};
 unsigned char bctable[100] = {0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 ,0 , 0, 1 };
@@ -147,12 +147,12 @@ int main()
 			break;
 			case 5:
 				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < amount)
-				{	
+				{
 					if (askmbframe.pdu.data.writereg.regvalue == 0)
 						bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 0;
 					else
 						bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 1;
-				}	
+				}
 				break;
 			case 6:
 				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < amount)
@@ -161,12 +161,12 @@ int main()
 			case 15:
 				for (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
 					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < amount)
-					{	
+					{
 						if (askmbframe.pdu.data.writereg.regvalue == 0)
 							bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 0;
 						else
 							bctable[ntohs(askmbframe.pdu.data.writereg.regaddress)] = 1;
-					}	
+					}
 				break;
 				askmbframe.length = htons(6);
 				break;

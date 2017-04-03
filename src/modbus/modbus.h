@@ -1,57 +1,57 @@
-struct tcpframestruct {
+typedef struct  {
 	unsigned short tsid;
 	unsigned short protoid;
 	unsigned short length;
-};
+}tcpframestruct;
 
-struct askreadregstruct {
+typedef struct  {
 	unsigned short firstreg;
 	unsigned short regnumber;
-};
+}askreadregstruct;
 
-struct writeregstruct {
+typedef struct  {
 	unsigned short regaddress;
 	unsigned short regvalue;
-};
+}writeregstruct;
 
-struct reqreadstruct {
+typedef struct  {
 	unsigned char bytestofollow;
 	unsigned char bytes[254];
-};
+}reqreadstruct;
 
-struct writemulticoilstruct {
+typedef struct  {
 	unsigned short firstreg;
 	unsigned short regnumber;
 	unsigned char bytestofollow;
 	unsigned char coils[256];
-};
+}writemulticoilstruct;
 
-struct writemultiregstruct {
+typedef struct  {
 	unsigned short firstreg;
 	unsigned short regnumber;
 	unsigned char bytestofollow;
 	unsigned short registers[127];
-};
+}writemultiregstruct;
 
-union pdudataunion {
-	struct askreadregstruct askreadregs;
-	struct reqreadstruct reqread;
-	struct writeregstruct writereg;
-	struct writemulticoilstruct writemulticoil;
-	struct writemultiregstruct writemultireg;
+typedef union  {
+	askreadregstruct askreadregs;
+	reqreadstruct reqread;
+	writeregstruct writereg;
+	writemulticoilstruct writemulticoil;
+	writemultiregstruct writemultireg;
 	unsigned short words[127];
 	unsigned char bytes[254];
-};
+}pdudataunion;
 
-struct pduframestruct {
+typedef struct  {
 	unsigned char unitid;
 	unsigned char fncode;
-	union pdudataunion data;
-};
+	pdudataunion data;
+}pduframestruct;
 
-struct mbframestruct {
+typedef struct  {
 	unsigned short tsid;
 	unsigned short protoid;
 	unsigned short length;
-	struct pduframestruct pdu;
-};
+	pduframestruct pdu;
+}mbframestruct;
