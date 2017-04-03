@@ -22,39 +22,22 @@ int main()
 		printf("socket ok\n");
 	}
 
-	struct sockaddr_in server = {
+	struct sockaddr_in other = {
+		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
-		.sin_addr.s_addr = INADDR_ANY,
 		.sin_port = htons(1234)
 	};
 
-	struct sockaddr_in other;
 	int slen = sizeof(other);
 
-	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
+	int numwrite = sendto(sock,"hello",6,0,(struct sockaddr *)&other, &slen);
+	if (numwrite == -1)
 	{
-		perror("bind error");
-		close(sock);
-		return 1;
+		perror("sendto error");
 	}
 	else
 	{
-		printf("bind ok\n");
-	}
-
-	int numread = recvfrom(sock,buf,100,0,(struct sockaddr *)&other, &slen);
-	if (numread == -1)
-	{
-		perror("recv error");
-	}
-	else
-	{
-		printf("recv %d bytes\n",numread);
-		for (int i=0; i<numread;i++)
-		{
-			printf("0x%02X ",buf[i]);
-		}
-		printf("\n");
+		printf("send %d bytes\n",numwrite);
 	}
 
 	if (shutdown(sock, 2) == -1)
