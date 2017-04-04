@@ -11,7 +11,7 @@
 int main()
 {
 	unsigned char buf[100];
-	int sock = socket(AF_INET,SOCK_STREAM,IPPROTO_UDP);
+	int sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
 	if (sock == -1)
 	{
 		perror("socket error");
