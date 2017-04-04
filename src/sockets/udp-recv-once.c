@@ -10,7 +10,7 @@
 
 int main()
 {
-	unsigned char buf[100];
+	unsigned char buf[1000];
 	int sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
 	if (sock == -1)
 	{
@@ -25,7 +25,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(1234)
+		.sin_port = htons(123)
 	};
 
 	struct sockaddr_in other;
@@ -42,7 +42,7 @@ int main()
 		printf("bind ok\n");
 	}
 
-	int numread = recvfrom(sock,buf,100,0,(struct sockaddr *)&other, &slen);
+	int numread = recvfrom(sock,buf,1000,0,(struct sockaddr *)&other, &slen);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -52,7 +52,7 @@ int main()
 		printf("recv %d bytes\n",numread);
 		for (int i=0; i<numread;i++)
 		{
-			printf("0x%02X ",buf[i]);
+			printf("0x%02X, ",buf[i]);
 		}
 		printf("\n");
 	}

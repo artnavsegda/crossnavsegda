@@ -14,6 +14,7 @@ int main()
 {
 	unsigned char buf[100];
 	int sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
+	int sock2 = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
 	if (sock == -1)
 	{
 		perror("socket error");
@@ -32,6 +33,23 @@ int main()
 
 	int slen = sizeof(other);
 
+	struct sockaddr_in server = {
+		.sin_family = AF_INET,
+		.sin_addr.s_addr = INADDR_ANY,
+		.sin_port = htons(123)
+	};
+
+	if (bind(sock,(struct sockaddr *)&server,sizeof(server)) == -1)
+	{
+		perror("bind error");
+		close(sock);
+		return 1;
+	}
+	else
+	{
+		printf("bind ok\n");
+	}
+
 	int numwrite = sendto(sock,package,sizeof(package),0,(struct sockaddr *)&other, slen);
 	if (numwrite == -1)
 	{
@@ -40,6 +58,21 @@ int main()
 	else
 	{
 		printf("send %d bytes\n",numwrite);
+	}
+
+	int numread = recvfrom(sock,buf,1000,0,(struct sockaddr *)&other, &slen);
+	if (numread == -1)
+	{
+		perror("recv error");
+	}
+	else
+	{
+		printf("recv %d bytes\n",numread);
+		for (int i=0; i<numread;i++)
+		{
+			printf("0x%02X ",buf[i]);
+		}
+		printf("\n");
 	}
 
 	if (shutdown(sock, 2) == -1)
