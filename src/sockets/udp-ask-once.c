@@ -26,7 +26,8 @@ int main()
 	}
 
 	struct sockaddr_in other = {
-		.sin_addr.s_addr = inet_addr("192.168.1.110"),
+		//.sin_addr.s_addr = inet_addr("192.168.1.110"),
+		.sin_addr.s_addr = inet_addr("132.163.4.103"),
 		.sin_family = AF_INET,
 		.sin_port = htons(123)
 	};

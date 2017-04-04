@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 	int fd;
 	//struct termios tio;
 	struct termios tio = {
-		.c_cflag = B115200 | CS8 | CLOCAL | CREAD,
+		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
 		.c_iflag = IGNPAR,
 		.c_oflag = 0,
 		.c_lflag = 0,
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	else
 		printf("serial port open\n");
 
-	cfsetspeed(&tio,B115200);
+	cfsetspeed(&tio,B9600);
 	tcsetattr(fd,TCSANOW,&tio);
 
 	while (1)
