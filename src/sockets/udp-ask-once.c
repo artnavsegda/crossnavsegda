@@ -92,10 +92,22 @@ int main()
 	else
 	{
 		printf("recv %d bytes\n",numread);
-		for (int i=0; i<numread;i++)
-		{
-			printf("0x%02X ",buf[i]);
-		}
+		printf("NTP frame: %ld\n",sizeof(myframe));
+		printf("NTP lvm: 0x%X\n",myframe.leapvermode);
+		printf("NTP stratum: 0x%X\n",myframe.stratumlevel);
+		printf("NTP poll: 0x%X\n",myframe.poll);
+		printf("NTP precision: 0x%X\n",myframe.precision);
+		printf("NTP root delay: 0x%X\n",myframe.rootdelay);
+		printf("NTP drift rate: 0x%X\n",myframe.driftrate);
+		printf("NTP reference id: 0x%X\n",myframe.referenceid);
+		printf("NTP reference time: 0x%X\n",myframe.reference.timeseconds);
+		printf("NTP reference fraction: 0x%X\n",myframe.reference.timefraction);
+		printf("NTP origin time: 0x%X\n",myframe.origin.timeseconds);
+		printf("NTP origin fraction: 0x%X\n",myframe.origin.timefraction);
+		printf("NTP receive time: 0x%X\n",myframe.receive.timeseconds);
+		printf("NTP receive fraction: 0x%X\n",myframe.receive.timefraction);
+		printf("NTP transmit time: %u\n",myframe.transmit.timeseconds-NTP_TIME_OFFSET);
+		printf("NTP transmit fraction: %u\n",myframe.transmit.timefraction);
 		printf("\n");
 	}
 
