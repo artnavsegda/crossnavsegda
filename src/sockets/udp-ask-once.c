@@ -8,6 +8,29 @@
 #include <unistd.h>
 #include <netdb.h>
 
+#define NTP_TIME_OFFSET 2208988800
+
+struct ntptime {
+	unsigned int timeseconds;
+	unsigned int timefraction;
+};
+
+struct ntpframe {
+	unsigned char leapvermode;
+	unsigned char stratumlevel;
+	unsigned char poll;
+	unsigned char precision;
+	unsigned int rootdelay;
+	unsigned int driftrate;
+	unsigned int referenceid;
+	struct ntptime reference;
+	struct ntptime origin;
+	struct ntptime receive;
+	struct ntptime transmit;
+};
+
+struct ntpframe myframe;
+
 char package[] = { 0xE3, 0x00, 0x03, 0xFA, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xDC, 0x8D, 0x97, 0xBA, 0x2C, 0x64, 0xE9, 0xCF };
 
 int main()
@@ -61,7 +84,7 @@ int main()
 		printf("send %d bytes\n",numwrite);
 	}
 
-	int numread = recvfrom(sock,buf,1000,0,(struct sockaddr *)&other, &slen);
+	int numread = recvfrom(sock,&myframe,48,0,(struct sockaddr *)&other, &slen);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -90,4 +113,3 @@ int main()
 
 	return 0;
 }
-
