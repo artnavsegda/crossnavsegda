@@ -102,9 +102,9 @@ int main()
 		printf("NTP reference id: 0x%X\n",myframe.referenceid);
 		printf("NTP reference time: 0x%X\n",myframe.reference.timeseconds);
 		printf("NTP reference fraction: 0x%X\n",myframe.reference.timefraction);
-		printf("NTP origin time: 0x%X\n",myframe.origin.timeseconds);
+		printf("NTP origin time: %u\n",myframe.origin.timeseconds-NTP_TIME_OFFSET);
 		printf("NTP origin fraction: 0x%X\n",myframe.origin.timefraction);
-		printf("NTP receive time: 0x%X\n",myframe.receive.timeseconds);
+		printf("NTP receive time: %u\n",myframe.receive.timeseconds-NTP_TIME_OFFSET);
 		printf("NTP receive fraction: 0x%X\n",myframe.receive.timefraction);
 		printf("NTP transmit time: %u\n",myframe.transmit.timeseconds-NTP_TIME_OFFSET);
 		printf("NTP transmit fraction: %u\n",myframe.transmit.timefraction);
