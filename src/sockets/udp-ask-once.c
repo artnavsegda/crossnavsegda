@@ -92,8 +92,8 @@ int main()
 	}
 	else
 	{
-		printf("Unixtime: %ld\n",time(NULL));
-		printf("NTP time: %ld\n",time(NULL)+NTP_TIME_OFFSET);
+		printf("Unixtime: %lu\n",time(NULL));
+		printf("NTP time: %lu\n",time(NULL)+NTP_TIME_OFFSET);
 		printf("recv %d bytes\n",numread);
 		printf("NTP frame: %ld\n",sizeof(myframe));
 		printf("NTP lvm: 0x%X\n",myframe.leapvermode);
@@ -103,13 +103,13 @@ int main()
 		printf("NTP root delay: 0x%X\n",myframe.rootdelay);
 		printf("NTP drift rate: 0x%X\n",myframe.driftrate);
 		printf("NTP reference id: 0x%X\n",myframe.referenceid);
-		printf("NTP reference time: 0x%X\n",myframe.reference.timeseconds);
+		printf("NTP reference time: %lu\n",myframe.reference.timeseconds-NTP_TIME_OFFSET);
 		printf("NTP reference fraction: 0x%X\n",myframe.reference.timefraction);
-		printf("NTP origin time: %u\n",myframe.origin.timeseconds-NTP_TIME_OFFSET);
+		printf("NTP origin time: %lu\n",myframe.origin.timeseconds-NTP_TIME_OFFSET);
 		printf("NTP origin fraction: 0x%X\n",myframe.origin.timefraction);
-		printf("NTP receive time: %u\n",myframe.receive.timeseconds-NTP_TIME_OFFSET);
+		printf("NTP receive time: %lu\n",myframe.receive.timeseconds-NTP_TIME_OFFSET);
 		printf("NTP receive fraction: 0x%X\n",myframe.receive.timefraction);
-		printf("NTP transmit time: %u\n",myframe.transmit.timeseconds-NTP_TIME_OFFSET);
+		printf("NTP transmit time: %lu\n",myframe.transmit.timeseconds-NTP_TIME_OFFSET);
 		printf("NTP transmit fraction: %u\n",myframe.transmit.timefraction);
 		printf("\n");
 	}
