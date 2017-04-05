@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <time.h>
 
 #define NTP_TIME_OFFSET 2208988800
 
@@ -91,6 +92,8 @@ int main()
 	}
 	else
 	{
+		printf("Unixtime: %ld\n",time(NULL));
+		printf("NTP time: %ld\n",time(NULL)+NTP_TIME_OFFSET);
 		printf("recv %d bytes\n",numread);
 		printf("NTP frame: %ld\n",sizeof(myframe));
 		printf("NTP lvm: 0x%X\n",myframe.leapvermode);
