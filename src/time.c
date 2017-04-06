@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <arpa/inet.h>
 
 #define NTP_TIME_OFFSET 2208988800
 
@@ -34,6 +35,7 @@ int main(void)
 	timenow = time(NULL);
 	printf("Unixtime: %ld\n",timenow);
 	printf("NTP time: %ld\n",timenow+NTP_TIME_OFFSET);
+	printf("Time: %s",ctime(&timenow));
 	printf("NTP frame: %ld\n",sizeof(myframe));
 	printf("NTP lvm: 0x%X\n",myframe.leapvermode);
 	printf("NTP stratum: 0x%X\n",myframe.stratumlevel);
@@ -48,7 +50,7 @@ int main(void)
 	printf("NTP origin fraction: 0x%X\n",myframe.origin.timefraction);
 	printf("NTP receive time: 0x%X\n",myframe.receive.timeseconds);
 	printf("NTP receive fraction: 0x%X\n",myframe.receive.timefraction);
-	printf("NTP transmit time: %u\n",myframe.transmit.timeseconds-NTP_TIME_OFFSET);
+	printf("NTP transmit time: %lu\n",ntohl(myframe.transmit.timeseconds)-NTP_TIME_OFFSET);
 	printf("NTP transmit fraction: %u\n",myframe.transmit.timefraction);
 }
 
