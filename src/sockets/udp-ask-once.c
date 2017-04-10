@@ -50,8 +50,8 @@ int main()
 	}
 
 	struct sockaddr_in other = {
-		//.sin_addr.s_addr = inet_addr("192.168.1.110"),
-		.sin_addr.s_addr = inet_addr("132.163.4.103"),
+		.sin_addr.s_addr = inet_addr("192.168.1.110"),
+		//.sin_addr.s_addr = inet_addr("132.163.4.103"),
 		.sin_family = AF_INET,
 		.sin_port = htons(123)
 	};
@@ -100,17 +100,17 @@ int main()
 		printf("NTP stratum: 0x%X\n",myframe.stratumlevel);
 		printf("NTP poll: 0x%X\n",myframe.poll);
 		printf("NTP precision: 0x%X\n",myframe.precision);
-		printf("NTP root delay: 0x%X\n",myframe.rootdelay);
-		printf("NTP drift rate: 0x%X\n",myframe.driftrate);
+		printf("NTP root delay: %u\n",ntohl(myframe.rootdelay));
+		printf("NTP drift rate: %u\n",ntohl(myframe.driftrate));
 		printf("NTP reference id: 0x%X\n",myframe.referenceid);
 		printf("NTP reference time: %lu\n",ntohl(myframe.reference.timeseconds)-NTP_TIME_OFFSET);
-		printf("NTP reference fraction: 0x%X\n",myframe.reference.timefraction);
+		printf("NTP reference fraction: %u\n",ntohl(myframe.reference.timefraction));
 		printf("NTP origin time: %lu\n",ntohl(myframe.reference.timeseconds)-NTP_TIME_OFFSET);
-		printf("NTP origin fraction: 0x%X\n",myframe.origin.timefraction);
+		printf("NTP origin fraction: %u\n",ntohl(myframe.origin.timefraction));
 		printf("NTP receive time: %lu\n",ntohl(myframe.reference.timeseconds)-NTP_TIME_OFFSET);
-		printf("NTP receive fraction: 0x%X\n",myframe.receive.timefraction);
+		printf("NTP receive fraction: %u\n",ntohl(myframe.receive.timefraction));
 		printf("NTP transmit time: %lu\n",ntohl(myframe.reference.timeseconds)-NTP_TIME_OFFSET);
-		printf("NTP transmit fraction: %u\n",myframe.transmit.timefraction);
+		printf("NTP transmit fraction: %u\n",ntohl(myframe.transmit.timefraction));
 		printf("\n");
 	}
 
