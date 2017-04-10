@@ -32,10 +32,8 @@ struct ntpframe {
 
 struct ntpframe myframe;
 
-//char package[] = { 0x1b, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
 struct ntpframe package = {
-	.leapvermode = 0x1b;
+	.leapvermode = 0x1b
 };
 
 int main()
@@ -54,8 +52,8 @@ int main()
 	}
 
 	struct sockaddr_in other = {
-		.sin_addr.s_addr = inet_addr("192.168.1.110"),
-		//.sin_addr.s_addr = inet_addr("132.163.4.103"),
+		//.sin_addr.s_addr = inet_addr("192.168.1.110"),
+		.sin_addr.s_addr = inet_addr("132.163.4.103"),
 		.sin_family = AF_INET,
 		.sin_port = htons(123)
 	};
@@ -79,7 +77,12 @@ int main()
 		printf("bind ok\n");
 	}
 
-	int numwrite = sendto(sock,package,sizeof(package),0,(struct sockaddr *)&other, slen);
+	package.reference.timeseconds = htonl(time(NULL)+NTP_TIME_OFFSET);
+	package.origin.timeseconds = htonl(time(NULL)+NTP_TIME_OFFSET);
+	package.receive.timeseconds = htonl(time(NULL)+NTP_TIME_OFFSET);
+	package.transmit.timeseconds = htonl(time(NULL)+NTP_TIME_OFFSET);
+
+	int numwrite = sendto(sock,&package,sizeof(package),0,(struct sockaddr *)&other, slen);
 	if (numwrite == -1)
 	{
 		perror("sendto error");
