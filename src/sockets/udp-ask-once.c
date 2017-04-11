@@ -32,11 +32,11 @@ struct ntpframe {
 
 struct ntpframe myframe;
 
-//struct ntpframe package = {
-//	.leapvermode = 0x1b
-//};
+struct ntpframe package = {
+	.leapvermode = 0x1b
+};
 
-char package[] = { 0xE3, 0, 6, 0xEC, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0x4E, 49, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+//char package[] = { 0xE3, 0, 6, 0xEC, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0x4E, 49, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 int main()
 {

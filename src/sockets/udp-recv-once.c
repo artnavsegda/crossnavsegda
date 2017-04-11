@@ -25,7 +25,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(123)
+		.sin_port = htons(10001)
 	};
 
 	struct sockaddr_in other;
@@ -42,7 +42,7 @@ int main()
 		printf("bind ok\n");
 	}
 
-	int numread = recvfrom(sock,buf,1000,0,(struct sockaddr *)&other, &slen);
+	int numread = recvfrom(sock,buf,3,0,(struct sockaddr *)&other, &slen);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -71,4 +71,3 @@ int main()
 
 	return 0;
 }
-
