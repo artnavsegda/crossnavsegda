@@ -33,10 +33,11 @@ struct ntpframe {
 struct ntpframe myframe;
 
 struct ntpframe package = {
-	.leapvermode = 0x1b
+	.leapvermode = 0x1b,
+	.stratumlevel = 0,
+	.poll = 6,
+	.precision = 0xEC
 };
-
-//char package[] = { 0xE3, 0, 6, 0xEC, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0x4E, 49, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 int main()
 {
@@ -54,8 +55,9 @@ int main()
 	}
 
 	struct sockaddr_in other = {
-		//.sin_addr.s_addr = inet_addr("192.168.1.110"),
-		.sin_addr.s_addr = inet_addr("132.163.4.103"),
+		//.sin_addr.s_addr = inet_addr("192.168.1.113"),
+		//.sin_addr.s_addr = inet_addr("132.163.4.103"),
+		.sin_addr.s_addr = inet_addr("216.229.0.179"),
 		.sin_family = AF_INET,
 		.sin_port = htons(123)
 	};
@@ -120,6 +122,9 @@ int main()
 		printf("NTP receive fraction: %u\n",ntohl(myframe.receive.timefraction));
 		printf("NTP transmit time: %lu\n",ntohl(myframe.reference.timeseconds)-NTP_TIME_OFFSET);
 		printf("NTP transmit fraction: %u\n",ntohl(myframe.transmit.timefraction));
+		time_t mytime = ntohl(myframe.reference.timeseconds)-NTP_TIME_OFFSET;
+		struct tm *mydate = localtime(&mytime);
+		printf("Time is %s\n", asctime(mydate));
 		printf("\n");
 	}
 
