@@ -42,31 +42,24 @@ int main()
 		printf("bind ok\n");
 	}
 
-	int numread = recvfrom(sock,buf,3,0,(struct sockaddr *)&other, &slen);
+	int numread = recvfrom(sock,buf,sizeof(buf),0,(struct sockaddr *)&other, &slen);
 	if (numread == -1)
 	{
 		perror("recv error");
 	}
 	else
 	{
-		printf("recv %d bytes\n",numread);
-		for (int i=0; i<numread;i++)
+		printf("recv %d bytes\n",numread-28);
+		printf("destinaton port %hhu %hhu\n",buf[22],buf[23]);
+
+		for (int i=28; i<numread;i++)
 		{
 			printf("0x%02X, ",buf[i]);
 		}
 		printf("\n");
 	}
 
-	if (shutdown(sock, 2) == -1)
-	{
-		perror("shutdown error");
-		close(sock);
-		return 1;
-	}
-	else
-	{
-		printf("shutdown ok\n");
-	}
+	shutdown(sock, 2);
 	close(sock);
 
 	return 0;

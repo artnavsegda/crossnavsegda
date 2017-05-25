@@ -42,7 +42,7 @@ int main()
 		printf("bind ok\n");
 	}
 
-	int numread = recvfrom(sock,buf,3,0,(struct sockaddr *)&other, &slen);
+	int numread = recvfrom(sock,buf,sizeof(buf),0,(struct sockaddr *)&other, &slen);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -57,16 +57,7 @@ int main()
 		printf("\n");
 	}
 
-	if (shutdown(sock, 2) == -1)
-	{
-		perror("shutdown error");
-		close(sock);
-		return 1;
-	}
-	else
-	{
-		printf("shutdown ok\n");
-	}
+	shutdown(sock, 2);
 	close(sock);
 
 	return 0;
