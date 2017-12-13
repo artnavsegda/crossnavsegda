@@ -3,14 +3,17 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
         
 #define BAUDRATE B9600
 #define MODEMDEVICE "/dev/ttyUSB0"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
 #define TRUE 1
-        
-int main()
+
+int main(int argc, char *argv[])
 {
         int fd,c, res;
         struct termios oldtio,newtio;
