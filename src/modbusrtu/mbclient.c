@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
                 .c_oflag = 0,
                 .c_lflag = 0,
                 .c_cc[VTIME] = 1,
-                .c_cc[VMIN] = 7
+                .c_cc[VMIN] = 50
         };
 
 	if (argc < 3)
@@ -189,6 +189,8 @@ int main(int argc, char *argv[])
 			printf("unknown function number");
 		break;
 		}
+		printf("recieved CRC 0x%04hX\n",((short *)&askframe.data.reqread.bytes)[1+((numread-6))/2]);
+		printf("calculated CRC 0x%04hX\n",CRC16((char *)&askframe,numread-2));
 	}
 
 	close(fd);
