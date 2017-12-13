@@ -1,1 +1,1 @@
-bin_PROGRAMS = mbclient mbserver mbtable rtclient
+bin_PROGRAMS = mbclient mbserver mbtable
