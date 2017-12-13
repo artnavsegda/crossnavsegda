@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
 	if (argc < 3)
 	{
-		printf("name serial port function code and its values\n");
+		printf("name serial port device id function code and its values\n");
 		printf("1 first amount: read coil\n");
 		printf("2 first amount: read discrete\n");
 		printf("3 first amount: read holding\n");
@@ -51,60 +51,61 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	sscanf(argv[2],"%hhu",&mbframe.fncode); // <-----
+	sscanf(argv[2],"%hhu",&mbframe.unitid); // <-----
+	sscanf(argv[3],"%hhu",&mbframe.fncode); // <-----
 
 	switch (mbframe.fncode)
 	{
 		case 1:
 		case 2:
-			if (argc < 5)
+			if (argc < 6)
 			{
 				printf("name first coil/discrete and amount to return\n");
 				return 1;
 			}
-			sscanf(argv[3],"%hu",&mbframe.data.askreadregs.firstreg);
+			sscanf(argv[4],"%hu",&mbframe.data.askreadregs.firstreg);
 			mbframe.data.askreadregs.firstreg = htons(mbframe.data.askreadregs.firstreg);
-			sscanf(argv[4],"%hu",&mbframe.data.askreadregs.regnumber);
+			sscanf(argv[5],"%hu",&mbframe.data.askreadregs.regnumber);
 			mbframe.data.askreadregs.regnumber = htons(mbframe.data.askreadregs.regnumber);
 			break;
 		case 3:
 		case 4:
-			if (argc < 5)
+			if (argc < 6)
 			{
 				printf("name first input/holding and amount to return\n");
 				return 1;
 			}
-			sscanf(argv[3],"%hu",&mbframe.data.askreadregs.firstreg);
+			sscanf(argv[4],"%hu",&mbframe.data.askreadregs.firstreg);
 			mbframe.data.askreadregs.firstreg = htons(mbframe.data.askreadregs.firstreg);
-			sscanf(argv[4],"%hu",&mbframe.data.askreadregs.regnumber);
+			sscanf(argv[5],"%hu",&mbframe.data.askreadregs.regnumber);
 			mbframe.data.askreadregs.regnumber = htons(mbframe.data.askreadregs.regnumber);
 			break;
 		case 5:
 		case 6:
-			if (argc < 5)
+			if (argc < 6)
 			{
 				printf("name register number and value to set\n");
 				return 1;
 			}
-			sscanf(argv[3],"%hu",&mbframe.data.writereg.regaddress);
+			sscanf(argv[4],"%hu",&mbframe.data.writereg.regaddress);
 			mbframe.data.writereg.regaddress = htons(mbframe.data.writereg.regaddress);
-			sscanf(argv[4],"%hu",&mbframe.data.writereg.regvalue);
+			sscanf(argv[5],"%hu",&mbframe.data.writereg.regvalue);
 			mbframe.data.writereg.regvalue = htons(mbframe.data.writereg.regvalue);
 			break;
 		case 15:
 		case 16:
-			if (argc < 6)
+			if (argc < 7)
 			{
 				printf("name first register, registers amount to set, number of bytes to follow and bytes with values\n");
 				return 1;
 			}
-			sscanf(argv[3],"%hu",&mbframe.data.writemulticoil.firstreg);
+			sscanf(argv[4],"%hu",&mbframe.data.writemulticoil.firstreg);
 			mbframe.data.writemulticoil.firstreg = htons(mbframe.data.writemulticoil.firstreg);
-			sscanf(argv[4],"%hu",&mbframe.data.writemulticoil.regnumber);
+			sscanf(argv[5],"%hu",&mbframe.data.writemulticoil.regnumber);
 			mbframe.data.writemulticoil.regnumber = htons(mbframe.data.writemulticoil.regnumber);
-			sscanf(argv[5],"%hhu",&mbframe.data.writemulticoil.bytestofollow);
+			sscanf(argv[6],"%hhu",&mbframe.data.writemulticoil.bytestofollow);
 			for (int i=0;i<mbframe.data.writemulticoil.bytestofollow;i++)
-				sscanf(argv[4+i],"%hhu",&mbframe.data.writemulticoil.coils[i]);
+				sscanf(argv[5+i],"%hhu",&mbframe.data.writemulticoil.coils[i]);
 			break;
 		default:
 			printf("unknown function number");
