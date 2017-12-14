@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
                 .c_cc[VMIN] = 50
         };
 
-	if (argc < 3)
+	if (argc < 4)
 	{
 		printf("name serial port device id function code and its values\n");
 		printf("1 first amount: read coil\n");
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 			break;
 	}
 
-        int fd = open(argv[1], O_RDWR | O_NOCTTY ); 
+        int fd = open(argv[1], O_RDWR | O_NOCTTY );
         if (fd  == -1)
         {
                 perror("cannot open serial port");
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
         tcflush(fd, TCIFLUSH);
         tcsetattr(fd,TCSANOW,&tio);
 
-	mbframe.checksum = CRC16((char *)&mbframe,6);
+	mbframe.checksum = CRC16((unsigned char *)&mbframe,6);
 
 	printf("checksum %02X\n",mbframe.checksum);
 
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 		break;
 		}
 		printf("recieved CRC 0x%04hX\n",((short *)&askframe.data.reqread.bytes)[1+((numread-6))/2]);
-		printf("calculated CRC 0x%04hX\n",CRC16((char *)&askframe,numread-2));
+		printf("calculated CRC 0x%04hX\n",CRC16((unsigned char *)&askframe,numread-2));
 	}
 
 	close(fd);
