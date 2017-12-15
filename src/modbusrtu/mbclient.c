@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 			printf("number of registers: %d\n",askframe.data.reqread.bytestofollow/2);
 			for (int i=0;i<askframe.data.reqread.bytestofollow/2;i++)
 			{
-				printf("0x%04hX ",((short *)&askframe.data.reqread.bytes)[i]);
+				printf("0x%04hX ",htons(((short *)&askframe.data.reqread.bytes)[i]));
 			}
 			printf("\n");
 		break;
