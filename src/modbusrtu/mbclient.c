@@ -127,17 +127,21 @@ int main(int argc, char *argv[])
 
 	printf("checksum %02X\n",mbframe.checksum);
 
-	ssize_t numwrite = write(fd,&mbframe,6);
-	if (numwrite == -1)
+	ssize_t numwrite1 = write(fd,&mbframe,6);
+	if (numwrite1 == -1)
 	{
-		perror("send error");
-	}
-	else
-	{
-		printf("send %zd bytes ok\n", numwrite);
+		perror("send request error");
+                exit(1);
 	}
 
-	write(fd,&mbframe.checksum,2);
+	ssize_t numwrite2 = write(fd,&mbframe.checksum,2);
+	if (numwrite2 == -1)
+	{
+		perror("send checksum error");
+                exit(1);
+	}
+
+	printf("send %zd request and %zd checksum ok\n", numwrite1, numwrite2);
 
 	int numread = read(fd,&askframe,255);
 	if (numread == -1)
@@ -172,7 +176,7 @@ int main(int argc, char *argv[])
 			printf("number of registers: %d\n",askframe.data.reqread.bytestofollow/2);
 			for (int i=0;i<askframe.data.reqread.bytestofollow/2;i++)
 			{
-				printf("0x%04hX ",htons(((short *)&askframe.data.reqread.bytes)[i]));
+				printf("0x%04hX ",((short *)&askframe.data.reqread.bytes)[i]);
 			}
 			printf("\n");
 		break;
@@ -187,7 +191,7 @@ int main(int argc, char *argv[])
 			printf("registers amount %u\n", ntohs(askframe.data.writemulticoil.regnumber));
 		break;
 		default:
-			printf("unknown function number");
+			printf("unknown function number\n");
 		break;
 		}
 		printf("recieved CRC 0x%04hX\n",((short *)&askframe.data.reqread.bytes)[1+((numread-6))/2]);
