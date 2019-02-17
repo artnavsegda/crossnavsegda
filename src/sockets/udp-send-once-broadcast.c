@@ -29,7 +29,7 @@ int main()
 
 	struct sockaddr_in other = {
 		.sin_family = AF_INET,
-		.sin_port = htons(123),
+		.sin_port = htons(10001),
 		.sin_addr.s_addr = htonl(INADDR_BROADCAST)
 	};
 
