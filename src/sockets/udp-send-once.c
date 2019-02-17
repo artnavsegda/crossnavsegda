@@ -26,7 +26,7 @@ int main()
 	struct sockaddr_in other = {
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
-		.sin_port = htons(123)
+		.sin_port = htons(10001)
 	};
 
 	int slen = sizeof(other);
