@@ -28,9 +28,9 @@ int main()
 	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
 
 	struct sockaddr_in other = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
-		.sin_port = htons(123)
+		.sin_port = htons(123),
+		.sin_addr.s_addr = htonl(INADDR_BROADCAST)
 	};
 
 	int slen = sizeof(other);
