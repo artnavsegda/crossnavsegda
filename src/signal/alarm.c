@@ -10,7 +10,7 @@ void alarm_handler(int signal)
 int main(void)
 {
 	signal(SIGALRM, alarm_handler);
-	alarm(100);
+	alarm(10);
 	while (1)
 		sleep(1);
 	return 0;
