@@ -23,6 +23,10 @@ int main()
 		printf("socket ok\n");
 	}
 
+	int broadcast = 1;
+
+	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast);
+
 	struct sockaddr_in other = {
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
