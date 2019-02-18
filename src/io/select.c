@@ -8,5 +8,10 @@ int main(void)
 	FD_SET(STDIN_FILENO,&rfds);
 	struct timeval tv = { .tv_sec = 5, .tv_usec = 0 };
 	select(1,&rfds,NULL,NULL,&tv);
+
+	if (FD_ISSET(STDIN, &rfds))
+		printf("key press\n");
+	else
+		printf("timeout");
 }
 
