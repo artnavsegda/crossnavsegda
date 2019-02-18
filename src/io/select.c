@@ -1,5 +1,6 @@
 #include <sys/select.h>
 #include <unistd.h>
+#include <stdio.h>
 
 int main(void)
 {
@@ -9,7 +10,7 @@ int main(void)
 	struct timeval tv = { .tv_sec = 5, .tv_usec = 0 };
 	select(1,&rfds,NULL,NULL,&tv);
 
-	if (FD_ISSET(STDIN, &rfds))
+	if (FD_ISSET(STDIN_FILENO, &rfds))
 		printf("key press\n");
 	else
 		printf("timeout");
