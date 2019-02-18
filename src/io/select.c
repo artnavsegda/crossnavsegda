@@ -13,6 +13,6 @@ int main(void)
 	if (FD_ISSET(STDIN_FILENO, &rfds))
 		printf("key press\n");
 	else
-		printf("timeout");
+		printf("timeout\n");
 }
 
