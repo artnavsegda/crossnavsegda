@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/poll.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <stdio.h>
@@ -21,6 +22,13 @@ int main()
 	{
 		printf("socket ok\n");
 	}
+
+	struct pollfd fds[1] = {
+		{
+			.fd = sock,
+			.events = POLLIN
+		}
+	};
 
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
@@ -44,6 +52,8 @@ int main()
 
 	while(1)
 	{
+		int ret = poll(fds, 1, 5000);
+
 		int numread = recvfrom(sock,buf,sizeof(buf),MSG_DONTWAIT,(struct sockaddr *)&other, &slen);
 		if (numread == -1)
 		{
