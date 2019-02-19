@@ -52,22 +52,25 @@ int main()
 
 	while(1)
 	{
-		int ret = poll(fds, 1, 5000);
-
-		int numread = recvfrom(sock,buf,sizeof(buf),MSG_DONTWAIT,(struct sockaddr *)&other, &slen);
-		if (numread == -1)
+		if (poll(fds, 1, 5000))
 		{
-			perror("recv error");
+			int numread = recvfrom(sock,buf,sizeof(buf),MSG_DONTWAIT,(struct sockaddr *)&other, &slen);
+			if (numread == -1)
+			{
+				perror("recv error");
+			}
+			else
+			{
+				printf("recv %d bytes\n",numread);
+				for (int i=0; i<numread;i++)
+				{
+					printf("0x%02X, ",buf[i]);
+				}
+				printf("\n");
+			}
 		}
 		else
-		{
-			printf("recv %d bytes\n",numread);
-			for (int i=0; i<numread;i++)
-			{
-				printf("0x%02X, ",buf[i]);
-			}
-			printf("\n");
-		}
+			printf("poll timeout\n");
 	}
 
 	shutdown(sock, 2);

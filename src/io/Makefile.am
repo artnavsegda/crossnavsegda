@@ -1,1 +1,1 @@
-bin_PROGRAMS = read select noncanon stream poll
+bin_PROGRAMS = read select noncanon stream poll ppoll
