@@ -11,7 +11,11 @@ int main(void)
 	select(1,&rfds,NULL,NULL,&tv);
 
 	if (FD_ISSET(STDIN_FILENO, &rfds))
+	{
+		char buf[100];
+		int len = read(STDIN_FILENO, buf, 100);
 		printf("key press\n");
+	}
 	else
 		printf("timeout\n");
 }
