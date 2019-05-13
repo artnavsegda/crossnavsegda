@@ -24,16 +24,16 @@ int main()
 	}
 
 	struct timeval timeout = {
-		.tv_sec = 1,
+		.tv_sec = 10,
 		.tv_usec = 0
 	};
 	setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
 	setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout));
 
 	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("192.168.1.150"),
+		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
-		.sin_port = htons(100)
+		.sin_port = htons(1100)
 	};
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
@@ -46,7 +46,7 @@ int main()
 		printf("connect ok\n");
 	}
 
-	int numread = recv(sock,buf,1,0);
+	int numread = recv(sock,buf,100,0);
        	if (numread == -1)
 	{
 		perror("recv error");
