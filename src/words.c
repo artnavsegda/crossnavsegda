@@ -1,4 +1,6 @@
-char array[5][5] = {
+#include <stdbool.h>
+
+char keys[26][7] = {
 	"aqwsz",
 	"bvghn",
 	"cxdfv",
@@ -26,6 +28,14 @@ char array[5][5] = {
 	"ytugh",
 	"zasx",
 };
+
+bool nmatch(char key, char neigh)
+{
+	if (strchr(keys[key-97],neigh))
+		return true;
+	else
+		return false;
+}
 
 int main()
 {
