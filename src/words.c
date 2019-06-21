@@ -43,7 +43,7 @@ bool nmatch(char key, char neigh)
 
 bool wmatch(char * word)
 {
-	for (int i = 0; i++; i < strlen(word))
+	for (int i = 0; i < strlen(word); i++)
 	{
 		if (nmatch(word[i],word[i+1]) == false)
 			return false;
