@@ -56,10 +56,10 @@ bool wmatch(char * word)
 int main()
 {
 	char word[MAXLEN];
-	while(fgets(word,MAXLEN,stdin) != NULL)
+	while(scanf("%s",word) > 0)
 	{
 		if (wmatch(word) == true)
-			puts(word);
+      puts(word);
 	}
 	return 0;
 }
