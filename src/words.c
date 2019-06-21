@@ -4,7 +4,7 @@
 
 #define MAXLEN 255
 
-char keys[26][7] = {
+char keys[26][8] = {
 	"aqwsz",
 	"bvghn",
 	"cxdfv",
@@ -13,8 +13,8 @@ char keys[26][7] = {
 	"fdrtgvc",
 	"gftyhbv",
 	"hgyujnb",
-	"iuojk"
-	"jhuikmn"
+	"iuojk",
+	"jhuikmn",
 	"kjiolm",
 	"lkop",
 	"mnjk",
@@ -45,7 +45,7 @@ bool nmatch(char key, char neigh)
 
 bool wmatch(char * word)
 {
-	for (int i = 0; i < strlen(word); i++)
+	for (int i = 0; i < strlen(word)-1; i++)
 	{
 		if (nmatch(word[i],word[i+1]) == false)
 			return false;
@@ -53,7 +53,7 @@ bool wmatch(char * word)
 	return true;
 }
 
-int main()
+int amain()
 {
 	char word[MAXLEN];
 	while(fgets(word,MAXLEN,stdin) != NULL)
@@ -62,5 +62,17 @@ int main()
 			puts(word);
 	}
 	return 0;
+}
+
+int main()
+{
+	if (wmatch("hello") == true)
+		printf("match\n");
+	else
+		printf("not match\n");
+	if (wmatch("desert") == true)
+		printf("match\n");
+	else
+		printf("not match\n");
 }
 
