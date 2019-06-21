@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#define MaXLEN 255
+
 char keys[26][7] = {
 	"aqwsz",
 	"bvghn",
@@ -51,6 +53,12 @@ bool wmatch(char * word)
 
 int main()
 {
+	char word[MAXLEN];
+	while(fgets(word,MAXLEN,stdin) != NULL)
+	{
+		if (wmatch(word) == true)
+			puts(word);
+	}
 	return 0;
 }
 
