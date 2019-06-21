@@ -7,39 +7,6 @@
 #include <unistd.h>
 #include <strings.h>
 
-#define _BV(bit) (1 << (bit)) 
-
-unsigned char genchecksum(unsigned char *massive, int sizeofmassive)
-{
-	unsigned char checksum = 0;
-	for (int i=0;i<sizeofmassive;i++)
-		checksum = checksum + massive[i];
-	return checksum;
-}
-
-unsigned char makecontrolbyte(void)
-{
-	unsigned char controlbyte = 0;
-	controlbyte |= _BV(1); //ign
-	controlbyte |= _BV(2); //zero
-	controlbyte |= _BV(3); //cell
-	controlbyte |= _BV(4); //cal
-	controlbyte |= _BV(5); //total
-	return controlbyte;
-}
-
-void sendcommand(int fd, unsigned char marker, unsigned char *frame, int framelength)
-{
-	unsigned char markerframe[1];
-	markerframe[0] = marker;
-	write(fd,markerframe,1);
-	usleep(20*1000);
-	write(fd,frame,framelength);
-	markerframe[0] = genchecksum(frame,framelength);
-	write(fd,markerframe,1);
-	//write(fd,genchecksum(frame,framelength),1);
-}
-
 int main(int argc, char *argv[])
 {
 	unsigned char frame[1];
@@ -50,9 +17,9 @@ int main(int argc, char *argv[])
 		.c_oflag = 0,
 		.c_lflag = 0 
 	};
-	if (argc != 3)
+	if (argc != 2)
 	{
-		printf("name serial port and byte\n");
+		printf("name serial port\n");
 		exit(1);
 	}
 	fd = open(argv[1],O_RDWR | O_NOCTTY);
@@ -61,14 +28,11 @@ int main(int argc, char *argv[])
 		printf("error open serial port\n");
 		exit(1);
 	}
-	//tcgetattr(fd,&tio);
-	//tcflush(fd, TCIFLUSH);
-	//tcsetattr(fd,TCSANOW,&tio);
+	tcgetattr(fd,&tio);
+	tcflush(fd, TCIFLUSH);
+	tcsetattr(fd,TCSANOW,&tio);
 
-	unsigned char controlbyte[1];
-	sscanf(argv[2],"%X",&controlbyte[0]);
-	write(fd,controlbyte,1);
-	//write(fd,"\xAF",1);
+	write(fd,"\x01\x03\x01\x68\x00\x02\x44\x2B",8);
 	//write(fd,"\xCA",1);
 	//write(fd,"\xAF",1);
 	//usleep(20*1000);

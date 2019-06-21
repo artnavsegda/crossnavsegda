@@ -7,9 +7,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <limits.h>
 
-char buf[100];
-char ask[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x32, 0x03, 0x00, 0x00, 0x00, 0x01 };
+char buf[10000000];
+char ask[1] = { 0x00 };
 
 struct tcpframestruct {
 	unsigned short tsid;
@@ -35,12 +36,12 @@ int main()
 	}
 	else
 	{
-		printf("socket ok\n");
+		//printf("socket ok\n");
 	}
 	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
+		.sin_addr.s_addr = inet_addr("192.168.1.150"),
 		.sin_family = AF_INET,
-		.sin_port = htons(1100)
+		.sin_port = htons(502)
 	};
 	if (connect(sock,(struct sockaddr *)&client, sizeof(client)) == -1)
 	{
@@ -50,20 +51,20 @@ int main()
 	}
 	else
 	{
-		printf("connect ok\n");
+		//printf("connect ok\n");
 	}
 
-	int numwrite = send(sock,ask,12,0);
+	int numwrite = send(sock,ask,1,0);
 	if (numwrite == -1)
 	{
 		perror("send error");
 	}
 	else
 	{
-		printf("send %d bytes ok\n", numwrite);
+		//printf("send %d bytes ok\n", numwrite);
 	}
 
-	int numread = recv(sock,buf,100,0);
+	int numread = recv(sock,buf,10000000,0);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -73,11 +74,11 @@ int main()
 	else
 	{
 		printf("recv %d bytes\n",numread);
-		for (int i=0; i<numread;i++)
+		/*for (int i=0; i<numread;i++)
 		{
 			printf("0x%02hhX ",buf[i]);
 		}
-		printf("\n");
+		printf("\n");*/
 	}
 
 	if (shutdown(sock, 2) == -1)
@@ -88,7 +89,7 @@ int main()
 	}
 	else
 	{
-		printf("shutdown ok\n");
+		//printf("shutdown ok\n");
 	}
 	close(sock);
 

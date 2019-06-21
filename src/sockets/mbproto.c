@@ -7,7 +7,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <byteswap.h>
 
 char buf[100];
 char ask[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x32, 0x03, 0x00, 0x00, 0x00, 0x01 };
@@ -18,10 +17,32 @@ struct tcpframestruct {
 	unsigned short length;
 };
 
+struct askreadregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
+};
+
+struct writeregstruct {
+	unsigned short regaddress;
+	unsigned short regvalue;
+};
+
+struct reqreadstruct {
+	unsigned char bytestofollow;
+	unsigned char bytes[254];
+};
+
+union pdudataunion {
+	struct askreadregstruct askreadregs;
+	struct reqreadstruct reqread;
+	struct writeregstruct writereg;
+	unsigned short words[127];
+};
+
 struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
-	unsigned char data[256];
+	union pdudataunion data;
 };
 
 struct tcpframestruct tcpframe = {
@@ -35,26 +56,32 @@ struct pduframestruct pduframe = {
 	.fncode = 3,
 };
 
-struct tcpframestruct askframe;
-struct pduframestruct askpduframe;
+//struct tcpframestruct askframe;
+//struct pduframestruct askpduframe;
 
 struct mbframestruct {
 	unsigned short tsid;
 	unsigned short protoid;
 	unsigned short length;
-	unsigned char unitid;
-	unsigned char fncode;
-	unsigned short data[2];
+	struct pduframestruct pdu;
+//	unsigned char unitid;
+//	unsigned char fncode;
+//	unsigned short data[2];
 };
 
 struct mbframestruct mbframe = {
 	.tsid = 0x0100,
 	.protoid = 0x0000,
 	.length = 0x0600,
-	.unitid = 50,
-	.fncode = 3,
-	.data = { 0x0000, 0x0100 }
+	.pdu = {
+		.unitid = 50
+	}
+//	.unitid = 50,
+//	.fncode = 3,
+//	.data = { 0x0000, 0x0100 }
 };
+
+struct mbframestruct askframe;
 
 int main(int argc, char *argv[])
 {
@@ -91,12 +118,12 @@ int main(int argc, char *argv[])
 	}
 
 	//int numwrite = send(sock,ask,12,0);
-	
-	sscanf(argv[1],"%hhu",&mbframe.fncode); // <-----
-	sscanf(argv[2],"%hu",&mbframe.data[0]);
-	mbframe.data[0] = bswap_16(mbframe.data[0]);
-	sscanf(argv[3],"%hu",&mbframe.data[1]);
-	mbframe.data[1] = bswap_16(mbframe.data[1]);
+
+	sscanf(argv[1],"%hhu",&mbframe.pdu.fncode); // <-----
+	sscanf(argv[2],"%hu",&mbframe.pdu.data.words[0]);
+	mbframe.pdu.data.words[0] = htons(mbframe.pdu.data.words[0]);
+	sscanf(argv[3],"%hu",&mbframe.pdu.data.words[1]);
+	mbframe.pdu.data.words[1] = htons(mbframe.pdu.data.words[1]);
 
 	int numwrite = send(sock,&mbframe,12,0);
 	if (numwrite == -1)
@@ -119,9 +146,9 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("recv %d bytes\n",numread);
-		printf("TS id: %d\n", bswap_16(askframe.tsid));
-		printf("Protocol id: %d\n", bswap_16(askframe.protoid));
-		printf("Length: %d\n", bswap_16(askframe.length));
+		printf("TS id: %d\n", ntohs(askframe.tsid));
+		printf("Protocol id: %d\n", ntohs(askframe.protoid));
+		printf("Length: %d\n", ntohs(askframe.length));
 		/*for (int i=0; i<numread;i++)
 		{
 			printf("0x%02hhX ",buf[i]);
@@ -129,7 +156,7 @@ int main(int argc, char *argv[])
 		printf("\n");*/
 	}
 
-	numread = recv(sock,&askpduframe,bswap_16(askframe.length),0);
+	numread = recv(sock,&askframe.pdu,ntohs(askframe.length),0);
 	if (numread == -1)
 	{
 		perror("recv error");
@@ -139,11 +166,37 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("recv %d bytes\n",numread);
-		printf("Unit id: %d\n", askpduframe.unitid);
-		printf("Function code: %d\n", askpduframe.fncode);
-		for (int i=0; i<numread-2;i++)
-			printf("0x%02hhX ",askpduframe.data[i]);
+		printf("Unit id: %d\n", askframe.pdu.unitid);
+		printf("Function code: %d\n", askframe.pdu.fncode);
+		for (int i=0; i<numread;i++)
+			printf("0x%02hhX ",((char *)&askframe.pdu)[i]);
 		printf("\n");
+		switch(askframe.pdu.fncode)
+		{
+		case 1:
+		case 2:
+			printf("number of bytes: %d\n",askframe.pdu.data.reqread.bytestofollow);
+			for (int i=0;i<askframe.pdu.data.reqread.bytestofollow;i++)
+			{
+				printf("0x%02hhX ",askframe.pdu.data.reqread.bytes[i]);
+			}
+			printf("\n");
+		break;
+		case 3:
+		case 4:
+			printf("number of registers: %d\n",askframe.pdu.data.reqread.bytestofollow/2);
+			for (int i=0;i<askframe.pdu.data.reqread.bytestofollow/2;i++)
+			{
+				printf("0x%04hX ",((short *)&askframe.pdu.data.reqread.bytes)[i]);
+			}
+			printf("\n");
+		break;
+		case 5:
+		case 6:
+			printf("register number %u\n", ntohs(askframe.pdu.data.writereg.regaddress));
+			printf("register value %u\n", ntohs(askframe.pdu.data.writereg.regvalue));
+		break;
+		}
 	}
 
 	if (shutdown(sock, 2) == -1)
@@ -160,4 +213,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-

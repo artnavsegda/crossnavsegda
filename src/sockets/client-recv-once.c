@@ -22,6 +22,14 @@ int main()
 	{
 		printf("socket ok\n");
 	}
+
+	struct timeval timeout = {
+		.tv_sec = 10,
+		.tv_usec = 0
+	};
+	setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
+	setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout));
+
 	struct sockaddr_in client = {
 		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,

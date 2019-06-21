@@ -1,2 +1,1 @@
-AM_CFLAGS = -fshort-enums
-bin_PROGRAMS = eeprom2set set2eeprom
+bin_PROGRAMS = settings readip settings2

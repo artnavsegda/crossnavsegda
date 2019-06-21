@@ -7,7 +7,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <byteswap.h>
 
 unsigned short hrmassive[50];
 
@@ -22,40 +21,62 @@ unsigned char buf[100];
 
 unsigned char data[12] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x32, 0x03, 0x02, 0x00, 0x00 };
 
-struct tcpframestruct {
-	unsigned short tsid;
-	unsigned short protoid;
-	unsigned short length;
+struct askreadregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
+};
+
+struct reqreadstruct {
+	unsigned char bytestofollow;
+	unsigned char bytes[254];
+};
+
+struct writeregstruct {
+	unsigned short regaddress;
+	unsigned short regvalue;
+};
+
+struct writemulticoilstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
+	unsigned char bytestofollow;
+	unsigned char coils[256];
+};
+
+struct writemultiregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
+	unsigned char bytestofollow;
+	unsigned short registers[127];
+};
+
+union pdudataunion {
+	struct askreadregstruct askreadregs;
+	struct reqreadstruct reqread;
+	struct writeregstruct writereg;
+	struct writemulticoilstruct writemulticoil;
+	struct writemultiregstruct writemultireg;
+	unsigned short words[127];
+	unsigned char bytes[254];
 };
 
 struct pduframestruct {
 	unsigned char unitid;
 	unsigned char fncode;
-	unsigned short data[256];
+	union pdudataunion data;
 };
 
 struct mbframestruct {
 	unsigned short tsid;
 	unsigned short protoid;
 	unsigned short length;
-	struct pduframestruct pduframe;
+	struct pduframestruct pdu;
 };
 
 struct mbframestruct askmbframe, reqmbframe;
 
-struct tcpframestruct tcpframe = {
-	.tsid = 1,
-	.protoid = 0,
-	.length = 5,
-};
-
-struct pduframestruct pduframe = {
-	.unitid = 50,
-	.fncode = 3
-};
-
-struct tcpframestruct askframe;
-struct pduframestruct askpduframe;
+unsigned short table[100] = {0xABCD, 0xDEAD};
+unsigned short amount = 100;
 
 int main()
 {
@@ -114,7 +135,6 @@ int main()
 			printf("accept ok\n");
 		}
 
-		//int numread = recv(msgsock,&askframe,6,0);
 		int numread = recv(msgsock,&askmbframe,6,0);
 		if (numread == -1)
 		{
@@ -126,12 +146,9 @@ int main()
 		else
 		{
 			printf("recv %d bytes\n",numread);
-			//printf("TS id: %d\n", bswap_16(askframe.tsid));
-			printf("TS id: %d\n", bswap_16(askmbframe.tsid));
-			//printf("Protocol id: %d\n", bswap_16(askframe.protoid));
-			printf("Protocol id: %d\n", bswap_16(askmbframe.protoid));
-			//printf("Length: %d\n", bswap_16(askframe.length));
-			printf("Length: %d\n", bswap_16(askmbframe.length));
+			printf("TS id: %d\n", ntohs(askmbframe.tsid));
+			printf("Protocol id: %d\n", ntohs(askmbframe.protoid));
+			printf("Length: %d\n", ntohs(askmbframe.length));
 			/*for (int i=0; i<numread;i++)
 			{
 				printf("0x%02X ",buf[i]);
@@ -139,8 +156,7 @@ int main()
 			printf("\n");*/
 		}
 
-		//numread = recv(msgsock,&askpduframe,bswap_16(askframe.length),0);
-		numread = recv(msgsock,&askmbframe.pduframe,bswap_16(askmbframe.length),0);
+		numread = recv(msgsock,&askmbframe.pdu,ntohs(askmbframe.length),0);
 		if (numread == -1)
 		{
 			perror("recv error");
@@ -151,48 +167,64 @@ int main()
 		else
 		{
 			printf("recv %d bytes\n",numread);
-			//printf("Unit id: %d\n", askpduframe.unitid);
-			printf("Unit id: %d\n", askmbframe.pduframe.unitid);
-			//printf("Function code: %d\n", askpduframe.fncode);
-			printf("Function code: %d\n", askmbframe.pduframe.fncode);
+			printf("Unit id: %d\n", askmbframe.pdu.unitid);
+			printf("Function code: %d\n", askmbframe.pdu.fncode);
 			for (int i=0; i<(numread-2)/2;i++)
-				printf("%u ",bswap_16(askmbframe.pduframe.data[i]));
-				//printf("%u ",bswap_16(askpduframe.data[i]));
+				printf("%u ",ntohs(askmbframe.pdu.data.words[i]));
 			printf("\n");
 		}
 
-		switch (askmbframe.pduframe.fncode) {
+		int firstrequest = 0;
+		int requestnumber = 0;
+		switch (askmbframe.pdu.fncode) {
 			case 1:
 			case 2:
-				// read coils/discrete inputs
-				// data[0] = address of first coil/discrete
-				// data[1] = number of colis to read
-				// reply
-				//askmbframe.pduframe.data[1] = generatecoils(askmbframe.pduframe.data[0],askmbframe.pduframe.data[1]);
-				//askmbframe.pduframe.data[0] = 1;
-				//askframe.length = 4;
+				askmbframe.pdu.data.reqread.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) / 8;
+				if ((ntohs(askmbframe.pdu.data.askreadregs.regnumber) % 8)>0)
+					askmbframe.pdu.data.reqread.bytestofollow++;
+				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
+				// fill all requested coil bytes with zeroes
+				for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
+					askmbframe.pdu.data.reqread.bytes[i] = 0x00;
+			break;
 			case 3:
 			case 4:
-				// read holding/input registers
-				// data[0] = address of first register
-				// data[1] = number of registers to read
-				// reply
-				//askmbframe.pduframe.data[0] = askmbframe.pduframe.data[1];
-				//for (int i = 1;i>=bswap_16(askmbframe.pduframe.data[1]);i++)
-				//	askmbframe.pduframe.data[i] = hrmassive[i+bswap_16(askmbframe.pduframe.data[1])];
-				//askframe.length = 3+(bswap_16(askmbframe.pduframe.data[1])*2);
+				firstrequest = ntohs(askmbframe.pdu.data.askreadregs.firstreg);
+				printf("Requesing register starting from: %d\n", firstrequest);
+				requestnumber = ntohs(askmbframe.pdu.data.askreadregs.regnumber);
+				printf("Number of registers requested: %d\n", requestnumber);
+				askmbframe.pdu.data.reqread.bytestofollow = requestnumber * 2;
+				askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
+				// fill every requested register with table values
+				for (int i = 0; i < requestnumber;i++)
+					if (firstrequest+i < amount)
+						((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(table[firstrequest+i]);
+					else
+						((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(0x0000);
+				/*for (int i = 0; i < requestnumber;i++)
+					((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(table[i]);*/
+			break;
 			case 5:
-				// write coil
-				// data[0] = address of coil
-				// data[1] = value to write(0 = off, 0xFF00 for on)
+				//same as request
+				break;
 			case 6:
-				// write holding
-				// data[0] = address of holding
-				// data[1] = value of holding to write
+				if (ntohs(askmbframe.pdu.data.writereg.regaddress) < amount)
+					table[ntohs(askmbframe.pdu.data.writereg.regaddress)] = ntohs(askmbframe.pdu.data.writereg.regvalue);
+				break;
+			case 15:
+				askmbframe.length = htons(6);
+				break;
+			case 16:
+				for (int i = 0; i<ntohs(askmbframe.pdu.data.writemultireg.regnumber);i++)
+					if(ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i < amount)
+						table[ntohs(askmbframe.pdu.data.writemultireg.firstreg)+i] = ntohs(askmbframe.pdu.data.writemultireg.registers[i]);
+				askmbframe.length = htons(6);
+				break;
 			break;
 		}
 
-		int replylength = bswap_16(askframe.length) + 6;
+		int replylength = ntohs(askmbframe.length) + 6;
+		printf("replylength %d\n",replylength);
 
 		int numwrite = send(msgsock,&askmbframe,replylength,0);
 		if (numwrite == -1)

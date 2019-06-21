@@ -8,13 +8,15 @@
 
 int main(int argc, char *argv[])
 {
-	unsigned char frame[1];
-	int fd;
+	unsigned char frame[100];
+	int fd, ret;
 	struct termios tio = {
 		.c_cflag = B9600 | CS8 | CLOCAL | CREAD,
 		.c_iflag = IGNPAR,
 		.c_oflag = 0,
-		.c_lflag = 0 
+		.c_lflag = 0,
+		.c_cc[VMIN] = 0,
+		.c_cc[VTIME] = 100
 	};
 
 	if (argc != 2)
@@ -36,10 +38,11 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		if (read(fd,frame,1) == 1)
-			printf("0x%X \n",frame[0]);
-		else
-			printf("empty\n");
+		ret = read(fd,frame,100);
+		if (ret > 0)
+		{
+			printf("ret %d, read 0x%02X\n",ret,frame[0]);
+		}
 	}
 
 	return 0;

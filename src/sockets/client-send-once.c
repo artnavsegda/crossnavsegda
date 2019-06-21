@@ -10,7 +10,7 @@
 
 int main()
 {
-	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	int sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (sock == -1)
 	{
 		perror("socket error");
