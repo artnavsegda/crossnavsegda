@@ -35,6 +35,8 @@ char keys[26][7] = {
 
 bool nmatch(char key, char neigh)
 {
+	if (key < 97) // uppercase
+		return false;
 	if (strchr(keys[key-97],neigh))
 		return true;
 	else
