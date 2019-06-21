@@ -53,7 +53,7 @@ bool wmatch(char * word)
 	return true;
 }
 
-int amain()
+int main()
 {
 	char word[MAXLEN];
 	while(fgets(word,MAXLEN,stdin) != NULL)
@@ -62,17 +62,5 @@ int amain()
 			puts(word);
 	}
 	return 0;
-}
-
-int main()
-{
-	if (wmatch("hello") == true)
-		printf("match\n");
-	else
-		printf("not match\n");
-	if (wmatch("desert") == true)
-		printf("match\n");
-	else
-		printf("not match\n");
 }
 
