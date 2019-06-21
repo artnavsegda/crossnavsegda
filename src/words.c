@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define MaXLEN 255
+#define MAXLEN 255
 
 char keys[26][7] = {
 	"aqwsz",
