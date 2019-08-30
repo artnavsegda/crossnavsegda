@@ -9,15 +9,15 @@ int main(int argc, char *argv[])
   int i;
   for (i = 0; i < argc; i++)
   {
-    argarray[i]=argv[i];
+    argarray[i]=argv[i+1];
   }
 
   temp[read(STDIN_FILENO,temp,1000)] = '\0';
 
-  argarray[i] = temp;
-  argarray[i+1] = NULL;
+  argarray[i-1] = temp;
+  argarray[i] = NULL;
 
-  execve("./printargs",argarray,NULL);
+  execve(argv[1],argarray,NULL);
 
   return 1;
 }
