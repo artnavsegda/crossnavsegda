@@ -5,7 +5,7 @@
 int main(void)
 {
 	char path[MAXPATHLEN];
-	getwd(path);
+	getcwd(path,MAXPATHLEN);
 	printf("wd: %s\n",path);
 	return 0;
 }
