@@ -1,5 +1,6 @@
 #include <ftw.h>
 #include <stdio.h>
+#include <string.h>
 
 int list(const char *name, const struct stat *status, int type)
 {
@@ -8,7 +9,9 @@ int list(const char *name, const struct stat *status, int type)
 //    case FTW_F:
 //      puts
 //  }
-  puts(name);
+  char *ptr = rindex(name, '.');
+  if ((ptr!=NULL) && ((strcmp(ptr,".c")==0)))
+    puts(name);
   return 0;
 }
 
