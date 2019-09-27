@@ -7,6 +7,12 @@ int main()
     "hello=me",
     NULL
   };
-  execve("./environ",NULL,myenv);
+
+  char *myargv[] = {
+    "env",
+    NULL
+  };
+
+  execve("/usr/bin/env",myargv,myenv);
 	return 0;
 }
