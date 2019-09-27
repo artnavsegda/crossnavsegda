@@ -1,9 +1,12 @@
 #include <stdio.h>
-#include "config.h"
+#include <unistd.h>
 
 int main()
 {
-	printf(PACKAGE_STRING);
-	printf("\n");
+  char *myenv[] = {
+    "hello=me",
+    NULL
+  };
+  execve("./environ",NULL,myenv);
 	return 0;
 }
