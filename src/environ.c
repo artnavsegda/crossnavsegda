@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include "config.h"
 
-int main()
+int main(int argc, char *argv[], char *envp[])
 {
-	printf(PACKAGE_STRING);
-	printf("\n");
+  int i = 0;
+  while(envp[i] != NULL)
+  {
+    puts(envp[i]);
+    i++;
+  }
 	return 0;
 }
