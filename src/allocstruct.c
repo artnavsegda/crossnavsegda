@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+enum domains { PROTO, FACE, OPTION, SETTING, COMMAND };
+
 struct complement
 {
   char * command;
@@ -11,7 +13,7 @@ struct complestruct
 {
   char * locode;
   int complecount;
-  struct complement complelist;
+  struct complement complelist[];
 };
 
 int main()
