@@ -10,14 +10,14 @@ struct complement
   char * description;
 };
 
+typedef struct complement cmpstr_t;
+
 struct complestruct
 {
   char * locode;
   int complecount;
-  struct complement complelist[];
+  cmpstr_t complelist[];
 };
-
-typedef struct complement cmpstr_t;
 
 typedef cmpstr_t *callback_func_t (void);
 
