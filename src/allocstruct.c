@@ -33,10 +33,10 @@ cmpstr_t *callback(void)
     return NULL;
 }
 
-char ** array_allocate(callback_func_t *cb_func)
+int array_allocate(callback_func_t *cb_func, cmpstr_t **list)
 {
   cmpstr_t *element;
-  cmpstr_t **list = NULL;
+  //cmpstr_t **list = NULL;
   //string_list = (char **)malloc(sizeof (char *));
   int counter = 0;
 
@@ -53,11 +53,13 @@ char ** array_allocate(callback_func_t *cb_func)
     puts(list[i]->command);
   }
 
-  return string_list;
+  return counter;
+//  return string_list;
 }
 
 int main()
 {
-  array_allocate(callback);
+  cmpstr_t **list = NULL;
+  array_allocate(callback, list);
 	return 0;
 }
