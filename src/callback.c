@@ -1,9 +1,14 @@
 #include <stdio.h>
-#include "config.h"
+
+void callback(void)
+{
+}
+
+void recv_callback()
+{
+}
 
 int main()
 {
-	printf(PACKAGE_STRING);
-	printf("\n");
 	return 0;
 }
