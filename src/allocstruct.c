@@ -47,12 +47,12 @@ char ** array_allocate(callback_func_t *cb_func)
     list[counter-1] = element;
   }
   printf("%d\n",counter);
-//
-//  for (int i = 0; i < counter; i++)
-//  {
-//    puts(string_list[i]);
-//  }
-//
+
+  for (int i = 0; i < counter; i++)
+  {
+    puts(list[i]->command);
+  }
+
 //  return string_list;
 }
 
