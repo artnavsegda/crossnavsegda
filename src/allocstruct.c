@@ -35,24 +35,24 @@ cmpstr_t *callback(void)
     return NULL;
 }
 
-void array_allocate(callback_func_t *cb_func)
+void array_allocate(callback_func_t *cb_func, cmplist_t * list)
 {
-  cmplist_t list = { .complecount = 0};
+  //cmplist_t list = { .complecount = 0};
   cmpstr_t *element;
   //string_list = (char **)malloc(sizeof (char *));
 
   while (element = (*cb_func)())
   {
-    list.complecount++;
-    list.complelist = (cmpstr_t **)realloc(list.complelist, sizeof(cmpstr_t *) * list.complecount);
-    list.complelist[list.complecount-1] = element;
+    list->complecount++;
+    list->complelist = (cmpstr_t **)realloc(list->complelist, sizeof(cmpstr_t *) * list->complecount);
+    list->complelist[list->complecount-1] = element;
   }
 
-  for (int i = 0; i < list.complecount; i++)
+  for (int i = 0; i < list->complecount; i++)
   {
-    puts(list.complelist[i]->command);
+    puts(list->complelist[i]->command);
   }
-  printf("%d\n",list.complecount);
+  printf("%d\n",list->complecount);
 
 //    return counter;
 //  return list;
@@ -60,7 +60,8 @@ void array_allocate(callback_func_t *cb_func)
 
 int main()
 {
-  array_allocate(callback);
+  cmplist_t list = { .complecount = 0};
+  array_allocate(callback, &list);
 //  cmpstr_t **list = array_allocate(callback);
 //  printf("%d\n",counter);
 //  for (int i = 0; i < 9; i++)
