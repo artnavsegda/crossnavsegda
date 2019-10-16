@@ -21,9 +21,16 @@ struct complestruct
 
 typedef cmpstr_t *callback_func_t (void);
 
+cmpstr_t test1;
+
 cmpstr_t *callback(void)
 {
-
+  static int i = 0;
+  i++;
+  if (i < 10)
+    return &test1;
+  else
+    return NULL;
 }
 
 /*char ** array_allocate(callback_func_t *cb_func)
