@@ -12,12 +12,12 @@ struct complement
 
 typedef struct complement cmpstr_t;
 
-//struct complestruct
-//{
-//  char * locode;
-//  int complecount;
-//  cmpstr_t **complelist;
-//};
+struct complestruct
+{
+  char * locode;
+  int complecount;
+  cmpstr_t **complelist;
+};
 
 typedef cmpstr_t *callback_func_t (void);
 
