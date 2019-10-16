@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-char ** array_allocate(
+//char ** array_allocate(
 
 int main()
 {
