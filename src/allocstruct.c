@@ -19,6 +19,8 @@ struct complestruct
   cmpstr_t **complelist;
 };
 
+typedef struct complestruct cmplist_t;
+
 typedef cmpstr_t *callback_func_t (void);
 
 cmpstr_t test1 = { .command = "hello" };
@@ -35,8 +37,10 @@ cmpstr_t *callback(void)
 
 cmpstr_t ** array_allocate(callback_func_t *cb_func)
 {
+  cmplist_t list;
   cmpstr_t *element;
-  cmpstr_t **list = NULL;
+/*
+//  cmpstr_t **list = NULL;
   //string_list = (char **)malloc(sizeof (char *));
   int counter = 0;
 
@@ -54,14 +58,14 @@ cmpstr_t ** array_allocate(callback_func_t *cb_func)
   printf("%d\n",counter);
 
 //    return counter;
-  return list;
+  return list;*/
 }
 
 int main()
 {
-  cmpstr_t **list = array_allocate(callback);
+//  cmpstr_t **list = array_allocate(callback);
 //  printf("%d\n",counter);
-  for (int i = 0; i < 9; i++)
-    puts(list[i]->command);
+//  for (int i = 0; i < 9; i++)
+//    puts(list[i]->command);
 	return 0;
 }
