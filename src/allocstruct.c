@@ -42,9 +42,9 @@ char ** array_allocate(callback_func_t *cb_func)
 
   while (element = (*cb_func)())
   {
-//    counter++;
-//    string_list = (char **)realloc(string_list, sizeof(char *) * counter);
-//    string_list[counter-1] = string;
+    counter++;
+    list = (cmpstr_t **)realloc(list, sizeof(cmpstr_t *) * counter);
+    list[counter-1] = element;
   }
 //  printf("%d\n",counter);
 //
