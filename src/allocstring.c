@@ -15,6 +15,9 @@ char * callback(void)
 char ** array_allocate(callback_func_t *cb_func)
 {
   char *string;
+
+  char **string_list;
+
   while (string = (*cb_func)())
   {
     puts(string);
