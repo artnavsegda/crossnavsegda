@@ -21,7 +21,7 @@ typedef struct complement cmpstr_t;
 
 typedef cmpstr_t *callback_func_t (void);
 
-cmpstr_t test1;
+cmpstr_t test1 = { .command = "hello" };
 
 cmpstr_t *callback(void)
 {
