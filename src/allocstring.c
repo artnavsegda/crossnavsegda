@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef char *callback_func_t (void);
 
@@ -18,8 +19,13 @@ char ** array_allocate(callback_func_t *cb_func)
 
   char **string_list;
 
+  string_list = (char **)malloc(sizeof (char *));
+
   while (string = (*cb_func)())
   {
+//    string_list = 
+
+
     puts(string);
   }
 }
