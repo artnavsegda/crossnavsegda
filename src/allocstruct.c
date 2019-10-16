@@ -17,19 +17,16 @@ struct complestruct
   struct complement complelist[];
 };
 
-typedef char *callback_func_t (void);
+typedef struct complement cmpstr_t;
 
-char * callback(void)
+typedef cmpstr_t *callback_func_t (void);
+
+cmpstr_t *callback(void)
 {
-  static int i = 0;
-  i++;
-  if (i < 10)
-    return "hoba";
-  else
-    return NULL;
+
 }
 
-char ** array_allocate(callback_func_t *cb_func)
+/*char ** array_allocate(callback_func_t *cb_func)
 {
   char *string;
   char **string_list = NULL;
@@ -50,10 +47,10 @@ char ** array_allocate(callback_func_t *cb_func)
   }
 
   return string_list;
-}
+}*/
 
 int main()
 {
-  array_allocate(callback);
+  //array_allocate(callback);
 	return 0;
 }
