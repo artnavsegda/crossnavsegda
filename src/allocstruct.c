@@ -46,7 +46,7 @@ char ** array_allocate(callback_func_t *cb_func)
     list = (cmpstr_t **)realloc(list, sizeof(cmpstr_t *) * counter);
     list[counter-1] = element;
   }
-//  printf("%d\n",counter);
+  printf("%d\n",counter);
 //
 //  for (int i = 0; i < counter; i++)
 //  {
@@ -58,6 +58,6 @@ char ** array_allocate(callback_func_t *cb_func)
 
 int main()
 {
-  //array_allocate(callback);
+  array_allocate(callback);
 	return 0;
 }
