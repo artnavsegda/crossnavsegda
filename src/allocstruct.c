@@ -60,6 +60,7 @@ void array_allocate(callback_func_t *cb_func)
 
 int main()
 {
+  array_allocate(callback);
 //  cmpstr_t **list = array_allocate(callback);
 //  printf("%d\n",counter);
 //  for (int i = 0; i < 9; i++)
