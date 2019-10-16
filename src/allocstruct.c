@@ -53,7 +53,7 @@ char ** array_allocate(callback_func_t *cb_func)
     puts(list[i]->command);
   }
 
-//  return string_list;
+  return string_list;
 }
 
 int main()
