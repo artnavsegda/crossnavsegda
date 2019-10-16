@@ -16,7 +16,7 @@ typedef struct complement cmpstr_t;
 //{
 //  char * locode;
 //  int complecount;
-//  cmpstr_t *complelist[];
+//  cmpstr_t **complelist;
 //};
 
 typedef cmpstr_t *callback_func_t (void);
@@ -40,12 +40,12 @@ char ** array_allocate(callback_func_t *cb_func)
   //string_list = (char **)malloc(sizeof (char *));
   int counter = 0;
 
-//  while (string = (*cb_func)())
-//  {
+  while (element = (*cb_func)())
+  {
 //    counter++;
 //    string_list = (char **)realloc(string_list, sizeof(char *) * counter);
 //    string_list[counter-1] = string;
-//  }
+  }
 //  printf("%d\n",counter);
 //
 //  for (int i = 0; i < counter; i++)
