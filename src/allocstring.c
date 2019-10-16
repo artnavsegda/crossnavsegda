@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-typedef void callback_func_t (void);
+typedef char *callback_func_t (void);
 
-void callback(void)
+char * callback(void)
 {
   puts("hoba");
 }
