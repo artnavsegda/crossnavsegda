@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 enum domains { PROTO, FACE, OPTION, SETTING, COMMAND };
 
@@ -22,6 +23,27 @@ struct complestruct
 typedef struct complestruct cmplist_t;
 
 typedef cmpstr_t *callback_func_t (char *);
+
+char *builtincommands[] = {"show","acquire","validate",NULL};
+
+cmpstr_t * zc_builtinvalues(const char * text, int len)
+{
+  static int valueindex = 0;
+
+  while (builtincommands[valueindex] != NULL)
+  {
+    if (strncmp(builtincommands[valueindex], text, len)==0)
+    {
+      return strdup(builtincommands[valueindex++]);
+    }
+    else
+    {
+      valueindex++;
+    }
+  }
+  valueindex = 0;
+  return NULL;
+}
 
 cmpstr_t test1 = { .command = "hello" };
 
