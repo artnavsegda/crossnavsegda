@@ -61,7 +61,7 @@ int compute_lcd_of_matches (cmplist_t * list, char *text)
       return 1;
     }
 
-  for (i = 0, low = 100000; i < list->complecount; i++)
+  for (i = 0, low = 100000; i < list->complecount-1; i++)
     {
 	  for (si = 0;
 //	       (c1 = match_list[i][si]) &&
@@ -75,6 +75,8 @@ int compute_lcd_of_matches (cmplist_t * list, char *text)
       if (low > si)
 	low = si;
     }
+
+
 
   /* If there were multiple matches, but none matched up to even the
      first character, and the user typed something, use that as the
