@@ -45,8 +45,9 @@ char * builtinvalues(const char * text, int len)
   return NULL;
 }
 
-int compute_lcd_of_matches (char **match_list, int matches, const char *text)
+int compute_lcd_of_matches (cmplist_t * list)
 {
+  char **match_list; int matches; const char *text;//remove
   register int i, c1, c2, si;
   int low;		/* Count of max-matched characters. */
   int lx;
@@ -117,6 +118,11 @@ void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * li
     list->complecount++;
     list->complelist = (cmpstr_t **)realloc(list->complelist, sizeof(cmpstr_t *) * list->complecount);
     list->complelist[list->complecount-1] = element;
+  }
+  
+  if (list->complecount)
+  {
+    compute_lcd_of_matches(list);
   }
 
 //  for (int i = 0; i < list->complecount; i++)
