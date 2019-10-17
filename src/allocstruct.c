@@ -45,9 +45,9 @@ char * builtinvalues(const char * text, int len)
   return NULL;
 }
 
-int compute_lcd_of_matches (cmplist_t * list)
+int compute_lcd_of_matches (cmplist_t * list, char *text)
 {
-  char **match_list; int matches; const char *text;//remove
+//  char **match_list; int matches; const char *text;//remove
   register int i, c1, c2, si;
   int low;		/* Count of max-matched characters. */
   int lx;
@@ -61,11 +61,13 @@ int compute_lcd_of_matches (cmplist_t * list)
       return 1;
     }
 
-  for (i = 1, low = 100000; i < matches; i++)
+  for (i = 0, low = 100000; i < list->complecount; i++)
     {
 	  for (si = 0;
-	       (c1 = match_list[i][si]) &&
-	       (c2 = match_list[i + 1][si]);
+//	       (c1 = match_list[i][si]) &&
+	       (c1 = list->complelist[i]->command[si]) &&
+//	       (c2 = match_list[i + 1][si]);
+	       (c2 = list->complelist[i + 1]->command[si]);
 	       si++)
 	    if (c1 != c2)
 	      break;
@@ -79,14 +81,14 @@ int compute_lcd_of_matches (cmplist_t * list)
      value of matches[0]. */
   if (low == 0 && text && *text)
     {
-      match_list[0] = (char *)malloc (strlen (text) + 1);
-      strcpy (match_list[0], text);
+      list->locode = (char *)malloc (strlen (text) + 1);
+      strcpy (list->locode, text);
     }
   else
     {
-      match_list[0] = (char *)malloc (low + 1);
-      strncpy (match_list[0], match_list[1], low);
-      match_list[0][low] = '\0';
+      list->locode = (char *)malloc (low + 1);
+      strncpy (list->locode, complelist[0]->command, low);
+      list->locode[low] = '\0';
     }
 
   return matches;
@@ -121,7 +123,7 @@ void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * li
   
   if (list->complecount)
   {
-    compute_lcd_of_matches(list);
+    compute_lcd_of_matches(list, inputstring);
   }
 
 //  for (int i = 0; i < list->complecount; i++)
