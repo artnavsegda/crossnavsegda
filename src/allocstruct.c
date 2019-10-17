@@ -55,10 +55,9 @@ int compute_lcd_of_matches (cmplist_t * list)
   /* If only one match, just use that.  Otherwise, compare each
      member of the list with the next, finding out where they
      stop matching. */
-  if (matches == 1)
+  if (list->complecount == 1)
     {
-      match_list[0] = match_list[1];
-      match_list[1] = (char *)NULL;
+      list->locode = list->complelist[0]->command;
       return 1;
     }
 
