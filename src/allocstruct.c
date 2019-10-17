@@ -52,10 +52,12 @@ cmpstr_t *callback(char * inputstring)
   cmpstr_t * element;
   element = (cmpstr_t *)malloc(sizeof(cmpstr_t));
 
+  element->command = "hello";
+
   static int i = 0;
   i++;
   if (i < 10)
-    return &test1;
+    return element;
   else
     return NULL;
 }
