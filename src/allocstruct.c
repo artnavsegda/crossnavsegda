@@ -87,11 +87,11 @@ int compute_lcd_of_matches (cmplist_t * list, char *text)
   else
     {
       list->locode = (char *)malloc (low + 1);
-      strncpy (list->locode, complelist[0]->command, low);
+      strncpy (list->locode, list->complelist[0]->command, low);
       list->locode[low] = '\0';
     }
 
-  return matches;
+  return 0;
 }
 
 cmpstr_t test1 = { .command = "hello" };
@@ -106,6 +106,11 @@ cmpstr_t *callback(char * inputstring)
     return element;
   else
     return NULL;
+}
+
+int sort_wrapper(const void *p1, const void *p2)
+{
+  return strcmp(((cmpstr_t *)p1)->command,((cmpstr_t *)p2)->command);
 }
 
 void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * list)
@@ -123,7 +128,7 @@ void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * li
   
   if (list->complecount)
   {
-    qsort(list->complelist, list->complecount, sizeof (cmpstr_t *), 
+    qsort(list->complelist, list->complecount, sizeof (cmpstr_t *), sort_wrapper);
     compute_lcd_of_matches(list, inputstring);
   }
 
