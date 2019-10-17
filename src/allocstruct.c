@@ -45,12 +45,11 @@ char * builtinvalues(const char * text, int len)
   return NULL;
 }
 
-static int compute_lcd_of_matches (char **match_list, int matches, const char *text)
+int compute_lcd_of_matches (char **match_list, int matches, const char *text)
 {
   register int i, c1, c2, si;
   int low;		/* Count of max-matched characters. */
   int lx;
-  char *dtext;		/* dequoted TEXT, if needed */
 
   /* If only one match, just use that.  Otherwise, compare each
      member of the list with the next, finding out where they
