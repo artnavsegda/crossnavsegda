@@ -49,6 +49,9 @@ cmpstr_t test1 = { .command = "hello" };
 
 cmpstr_t *callback(char * inputstring)
 {
+  cmpstr_t * element;
+  element = (cmpstr_t *)malloc(sizeof(cmpstr_t));
+
   static int i = 0;
   i++;
   if (i < 10)
