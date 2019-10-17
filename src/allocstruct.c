@@ -45,6 +45,54 @@ char * builtinvalues(const char * text, int len)
   return NULL;
 }
 
+static int compute_lcd_of_matches (char **match_list, int matches, const char *text)
+{
+  register int i, c1, c2, si;
+  int low;		/* Count of max-matched characters. */
+  int lx;
+  char *dtext;		/* dequoted TEXT, if needed */
+
+  /* If only one match, just use that.  Otherwise, compare each
+     member of the list with the next, finding out where they
+     stop matching. */
+  if (matches == 1)
+    {
+      match_list[0] = match_list[1];
+      match_list[1] = (char *)NULL;
+      return 1;
+    }
+
+  for (i = 1, low = 100000; i < matches; i++)
+    {
+	  for (si = 0;
+	       (c1 = match_list[i][si]) &&
+	       (c2 = match_list[i + 1][si]);
+	       si++)
+	    if (c1 != c2)
+	      break;
+
+      if (low > si)
+	low = si;
+    }
+
+  /* If there were multiple matches, but none matched up to even the
+     first character, and the user typed something, use that as the
+     value of matches[0]. */
+  if (low == 0 && text && *text)
+    {
+      match_list[0] = (char *)malloc (strlen (text) + 1);
+      strcpy (match_list[0], text);
+    }
+  else
+    {
+      match_list[0] = (char *)malloc (low + 1);
+      strncpy (match_list[0], match_list[1], low);
+      match_list[0][low] = '\0';
+    }
+
+  return matches;
+}
+
 cmpstr_t test1 = { .command = "hello" };
 
 cmpstr_t *callback(char * inputstring)
