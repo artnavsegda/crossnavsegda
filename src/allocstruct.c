@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum domains { PROTO, FACE, OPTION, SETTING, COMMAND };
+enum ctype_enum { BUILTIN, PROTO, FACE, OPTION, SETTING, COMMAND, CUESETTING };
 
 struct complement
 {
   char * command;
-  enum domains domain;
+  enum ctype_enum ctype;
   char * description;
 };
 
@@ -26,7 +26,7 @@ typedef cmpstr_t *callback_func_t (char *);
 
 char *builtincommands[] = {"show","acquire","validate",NULL};
 
-cmpstr_t * zc_builtinvalues(const char * text, int len)
+char * builtinvalues(const char * text, int len)
 {
   static int valueindex = 0;
 
