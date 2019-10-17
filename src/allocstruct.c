@@ -35,7 +35,7 @@ cmpstr_t *callback(void)
     return NULL;
 }
 
-void array_allocate(callback_func_t *cb_func, cmplist_t * list)
+void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * list)
 {
   //cmplist_t list = { .complecount = 0};
   cmpstr_t *element;
@@ -61,7 +61,7 @@ void array_allocate(callback_func_t *cb_func, cmplist_t * list)
 int main()
 {
   cmplist_t list = { .complecount = 0};
-  array_allocate(callback, &list);
+  array_allocate("hello", callback, &list);
 //  cmpstr_t **list = array_allocate(callback);
   printf("%d\n",list.complecount);
   for (int i = 0; i < list.complecount; i++)
