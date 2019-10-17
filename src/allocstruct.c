@@ -123,6 +123,7 @@ void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * li
   
   if (list->complecount)
   {
+    qsort(list->complelist, list->complecount, sizeof (cmpstr_t *), 
     compute_lcd_of_matches(list, inputstring);
   }
 
