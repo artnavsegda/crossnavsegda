@@ -24,7 +24,7 @@ typedef struct complestruct cmplist_t;
 
 typedef cmpstr_t *callback_func_t (char *);
 
-char *builtincommands[] = {"show","acquire","validate",NULL};
+char *builtincommands[] = {"one","onetwo","onethre",NULL};
 
 char * builtinvalues(const char * text, int len)
 {
@@ -34,7 +34,7 @@ char * builtinvalues(const char * text, int len)
   {
     if (strncmp(builtincommands[valueindex], text, len)==0)
     {
-      return strdup(builtincommands[valueindex++]);
+      return builtincommands[valueindex++];
     }
     else
     {
@@ -51,12 +51,9 @@ cmpstr_t *callback(char * inputstring)
 {
   cmpstr_t * element;
   element = (cmpstr_t *)malloc(sizeof(cmpstr_t));
+  element->command = builtinvalues(inputstring, strlen(inputstring));
 
-  element->command = "hello";
-
-  static int i = 0;
-  i++;
-  if (i < 10)
+  if (element->command)
     return element;
   else
     return NULL;
