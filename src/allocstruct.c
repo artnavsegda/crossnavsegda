@@ -72,11 +72,11 @@ void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * li
     list->complelist[list->complecount-1] = element;
   }
 
-  for (int i = 0; i < list->complecount; i++)
-  {
-    puts(list->complelist[i]->command);
-  }
-  printf("%d\n",list->complecount);
+//  for (int i = 0; i < list->complecount; i++)
+//  {
+//    puts(list->complelist[i]->command);
+//  }
+//  printf("%d\n",list->complecount);
 
 //    return counter;
 //  return list;
@@ -85,7 +85,7 @@ void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * li
 int main()
 {
   cmplist_t list = { .complecount = 0};
-  array_allocate("hello", callback, &list);
+  array_allocate("onet", callback, &list);
 //  cmpstr_t **list = array_allocate(callback);
   printf("%d\n",list.complecount);
   for (int i = 0; i < list.complecount; i++)
