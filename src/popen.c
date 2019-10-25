@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 {
   FILE *fp;
   //fp = my_popen_read("/bin/ls", argv, NULL);
-  fp = my_popen_write("/bin/cat", argv, NULL);
+  fp = my_popen_write("/bin/cat", myargv, NULL);
   if (fp == NULL)
     puts("handle error");
   puts("pipe open");
