@@ -147,9 +147,10 @@ void array_allocate(char * inputstring, callback_func_t *cb_func, cmplist_t * li
 int main()
 {
   cmplist_t list = { .complecount = 0};
-  array_allocate("onet", callback, &list);
+  array_allocate("", callback, &list);
 //  cmpstr_t **list = array_allocate(callback);
   printf("%d\n",list.complecount);
+  printf("%s\n",list.locode);
   for (int i = 0; i < list.complecount; i++)
     puts(list.complelist[i]->command);
 	return 0;
