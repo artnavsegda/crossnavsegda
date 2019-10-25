@@ -46,10 +46,19 @@ FILE * my_popen_write (char * command, char *argv[], char *envp[])
 int main(int argc, char *argv[])
 {
   FILE *fp;
-  fp = my_popen_write("/bin/ls", argv, NULL);
-
+  //fp = my_popen_read("/bin/ls", argv, NULL);
+  fp = my_popen_write("/bin/cat", argv, NULL);
   if (fp == NULL)
     puts("handle error");
-
-  pclose(fp);
+  puts("pipe open");
+  sleep(1);
+  fwrite("hello\n\0", 1, 7, fp);
+  puts("data sent");
+  sleep(1);
+  fflush(fp);
+  puts("data flushed");
+  sleep(1);
+  fclose(fp);
+  puts("pipe closed");
+  sleep(1);
 }
