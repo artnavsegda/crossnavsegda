@@ -43,6 +43,8 @@ FILE * my_popen_write (char * command, char *argv[], char *envp[])
     }
 }
 
+char *myargv[] = { "/bin/cat", NULL };
+
 int main(int argc, char *argv[])
 {
   FILE *fp;
