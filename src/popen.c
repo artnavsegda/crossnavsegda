@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 
 FILE * my_popen_read (char * command, char *argv[], char *envp[])
 {
@@ -42,10 +43,10 @@ FILE * my_popen_write (char * command, char *argv[], char *envp[])
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
   FILE *fp;
-  fp = popen("ls", "w");
+  fp = my_popen_write("/bin/ls", argv, NULL);
 
   if (fp == NULL)
     puts("handle error");
