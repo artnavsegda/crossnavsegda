@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#define MAXLEN 1000
+
 int main(int argc, char *argv[])
 {
 	if (argc < 2)
@@ -14,6 +16,13 @@ int main(int argc, char *argv[])
 	{
 		printf("cannot open %s\n",argv[1]);
 		return 1;
+	}
+
+	char line[MAXLEN];
+
+	while (fgets(line, MAXLEN, script))
+	{
+		printf("line: %s", line);
 	}
 
 	return 0;
