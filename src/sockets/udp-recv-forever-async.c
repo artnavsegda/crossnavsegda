@@ -9,8 +9,14 @@
 #include <unistd.h>
 #include <netdb.h>
 
-int main()
+int main(int argc, char* argv[])
 {
+	if (argc != 2)
+	{
+		puts("usage: program <port>");
+		return 0;
+	}
+
 	unsigned char buf[1000];
 	int sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
 	if (sock == -1)
@@ -33,7 +39,7 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = INADDR_ANY,
-		.sin_port = htons(10001)
+		.sin_port = htons(atoi(argv[1]))
 	};
 
 	struct sockaddr_in other;
