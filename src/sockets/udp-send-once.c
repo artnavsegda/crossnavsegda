@@ -10,8 +10,6 @@
 
 char package[] = "hello world\n";
 
-char package[] = "hello world\n";
-
 int main(int argc, char* argv[])
 {
 	if (argc != 3)
