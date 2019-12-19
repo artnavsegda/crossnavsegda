@@ -10,8 +10,16 @@
 
 char package[] = "hello world\n";
 
-int main()
+char package[] = "hello world\n";
+
+int main(int argc, char* argv[])
 {
+	if (argc != 3)
+	{
+		puts("usage: udpsend <ipaddr> <port>");
+		return 0;
+	}
+
 	int sock = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
 	if (sock == -1)
 	{
@@ -24,9 +32,9 @@ int main()
 	}
 
 	struct sockaddr_in other = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
+		.sin_addr.s_addr = inet_addr(argv[1]),
 		.sin_family = AF_INET,
-		.sin_port = htons(10001)
+		.sin_port = htons(atoi(argv[2]))
 	};
 
 	int slen = sizeof(other);
@@ -46,4 +54,3 @@ int main()
 
 	return 0;
 }
-
