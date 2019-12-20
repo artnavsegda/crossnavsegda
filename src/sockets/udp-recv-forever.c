@@ -51,12 +51,16 @@ int main(int argc, char* argv[])
 	while(1)
 	{
 		int numread = recvfrom(sock,buf,sizeof(buf),0,(struct sockaddr *)&other, &slen);
+
 		if (numread == -1)
 		{
 			perror("recv error");
 		}
 		else
 		{
+      printf("port %d\n", other.sin_port);
+
+
 			printf("recv %d bytes\n",numread);
 			for (int i=0; i<numread;i++)
 			{
