@@ -67,6 +67,10 @@ int main(int argc, char* argv[])
 				printf("0x%02X, ",buf[i]);
 			}
 			printf("\n");
+      char line[10];
+      snprintf(line, 10, "%%.%ds\n",numread);
+      puts(line);
+      printf(line,buf);
 		}
 	}
 
