@@ -1,21 +1,19 @@
 #include <threads.h>
 #include <stdio.h>
 
-int run(void *arg)
+int print_thread(void* s)
 {
-    printf("Hello world of C11 threads.");
-
-    return 0;
+    printf("%s\n", (char*)s);
+    thrd_exit(0);
 }
-
-int main(int argc, const char *argv[])
+int main()
 {
-    thrd_t thread;
-    int result;
-
-    thrd_create(&thread, run, NULL);
-
-    thrd_join(&thread, &result);
-
-    printf("Thread return %d at the end\n", result);
+    thrd_t tid;
+    if (thrd_success != thrd_create(&tid, print_thread, "Hello world"))
+    {
+        fprintf(stderr, "Create thread error\n");
+        return 1;
+    }
+    thrd_join(tid, NULL);
+    return 0;
 }

@@ -1,2 +1,1 @@
-LIBS = $(PTHREAD_LIBS)
 bin_PROGRAMS = thread
