@@ -1,1 +1,1 @@
-bin_PROGRAMS = thread
+bin_PROGRAMS = thread pthread
