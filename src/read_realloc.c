@@ -13,22 +13,25 @@ int main()
   while (1)
   {
     chunkcounter = read(STDIN_FILENO, &buf[totalcounter], CHUNK);
-    if (chunkcounter == -1) 
+    if (chunkcounter == -1)
     {
       perror("read error");
       exit(0);
     }
-    else 
+    else
     {
       totalcounter += chunkcounter;
       if (chunkcounter == CHUNK)
       {
         limit += CHUNK;
-        if (realloc(buf,limit+1) == NULL)
+        char * newbuf = realloc(buf,limit+1);
+        if (newbuf == NULL)
         {
           puts("realloc break");
           break;
         }
+        else
+          buf = newbuf;
       }
       else
       {
@@ -42,4 +45,3 @@ int main()
   printf("total length %d, allocated %d, last chunk %d\n", totalcounter, limit, chunkcounter);
   fputs(buf, stdout);
 }
-
