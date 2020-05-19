@@ -39,6 +39,7 @@ int main()
   }
 
   buf[totalcounter] = '\0';
+  printf("total length %d, allocated %d, last chunk %d\n", totalcounter, limit, chunkcounter);
   fputs(buf, stdout);
 }
 
