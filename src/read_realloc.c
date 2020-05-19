@@ -10,9 +10,11 @@ int main()
   char * buf = malloc(CHUNK+1);
   int chunkcounter, totalcounter = 0, limit = CHUNK;
 
+  FILE * mypipe = popen("cat", "r");
+
   while (1)
   {
-    chunkcounter = read(STDIN_FILENO, &buf[totalcounter], CHUNK);
+    chunkcounter = fread(&buf[totalcounter], 1, CHUNK, mypipe);
     if (chunkcounter == -1)
     {
       perror("read error");
@@ -40,6 +42,7 @@ int main()
       }
     }
   }
+  pclose(mypipe);
 
   buf[totalcounter] = '\0';
   printf("total length %d, allocated %d, last chunk %d\n", totalcounter, limit, chunkcounter);
