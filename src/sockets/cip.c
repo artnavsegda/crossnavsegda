@@ -7,10 +7,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <signal.h>
+#include <sys/time.h>
 
 char buf[1000];
 
-void process(char *buf, int numread, int sock)
+int sock;
+
+void process(char *buf, int numread)
 {
 	int numwrite = 0;
 	printf("recv %d bytes\n",numread);
@@ -42,6 +46,7 @@ void process(char *buf, int numread, int sock)
 			puts("data");
 		break;
 		case 0x0D:
+		case 0x0E:
 			puts("heartbeat");
 		default:
 		break;
@@ -49,6 +54,13 @@ void process(char *buf, int numread, int sock)
 
 	if (numwrite > 0)
 		printf("%d bytes sent\n", numwrite);
+}
+
+void timer_handler(int signal)
+{
+	int numwrite = 0;
+	//printf("alarm\n");
+	numwrite = send(sock, "\x0D\x00\x02\x00\x00", 5, 0);
 }
 
 int main(int argc, char* argv[])
@@ -59,7 +71,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 	{
 		perror("socket error");
@@ -85,10 +97,17 @@ int main(int argc, char* argv[])
 		printf("connect ok\n");
 	}
 
+	struct itimerval it_val;
+	signal(SIGALRM, timer_handler);
+	it_val.it_value.tv_sec = 5;
+	it_val.it_value.tv_usec = 0;
+	it_val.it_interval = it_val.it_value;
+	setitimer(ITIMER_REAL, &it_val, NULL);
+
 	int numread = 0;
 	do {
 		numread = recv(sock,buf,1000,0);
-		process(buf,numread,sock);
+		process(buf,numread);
 	} while (numread > 0);
 
        	if (numread == -1)
