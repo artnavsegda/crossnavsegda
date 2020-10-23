@@ -14,46 +14,54 @@ char buf[1000];
 
 int sock;
 
-void process(char *buf, int numread)
+void process(char *message, int numread)
 {
 	int numwrite = 0;
+	int index = 0;
 	printf("recv %d bytes\n",numread);
 	for (int i=0; i<numread;i++)
 	{
-		printf("0x%02X ",buf[i]);
+		printf("0x%02X ",message[i]);
 	}
 	printf("\n");
 
-	int payloadLength = buf[2];
-	printf("payload length %d\n",payloadLength);
-
-	char * payload = &buf[3];
-
-	switch (buf[0])
+	while (index < numread)
 	{
-		case 0x0f:
-			puts("Client registration request");
-			numwrite = send(sock, "\x01\x00\x0b\x00\x00\x00\x00\x00" "\x03" "\x40\xff\xff\xf1\x01", 14, 0);
-		case 0x02:
-			puts("registration result");
-			if (payloadLength == 4 && (memcmp(payload,"\x00\x00\x00\x1f",4) == 0))
-			{
-				puts("registration ok");
-				numwrite = send(sock, "\x05\x00\x05\x00\x00\x02\x03\x00", 8, 0);
-			}
-		break;
-		case 0x05:
-			puts("data");
-		break;
-		case 0x0D:
-		case 0x0E:
-			puts("heartbeat");
-		default:
-		break;
-	}
+		char *buf = &message[index];
 
-	if (numwrite > 0)
-		printf("%d bytes sent\n", numwrite);
+		int payloadLength = buf[2];
+		printf("payload length %d\n",payloadLength);
+
+		char * payload = &buf[3];
+
+		switch (buf[0])
+		{
+			case 0x0f:
+				puts("Client registration request");
+				numwrite = send(sock, "\x01\x00\x0b\x00\x00\x00\x00\x00" "\x03" "\x40\xff\xff\xf1\x01", 14, 0);
+			case 0x02:
+				puts("registration result");
+				if (payloadLength == 4 && (memcmp(payload,"\x00\x00\x00\x1f",4) == 0))
+				{
+					puts("registration ok");
+					numwrite = send(sock, "\x05\x00\x05\x00\x00\x02\x03\x00", 8, 0);
+				}
+			break;
+			case 0x05:
+				puts("data");
+			break;
+			case 0x0D:
+			case 0x0E:
+				puts("heartbeat");
+			default:
+			break;
+		}
+
+		if (numwrite > 0)
+			printf("%d bytes sent\n", numwrite);
+
+		index = payloadLength+3;
+	}
 }
 
 void timer_handler(int signal)
