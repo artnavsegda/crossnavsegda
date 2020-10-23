@@ -14,11 +14,11 @@ char buf[1000];
 
 int sock;
 
-void process(char *message, int numread)
+void process(unsigned char *message, int numread)
 {
 	int numwrite = 0;
 	int index = 0;
-	printf("recv %d bytes\n",numread);
+	printf("recv %d bytes: ",numread);
 	for (int i=0; i<numread;i++)
 	{
 		printf("0x%02X ",message[i]);
@@ -27,20 +27,27 @@ void process(char *message, int numread)
 
 	while (index < numread)
 	{
-		char *buf = &message[index];
+		unsigned char *buf = &message[index];
+
+		printf("payload type 0x%02X, ",buf[0]);
 
 		int payloadLength = buf[2];
-		printf("payload length %d\n",payloadLength);
+		printf("payload length %d: ",payloadLength);
 
-		char * payload = &buf[3];
+		unsigned char * payload = &buf[3];
 
+		for (int i=0; i<payloadLength;i++)
+		{
+			printf("0x%02X ",payload[i]);
+		}
+		
 		switch (buf[0])
 		{
 			case 0x0f:
-				puts("Client registration request");
+				printf("Client registration request");
 				numwrite = send(sock, "\x01\x00\x0b\x00\x00\x00\x00\x00" "\x03" "\x40\xff\xff\xf1\x01", 14, 0);
 			case 0x02:
-				puts("registration result");
+				printf("registration result");
 				if (payloadLength == 4 && (memcmp(payload,"\x00\x00\x00\x1f",4) == 0))
 				{
 					puts("registration ok");
@@ -48,19 +55,51 @@ void process(char *message, int numread)
 				}
 			break;
 			case 0x05:
-				puts("data");
+				printf("data\n");
+				printf("datatype 0x%02X ", payload[3]);
+				switch (payload[3])
+				{
+					case 0x00:
+						printf("digital join %d state %d", (((payload[5] & 0x7F) << 8) | payload[4]) + 1, ((payload[5] & 0x80) >> 7) ^ 0x01);
+					break;
+					case 0x14:
+						printf("analog join %d value %d", ((payload[4] << 8) | payload[5]) + 1, (payload[6] << 8) + payload[7]);
+					break;
+					case 0x03:
+						printf("update request type 0x%02X ", payload[4]);
+						switch (payload[4])
+						{
+							case 0x00:
+								printf("standard update request");
+							break;
+							case 0x16:
+								printf("mysterious penultimate update-response");
+							break;
+							case 0x1C:
+								printf("end-of-query");
+								numwrite = send(sock, "\x05\x00\x05\x00\x00\x02\x03\x1d", 8, 0);
+								numwrite += send(sock, "\x0D\x00\x02\x00\x00", 5, 0);
+							break;
+							case 0x1D:
+								printf("end-of-query acknowledgement");
+							break;
+						}
+					break;
+				}
 			break;
 			case 0x0D:
 			case 0x0E:
-				puts("heartbeat");
+				printf("heartbeat");
 			default:
 			break;
 		}
 
+		printf("\n");
+
 		if (numwrite > 0)
 			printf("%d bytes sent\n", numwrite);
 
-		index = payloadLength+3;
+		index = index+payloadLength+3;
 	}
 }
 
