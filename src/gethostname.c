@@ -4,8 +4,8 @@
 
 int main()
 {
-  char hostname[HOST_NAME_MAX];
-  gethostname(hostname, HOST_NAME_MAX);
+  char hostname[255];
+  gethostname(hostname, 255);
   puts(hostname);
 }
 
